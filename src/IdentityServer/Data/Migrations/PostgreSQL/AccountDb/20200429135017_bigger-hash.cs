@@ -1,6 +1,3 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
-
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -48,10 +45,22 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.AccountDb
                 oldType: "integer")
                 .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Hash",
+                table: "AccountCodes",
+                maxLength: 64,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "character varying(40)",
+                oldMaxLength: 40);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(@"UPDATE ""AccountProperties"" SET ""Key"" = 'org' where ""Key"" = 'picture_o';");
+            migrationBuilder.Sql(@"UPDATE ""AccountProperties"" SET ""Key"" = 'orgunit' where ""Key"" = 'picture_ou';");
+
             migrationBuilder.AlterColumn<int>(
                 name: "Id",
                 table: "OverrideCodes",
@@ -68,7 +77,7 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.AccountDb
                 maxLength: 40,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldMaxLength: 128);
+                oldMaxLength: 64);
 
             migrationBuilder.AlterColumn<int>(
                 name: "Id",
@@ -87,6 +96,15 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.AccountDb
                 oldClrType: typeof(int))
                 .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .OldAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Hash",
+                table: "AccountCodes",
+                type: "character varying(40)",
+                maxLength: 40,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldMaxLength: 64);
         }
     }
 }
