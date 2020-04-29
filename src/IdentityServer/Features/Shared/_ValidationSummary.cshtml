@@ -1,0 +1,9 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@if (ViewContext.ModelState.IsValid == false)
+{
+    <div class="text text-danger">
+        <div asp-validation-summary="All" class="danger"></div>
+    </div>
+}

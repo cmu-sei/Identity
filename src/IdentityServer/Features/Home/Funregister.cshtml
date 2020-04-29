@@ -1,0 +1,983 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model fUnregisterModel
+
+<div class="row">
+    <div class="col panel">
+        <h3>Welcome, @Model.Name!</h3>
+        <p>
+            <dl class="row">
+                <dt class="col-sm-3">Last login</dt>
+                <dd class="col-sm-9">@Model.LastLogin</dd>
+                <dt class="col-sm-3">Last location</dt>
+                <dd class="col-sm-9">@Model.Location</dd>
+                <dt class="col-sm-3">Subject Id</dt>
+                <dd class="col-sm-9">@Model.Subject</dd>
+                <dt class="col-sm-3">Certificate</dt>
+                <dd class="col-sm-9">@Model.Certificate</dd>
+                <dt class="col-sm-3">User Agent</dt>
+                <dd class="col-sm-9">@Model.UserAgent</dd>
+            </dl>
+        </p>
+        <table border="1">
+            <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Born</th>
+                <th>Died</th>
+                <th>Age</th>
+                <th>N</th>
+                <th>W</th>
+                <th>Role</th>
+                <th>Event</th>
+                <th>First</th>
+                <th>Last</th>
+            </tr>
+            <tr>
+                <td>Andrew Wiggin</td>
+                <td>M</td>
+                <td>11BX</td>
+                <td>~</td>
+                <td>3000</td>
+                <td>0</td>
+                <td>0</td>
+                <td>1L1</td>
+                <td>Speaker</td>
+                <td>2019</td>
+                <td>2109</td>
+            </tr>
+        </table>
+        <pre>
+            Barkhad Abdi |M |1985 |~ |34 |1 |0 |S |Captain Phillips |2013 |2013
+F. Murray Abraham |M |1939 |~ |79 |1 |1 |L |Amadeus |1984 |1984
+Amy Adams |F |1974 |~ |44 |6 |0 |1L:5S |American Hustle (2013) |2005 |2018
+Nick Adams |M |1931 |1968 |36 |1 |0 |S |Twilight of Honor |1963 |1963
+Isabelle Adjani |F |1955 |~ |64 |2 |0 |L |Story of Adele H., The |1975 |1989
+Casey Affleck |M |1975 |~ |44 |2 |1 |1L1:1S0 |Manchester by the Sea |2007 |2016
+Shohreh Aghdashloo |F |1952 |~ |67 |1 |0 |S |House of Sand and Fog |2003 |2003
+Brian Aherne |M |1902 |1986 |83 |1 |0 |S |Juarez |1939 |1939
+Danny Aiello |M |1933 |~ |86 |1 |0 |S |Do the Right Thing |1989 |1989
+Anouk Aimée |F |1932 |~ |87 |1 |0 |L |Man and a Woman, A |1966 |1966
+Eddie Albert |M |1906 |2005 |99 |2 |0 |S |Roman Holiday |1953 |1972
+Jack Albertson |M |1907 |1981 |74 |1 |1 |S |Subject Was Roses, The |1968 |1968
+Alan Alda |M |1936 |~ |83 |1 |0 |S |Aviator, The |2004 |2004
+Norma Aleandro |F |1936 |~ |83 |1 |0 |S |Gaby: A True Story |1987 |1987
+Jane Alexander |F |1939 |~ |79 |4 |0 |2L:2S |Great White Hope, The |1970 |1983
+Mahershala Ali |M |1974 |~ |45 |2 |2 |S |Moonlight [w 1] |2016 |2018
+Joan Allen |F |1956 |~ |62 |3 |0 |1L:2S |Contender, The |1995 |2000
+Woody Allen |M |1935 |~ |83 |1 |0 |L |Annie Hall |1977 |1977
+Sara Allgood |F |1880 |1950 |69 |1 |0 |S |How Green Was My Valley |1941 |1941
+Don Ameche |M |1908 |1993 |85 |1 |1 |S |Cocoon |1985 |1985
+Judith Anderson |F |1897 |1992 |94 |1 |0 |S |Rebecca |1940 |1940
+Julie Andrews |F |1935 |~ |83 |3 |1 |L |Mary Poppins |1964 |1982
+Ann-Margret |F |1941 |~ |78 |2 |0 |1L:1S |Tommy |1971 |1975
+Yalitza Aparicio |F |1993 |~ |25 |1 |0 |L |Roma |2018 |2018
+Anne Archer |F |1947 |~ |71 |1 |0 |S |Fatal Attraction |1987 |1987
+Eve Arden |F |1908 |1990 |82 |1 |0 |S |Mildred Pierce |1945 |1945
+Alan Arkin |M |1934 |~ |85 |4 |1 |2L0:2S1 |Little Miss Sunshine (2006) |1966 |2012
+George Arliss |M |1868 |1946 |77 |1 |1 |L |Disraeli |1929 |1929
+Patricia Arquette |F |1968 |~ |51 |1 |1 |S |Boyhood |2014 |2014
+Jean Arthur |F |1900 |1991 |90 |1 |0 |L |More the Merrier, The |1943 |1943
+Peggy Ashcroft |F |1907 |1991 |83 |1 |1 |S |Passage to India, A |1984 |1984
+Fred Astaire |M |1899 |1987 |88 |1 |0 |S |Towering Inferno, The |1974 |1974
+Mary Astor |F |1906 |1987 |81 |1 |1 |S |Great Lie, The |1941 |1941
+Mischa Auer |M |1905 |1967 |61 |1 |0 |S |My Man Godfrey |1936 |1936
+Margaret Avery |F |1944 * |~ |75 |1 |0 |S |Color Purple, The |1985 |1985
+Dan Aykroyd |M |1952 |~ |67 |1 |0 |S |Driving Miss Daisy |1989 |1989
+Lew Ayres |M |1908 |1996 |88 |1 |0 |L |Johnny Belinda |1948 |1948
+Lauren Bacall |F |1924 |2014 |89 |1 |0 |S |Mirror Has Two Faces, The |1996 |1996
+Hermione Baddeley |F |1906 |1986 |79 |1 |0 |S |Room at the Top |1959 |1959
+Mary Badham |F |1952 |~ |66 |1 |0 |S |To Kill a Mockingbird |1962 |1962
+Fay Bainter |F |1893 |1968 |74 |3 |1 |1L0:2S1 |Jezebel [n 1] |1938 |1961
+Carroll Baker |F |1931 |~ |88 |1 |0 |L |Baby Doll |1956 |1956
+Alec Baldwin |M |1958 |~ |61 |1 |0 |S |Cooler, The |2003 |2003
+Christian Bale |M |1974 |~ |45 |4 |1 |2L0:2S1 |Fighter, The |2010 |2018
+Martin Balsam |M |1919 |1996 |76 |1 |1 |S |Thousand Clowns, A |1965 |1965
+Anne Bancroft |F |1931 |2005 |73 |5 |1 |L |Miracle Worker, The |1962 |1985
+George Bancroft |M |1882 |1956 |74 |1 |0 |L |Thunderbolt |1929 |1929
+Ian Bannen |M |1928 |1999 |71 |1 |0 |S |Flight of the Phoenix, The |1965 |1965
+Javier Bardem |M |1969 |~ |50 |3 |1 |2L0:1S1 |No Country for Old Men (2007) |2000 |2010
+Marie-Christine Barrault |F |1944 |~ |75 |1 |0 |L |Cousin Cousine |1976 |1976
+Adriana Barraza |F |1956 |~ |63 |1 |0 |S |Babel |2006 |2006
+Barbara Barrie |F |1931 |~ |88 |1 |0 |S |Breaking Away |1979 |1979
+Ethel Barrymore |F |1879 |1959 |79 |4 |1 |S |None but the Lonely Heart |1944 |1949
+Lionel Barrymore |M |1878 |1954 |76 |1 |1 |L |Free Soul, A |1931 |1931
+Richard Barthelmess |M |1895 |1963 |68 |1 |0 |L |Patent Leather Kid, The |1927 |1927
+Mikhail Baryshnikov |M |1948 |~ |71 |1 |0 |S |Turning Point, The |1977 |1977
+Kim Basinger |F |1953 |~ |65 |1 |1 |S |L.A. Confidential |1997 |1997
+Albert Bassermann |M |1867 |1952 |84 |1 |0 |S |Foreign Correspondent |1940 |1940
+Angela Bassett |F |1958 |~ |61 |1 |0 |L |What's Love Got to Do with It |1993 |1993
+Alan Bates |M |1934 |2003 |69 |1 |0 |L |Fixer, The |1968 |1968
+Kathy Bates |F |1948 |~ |71 |3 |1 |1L1:2S0 |Misery |1990 |2002
+Anne Baxter |F |1923 |1985 |62 |2 |1 |1L0:1S1 |Razor's Edge, The |1946 |1950
+Warner Baxter |M |1889 |1951 |62 |1 |1 |L |In Old Arizona |1928 |1928
+Ned Beatty |M |1937 |~ |82 |1 |0 |S |Network |1976 |1976
+Warren Beatty |M |1937 |~ |82 |4 |0 |L |Bonnie and Clyde |1967 |1991
+Wallace Beery |M |1885 |1949 |64 |2 |1 |L |Champ, The |1930 |1931
+Ed Begley |M |1901 |1970 |69 |1 |1 |S |Sweet Bird of Youth |1962 |1962
+Bérénice Bejo |F |1976 |~ |43 |1 |0 |S |Artist, The |2011 |2011
+Barbara Bel Geddes |F |1922 |2005 |82 |1 |0 |S |I Remember Mama |1948 |1948
+Ralph Bellamy |M |1904 |1991 |87 |1 |0 |S |Awful Truth, The |1937 |1937
+William Bendix |M |1906 |1964 |58 |1 |0 |S |Wake Island |1942 |1942
+Roberto Benigni |M |1952 |~ |66 |1 |1 |L |Life Is Beautiful |1998 |1998
+Annette Bening |F |1958 |~ |61 |4 |0 |3L:1S |American Beauty (1999) |1990 |2010
+Tom Berenger |M |1949 |~ |70 |1 |0 |S |Platoon |1986 |1986
+Candice Bergen |F |1946 |~ |73 |1 |0 |S |Starting Over |1979 |1979
+Ingrid Bergman |F |1915 |1982 |67 |7 |3 |6L2:1S1 |Gaslight (1944) [w 2] |1943 |1978
+Elisabeth Bergner |F |1897 |1986 |88 |1 |0 |L |Escape Me Never |1935 |1935
+Jeannie Berlin |F |1949 |~ |69 |1 |0 |S |Heartbreak Kid, The |1972 |1972
+Halle Berry |F |1966 |~ |53 |1 |1 |L |Monster's Ball |2001 |2001
+Demián Bichir |M |1963 |~ |56 |1 |0 |L |Better Life, A |2011 |2011
+Charles Bickford |M |1891 |1967 |76 |3 |0 |S |Song of Bernadette, The |1943 |1948
+Theodore Bikel |M |1924 |2015 |91 |1 |0 |S |Defiant Ones, The |1958 |1958
+Juliette Binoche |F |1964 |~ |55 |2 |1 |1L0:1S1 |English Patient, The |1996 |2000
+Karen Black |F |1939 |2013 |74 |1 |0 |S |Five Easy Pieces |1970 |1970
+Betsy Blair |F |1923 |2009 |85 |1 |0 |S |Marty |1955 |1955
+Linda Blair |F |1959 |~ |60 |1 |0 |S |Exorcist, The |1973 |1973
+Ronee Blakley |F |1945 |~ |73 |1 |0 |S |Nashville |1975 |1975
+Cate Blanchett |F |1969 |~ |50 |7 |2 |4L1:3S1 |Blue Jasmine (2013) [w 3][n 2] |1998 |2015
+Brenda Blethyn |F |1946 |~ |73 |2 |0 |1L:1S |Secrets & Lies |1996 |1998
+Mary J. Blige |F |1971 |~ |48 |1 |0 |S |Mudbound |2017 |2017
+Joan Blondell |F |1906 |1979 |73 |1 |0 |S |Blue Veil, The |1951 |1951
+Ann Blyth |F |1928 |~ |91 |1 |0 |S |Mildred Pierce |1945 |1945
+Humphrey Bogart |M |1899 |1957 |57 |3 |1 |L |African Queen, The (1951) |1943 |1954
+Beulah Bondi |F |1889 |1981 |91 |2 |0 |S |Gorgeous Hussy, The |1936 |1938
+Helena Bonham Carter |F |1966 |~ |53 |2 |0 |1L:1S |Wings of the Dove, The |1997 |2010
+Shirley Booth |F |1898 |1992 |94 |1 |1 |L |Come Back, Little Sheba |1952 |1952
+Ernest Borgnine |M |1917 |2012 |95 |1 |1 |L |Marty |1955 |1955
+Charles Boyer |M |1899 |1978 |78 |4 |0 |L |Conquest |1937 |1961
+Lorraine Bracco |F |1954 |~ |64 |1 |0 |S |Goodfellas |1990 |1990
+Alice Brady |F |1892 |1939 |46 |2 |1 |S |In Old Chicago |1936 |1937
+Kenneth Branagh |M |1960 |~ |58 |2 |0 |1L:1S |Henry V |1989 |2011
+Klaus Maria Brandauer |M |1943 |~ |76 |1 |0 |S |Out of Africa |1985 |1985
+Marlon Brando § |M |1924 |2004 |80 |8 |2 [a 1] |7L2:1S0 |On the Waterfront (1954) [w 4] |1951 |1989
+Eileen Brennan |F |1932 |2013 |80 |1 |0 |S |Private Benjamin |1980 |1980
+Walter Brennan |M |1894 |1974 |80 |4 |3 |S |Come and Get It [w 5] |1936 |1941
+Abigail Breslin |F |1996 |~ |23 |1 |0 |S |Little Miss Sunshine |2006 |2006
+Jeff Bridges |M |1949 |~ |69 |7 |1 |3L1:4S0 |Crazy Heart (2009) |1971 |2016
+Jim Broadbent |M |1949 |~ |70 |1 |1 |S |Iris |2001 |2001
+Adrien Brody |M |1973 |~ |46 |1 |1 |L |Pianist, The |2002 |2002
+Josh Brolin |M |1968 |~ |51 |1 |0 |S |Milk |2008 |2008
+Albert Brooks |M |1947 |~ |72 |1 |0 |S |Broadcast News |1987 |1987
+Leslie Browne |F |1957 |~ |62 |1 |0 |S |Turning Point, The |1977 |1977
+Yul Brynner |M |1920 |1985 |65 |1 |1 |L |King and I, The |1956 |1956
+Geneviève Bujold |F |1942 |~ |77 |1 |0 |L |Anne of the Thousand Days |1969 |1969
+Sandra Bullock |F |1964 |~ |55 |2 |1 |L |Blind Side, The |2009 |2013
+Victor Buono |M |1938 |1982 |43 |1 |0 |S |What Ever Happened to Baby Jane? |1962 |1962
+Billie Burke |F |1884 |1970 |85 |1 |0 |S |Merrily We Live |1938 |1938
+Catherine Burns |F |1945 |~ |73 |1 |0 |S |Last Summer |1969 |1969
+George Burns |M |1896 |1996 |100 |1 |1 |S |Sunshine Boys, The |1975 |1975
+Ellen Burstyn |F |1932 |~ |86 |6 |1 |5L1:1S0 |Alice Doesn't Live Here Anymore (1974) |1971 |2000
+Richard Burton |M |1925 |1984 |58 |7 |0 |6L:1S |Robe, The (1953) |1952 |1977
+Gary Busey |M |1944 |~ |75 |1 |0 |L |Buddy Holly Story, The |1978 |1978
+Red Buttons |M |1919 |2006 |87 |1 |1 |S |Sayonara |1957 |1957
+Spring Byington |F |1886 |1971 |84 |1 |0 |S |You Can't Take It with You |1938 |1938
+James Caan |M |1940 |~ |79 |1 |0 |S |Godfather, The |1972 |1972
+Adolph Caesar |M |1933 |1986 |52 |1 |0 |S |Soldier's Story, A |1984 |1984
+Nicolas Cage |M |1964 |~ |55 |2 |1 |L |Leaving Las Vegas |1995 |2002
+James Cagney |M |1899 |1986 |86 |3 |1 |L |Yankee Doodle Dandy (1942) |1938 |1955
+Michael Caine |M |1933 |~ |86 |6 |2 |4L0:2S2 |Hannah and Her Sisters (1986) [w 6] |1966 |2002
+Louis Calhern |M |1895 |1956 |61 |1 |0 |L |Magnificent Yankee, The |1950 |1950
+Dyan Cannon |F |1937 |~ |82 |2 |0 |S |Bob & Carol & Ted & Alice |1969 |1978
+Steve Carell |M |1962 |~ |57 |1 |0 |L |Foxcatcher |2014 |2014
+Harry Carey |M |1878 |1947 |69 |1 |0 |S |Mr. Smith Goes to Washington |1939 |1939
+Lynn Carlin |F |1938 |~ |81 |1 |0 |S |Faces |1968 |1968
+Art Carney |M |1918 |2003 |85 |1 |1 |L |Harry and Tonto |1974 |1974
+Leslie Caron |F |1931 |~ |88 |2 |0 |L |Lili |1953 |1963
+Diahann Carroll |F |1935 |~ |84 |1 |0 |L |Claudine |1974 |1974
+Nancy Carroll |F |1903 |1965 |61 |1 |0 |L |Devil's Holiday, The |1930 |1930
+Peggy Cass |F |1924 |1999 |74 |1 |0 |S |Auntie Mame |1958 |1958
+John Cassavetes |M |1929 |1989 |59 |1 |0 |S |Dirty Dozen, The |1967 |1967
+Seymour Cassel |M |1935 |2019 |84 |1 |0 |S |Faces |1968 |1968
+Richard S. Castellano |M |1933 |1988 |55 |1 |0 |S |Lovers and Other Strangers |1970 |1970
+Keisha Castle-Hughes |F |1990 |~ |29 |1 |0 |L |Whale Rider |2003 |2003
+George Chakiris |M |1934 |~ |84 |1 |1 |S |West Side Story |1961 |1961
+Timothée Chalamet |M |1995 |~ |23 |1 |0 |L |Call Me by Your Name |2017 |2017
+Jeff Chandler |M |1918 |1961 |42 |1 |0 |S |Broken Arrow |1950 |1950
+Carol Channing |F |1921 |2019 |97 |1 |0 |S |Thoroughly Modern Millie |1967 |1967
+Stockard Channing |F |1944 |~ |75 |1 |0 |L |Six Degrees of Separation |1993 |1993
+Charlie Chaplin |M |1889 |1977 |88 |1 |0 |L |Great Dictator, The |1940 |1940
+Jessica Chastain |F |1977 |~ |42 |2 |0 |1L:1S |Zero Dark Thirty |2011 |2012
+Ruth Chatterton |F |1892 |1961 |68 |2 |0 |L |Madame X |1929 |1930
+Don Cheadle |M |1964 |~ |54 |1 |0 |L |Hotel Rwanda |2004 |2004
+Michael Chekhov |M |1891 |1955 |64 |1 |0 |S |Spellbound |1945 |1945
+Cher |F |1946 |~ |73 |2 |1 |1L1:1S0 |Moonstruck |1983 |1987
+Maurice Chevalier |M |1888 |1972 |83 |1 |0 |L |Love Parade, The |1929 |1929
+Julie Christie |F |1940 |~ |79 |4 |1 |L |Darling |1965 |2007
+Thomas Haden Church |M |1960 |~ |59 |1 |0 |S |Sideways |2004 |2004
+Diane Cilento |F |1933 |2011 |78 |1 |0 |S |Tom Jones |1963 |1963
+Candy Clark |F |1947 |~ |72 |1 |0 |S |American Graffiti |1973 |1973
+Patricia Clarkson |F |1959 |~ |59 |1 |0 |S |Pieces of April |2003 |2003
+Jill Clayburgh |F |1944 |2010 |66 |2 |0 |L |Unmarried Woman, An |1978 |1979
+Montgomery Clift |M |1920 |1966 |45 |4 |0 |3L:1S |Search, The |1948 |1961
+George Clooney |M |1961 |~ |58 |4 |1 |3L0:1S1 |Syriana |2005 |2011
+Glenn Close |F |1947 |~ |72 |7 |0 |4L:3S |Fatal Attraction (1987) |1982 |2018
+Lee J. Cobb |M |1911 |1976 |64 |2 |0 |S |On the Waterfront |1954 |1958
+Charles Coburn |M |1877 |1961 |84 |3 |1 |S |More the Merrier, The (1943) |1941 |1946
+James Coburn |M |1928 |2002 |74 |1 |1 |S |Affliction |1998 |1998
+James Coco |M |1930 |1987 |56 |1 |0 |S |Only When I Laugh |1981 |1981
+Claudette Colbert |F |1903 |1996 |92 |3 |1 |L |It Happened One Night |1934 |1944
+Toni Collette |F |1972 |~ |46 |1 |0 |S |Sixth Sense, The |1999 |1999
+Patricia Collinge |F |1892 |1974 |81 |1 |0 |S |Little Foxes, The |1941 |1941
+Pauline Collins |F |1940 |~ |78 |1 |0 |L |Shirley Valentine |1989 |1989
+Olivia Colman |F |1974 |~ |45 |1 |1 |L |Favourite, The |2018 |2018
+Ronald Colman |M |1891 |1958 |67 |3 |1 |L |Double Life, A |1929 |1947
+Betty Compson |F |1897 |1974 |77 |1 |0 |L |Barker, The |1928 |1928
+Jennifer Connelly |F |1970 |~ |48 |1 |1 |S |Beautiful Mind, A |2001 |2001
+Sean Connery |M |1930 |~ |88 |1 |1 |S |Untouchables, The |1987 |1987
+Tom Conti |M |1941 |~ |77 |1 |0 |L |Reuben, Reuben |1983 |1983
+Bradley Cooper |M |1975 |~ |44 |4 |0 |3L:1S |Silver Linings Playbook |2012 |2018
+Chris Cooper |M |1951 |~ |68 |1 |1 |S |Adaptation |2002 |2002
+Gary Cooper |M |1901 |1961 |60 |5 |2 |L |Sergeant York (1941) [w 7] |1936 |1952
+Gladys Cooper |F |1888 |1971 |82 |3 |0 |S |Now, Voyager |1942 |1964
+Jackie Cooper |M |1922 |2011 |88 |1 |0 |L |Skippy |1931 |1931
+Ellen Corby |F |1911 |1999 |87 |1 |0 |S |I Remember Mama |1948 |1948
+Valentina Cortese |F |1923 |2019 |96 |1 |0 |S |Day for Night |1974 |1974
+Kevin Costner |M |1955 |~ |64 |1 |0 |L |Dances with Wolves |1990 |1990
+Marion Cotillard |F |1975 |~ |43 |2 |1 |L |La Vie en Rose |2007 |2014
+Tom Courtenay |M |1937 |~ |82 |2 |0 |1L:1S |Dresser, The |1965 |1983
+Jeanne Crain |F |1925 |2003 |78 |1 |0 |L |Pinky |1949 |1949
+Bryan Cranston |M |1956 |~ |63 |1 |0 |L |Trumbo |2015 |2015
+Broderick Crawford |M |1911 |1986 |74 |1 |1 |L |All the King's Men |1949 |1949
+Joan Crawford |F |1904 |1977 |73 |3 |1 |L |Mildred Pierce |1945 |1952
+Donald Crisp |M |1882 |1974 |91 |1 |1 |S |How Green Was My Valley |1941 |1941
+James Cromwell |M |1940 |~ |79 |1 |0 |S |Babe |1995 |1995
+Hume Cronyn |M |1911 |2003 |91 |1 |0 |S |Seventh Cross, The |1944 |1944
+Bing Crosby |M |1903 |1977 |74 |3 |1 |L |Going My Way |1944 |1954
+Rupert Crosse |M |1927 |1973 |45 |1 |0 |S |Reivers, The |1969 |1969
+Lindsay Crouse |F |1948 |~ |71 |1 |0 |S |Places in the Heart |1984 |1984
+Russell Crowe |M |1964 |~ |55 |3 |1 |L |Gladiator (2000) |1999 |2001
+Tom Cruise |M |1962 |~ |57 |3 |0 |2L:1S |Born on the Fourth of July |1989 |1999
+Penélope Cruz |F |1974 |~ |45 |3 |1 |1L0:2S1 |Vicky Cristina Barcelona (2008) |2006 |2009
+Benedict Cumberbatch |M |1976 |~ |43 |1 |0 |L |Imitation Game, The |2014 |2014
+Quinn Cummings |F |1967 |~ |52 |1 |0 |S |Goodbye Girl, The |1977 |1977
+Tony Curtis |M |1925 |2010 |85 |1 |0 |L |Defiant Ones, The |1958 |1958
+Joan Cusack |F |1962 |~ |56 |2 |0 |S |Working Girl |1988 |1997
+Willem Dafoe |M |1955 |~ |64 |4 |0 |1L:3S |At Eternity's Gate |1986 |2018
+Dan Dailey |M |1915 |1978 |62 |1 |0 |L |When My Baby Smiles at Me |1948 |1948
+John Dall |M |1920 |1971 |50 |1 |0 |S |Corn Is Green, The |1945 |1945
+Matt Damon |M |1970 |~ |48 |3 |0 |2L:1S |Good Will Hunting |1997 |2015
+Dorothy Dandridge |F |1922 |1965 |42 |1 |0 |L |Carmen Jones |1954 |1954
+Bobby Darin |M |1936 |1973 |37 |1 |0 |S |Captain Newman, M.D. |1963 |1963
+Jane Darwell |F |1879 |1967 |87 |1 |1 |S |Grapes of Wrath, The |1940 |1940
+Jaye Davidson |M |1968 |~ |51 |1 |0 |S |Crying Game, The |1992 |1992
+Bette Davis |F |1908 |1989 |81 |11 [a 2] |2 |L |Dangerous (1935) [w 8] |1934 |1962
+Geena Davis |F |1956 |~ |63 |2 |1 |1L0:1S1 |Accidental Tourist, The |1988 |1991
+Judy Davis |F |1955 |~ |64 |2 |0 |1L:1S |Passage to India, A |1984 |1992
+Viola Davis |F |1965 |~ |54 |3 |1 |1L0:2S1 |Fences |2008 |2016
+Bruce Davison |M |1946 |~ |73 |1 |0 |S |Longtime Companion |1990 |1990
+Doris Day |F |1922 |2019 |97 |1 |0 |L |Pillow Talk |1959 |1959
+Daniel Day-Lewis |M |1957 |~ |62 |6 |3 |L |My Left Foot [w 9] |1989 |2017
+Olivia de Havilland |F |1916 |~ |103 |5 |2 |4L2:1S0 |To Each His Own (1946) [w 10] |1939 |1949
+Robert De Niro |M |1943 |~ |76 |7 |2 |5L1:2S1 |Raging Bull (1980) [w 11] |1974 |2012
+Vittorio De Sica |M |1901 |1974 |73 |1 |0 |S |Farewell to Arms, A |1957 |1957
+Marina de Tavira |F |1974 |~ |45 |1 |0 |S |Roma |2018 |2018
+James Dean |M |1931 |1955 |24 |2 |0 |L |East of Eden |1955 |1956
+Ruby Dee |F |1922 |2014 |91 |1 |0 |S |American Gangster |2007 |2007
+Benicio del Toro |M |1967 |~ |52 |2 |1 |S |Traffic |2000 |2003
+William Demarest |M |1892 |1983 |91 |1 |0 |S |Jolson Story, The |1946 |1946
+Judi Dench |F |1934 |~ |84 |7 |1 |5L0:2S1 |Shakespeare in Love (1998) |1997 |2013
+Catherine Deneuve |F |1943 |~ |75 |1 |0 |L |Indochine |1992 |1992
+Sandy Dennis |F |1937 |1992 |54 |1 |1 |S |Who's Afraid of Virginia Woolf? |1966 |1966
+Gérard Depardieu |M |1948 |~ |70 |1 |0 |L |Cyrano de Bergerac |1990 |1990
+Johnny Depp |M |1963 |~ |56 |3 |0 |L |Pirates of the Caribbean |2003 |2007
+Bruce Dern |M |1936 |~ |83 |2 |0 |1L:1S |Nebraska |1978 |2013
+Laura Dern |F |1967 |~ |52 |2 |0 |1L:1S |Rambling Rose |1991 |2014
+Brandon deWilde |M |1942 |1972 |30 |1 |0 |S |Shane |1953 |1953
+Leonardo DiCaprio |M |1974 |~ |44 |5 |1 |4L1:1S0 |Revenant, The |1993 |2015
+Marlene Dietrich |F |1901 |1992 |90 |1 |0 |L |Morocco |1930 |1930
+Matt Dillon |M |1964 |~ |55 |1 |0 |S |Crash |2005 |2005
+Melinda Dillon |F |1939 |~ |79 |2 |0 |S |Close Encounters of the Third Kind |1977 |1981
+Richard Dix |M |1893 |1949 |56 |1 |0 |L |Cimarron |1931 |1931
+Robert Donat |M |1905 |1958 |53 |2 |1 |L |Goodbye, Mr. Chips |1938 |1939
+Brian Donlevy |M |1901 |1972 |71 |1 |0 |S |Beau Geste |1939 |1939
+Kirk Douglas |M |1916 |~ |102 |3 |0 |L |Champion |1949 |1956
+Melvyn Douglas |M |1901 |1981 |80 |3 |2 |1L0:2S2 |Hud [w 12] |1963 |1979
+Michael Douglas |M |1944 |~ |74 |1 |1 |L |Wall Street |1987 |1987
+Brad Dourif |M |1950 |~ |69 |1 |0 |S |One Flew Over the Cuckoo's Nest |1975 |1975
+Robert Downey Jr. |M |1965 |~ |54 |2 |0 |1L0:1S0 |Chaplin |1992 |2008
+Louise Dresser |F |1878 |1965 |85 |1 |0 |L |Ship Comes In, A |1928 |1928
+Marie Dressler |F |1868 |1934 |65 |2 |1 |L |Min and Bill |1930 |1932
+Richard Dreyfuss |M |1947 |~ |71 |2 |1 |L |Goodbye Girl, The |1977 |1995
+Adam Driver |M |1983 |~ |35 |1 |0 |S |BlacKkKlansman |2018 |2018
+Minnie Driver |F |1970 |~ |49 |1 |0 |S |Good Will Hunting |1997 |1997
+Jean Dujardin |M |1972 |~ |47 |1 |1 |L |Artist, The |2011 |2011
+Olympia Dukakis |F |1931 |~ |88 |1 |1 |S |Moonstruck |1987 |1987
+Patty Duke |F |1946 |2016 |69 |1 |1 |S |Miracle Worker, The |1962 |1962
+Faye Dunaway |F |1941 |~ |78 |3 |1 |L |Network |1967 |1976
+Michael Clarke Duncan |M |1957 |2012 |54 |1 |0 |S |Green Mile, The |1999 |1999
+James Dunn |M |1901 |1967 |65 |1 |1 |S |Tree Grows in Brooklyn, A |1945 |1945
+Michael Dunn |M |1934 |1973 |38 |1 |0 |S |Ship of Fools |1965 |1965
+Irene Dunne |F |1898 |1990 |91 |5 |0 |L |Cimarron |1931 |1948
+Mildred Dunnock |F |1901 |1991 |90 |2 |0 |S |Death of a Salesman |1951 |1956
+Charles Durning |M |1923 |2012 |89 |2 |0 |S |Best Little Whorehouse in Texas, The |1982 |1983
+Robert Duvall |M |1931 |~ |88 |7 |1 |3L1:4S0 |Tender Mercies (1983) |1972 |2014
+Jeanne Eagels |F |1890 |1929 |39 |1 |0 |L |Letter, The |1929 |1929
+Clint Eastwood |M |1930 |~ |89 |2 |0 |L |Unforgiven |1992 |2004
+Samantha Eggar |F |1939 |~ |80 |1 |0 |L |Collector, The |1965 |1965
+Jesse Eisenberg |M |1983 |~ |35 |1 |0 |L |Social Network, The |2010 |2010
+Chiwetel Ejiofor |M |1977 |~ |42 |1 |0 |L |12 Years a Slave |2013 |2013
+Denholm Elliott |M |1922 |1992 |70 |1 |0 |S |Room with a View, A |1986 |1986
+Sam Elliott |M |1944 |~ |75 |1 |0 |S |Star Is Born, A |2018 |2018
+Hope Emerson |F |1897 |1960 |62 |1 |0 |S |Caged |1950 |1950
+Stuart Erwin |M |1903 |1967 |64 |1 |0 |S |Pigskin Parade |1936 |1936
+Edith Evans |F |1888 |1976 |88 |3 |0 |1L:2S |Whisperers, The |1963 |1967
+Peter Falk |M |1927 |2011 |83 |2 |0 |S |Murder, Inc. |1960 |1961
+Vera Farmiga |F |1973 |~ |46 |1 |0 |S |Up in the Air |2009 |2009
+Richard Farnsworth |M |1920 |2000 |80 |2 |0 |1L:1S |Straight Story, The |1978 |1999
+Michael Fassbender |M |1977 |~ |42 |2 |0 |1L:1S |Steve Jobs |2013 |2015
+José Ferrer |M |1912 |1992 |80 |3 |1 |2L1:1S0 |Cyrano de Bergerac (1950) |1948 |1952
+Sally Field |F |1946 |~ |72 |3 |2 |2L2:1S0 |Norma Rae [w 13] |1979 |2012
+Ralph Fiennes |M |1962 |~ |56 |2 |0 |1L:1S |English Patient, The |1993 |1996
+Peter Finch |M |1916 |1977 |60 |2 |1 |L |Network |1971 |1976
+Frank Finlay |M |1926 |2016 |89 |1 |0 |S |Othello |1965 |1965
+Albert Finney |M |1936 |2019 |82 |5 |0 |4L:1S |Tom Jones |1963 |2000
+Colin Firth |M |1960 |~ |58 |2 |1 |L |King's Speech, The |2009 |2010
+Peter Firth |M |1953 |~ |65 |1 |0 |S |Equus |1977 |1977
+Laurence Fishburne |M |1961 |~ |58 |1 |0 |L |What's Love Got to Do with It |1993 |1993
+Barry Fitzgerald |M |1888 |1961 |72 |2 |1 |1L0:1S1 |Going My Way [n 3] |1944 |1944
+Geraldine Fitzgerald |F |1913 |2005 |91 |1 |0 |S |Wuthering Heights |1939 |1939
+Louise Fletcher |F |1934 |~ |85 |1 |1 |L |One Flew Over the Cuckoo's Nest |1975 |1975
+Nina Foch |F |1924 |2008 |84 |1 |0 |S |Executive Suite |1954 |1954
+Henry Fonda |M |1905 |1982 |77 |2 |1 |L |On Golden Pond |1940 |1981
+Jane Fonda |F |1937 |~ |81 |7 |2 |6L2:1S0 |Klute (1971) [w 14] |1969 |1986
+Peter Fonda |M |1940 |2019 |79 |1 |0 |L |Ulee's Gold |1997 |1997
+Joan Fontaine |F |1917 |2013 |96 |3 |1 |L |Suspicion (1941) |1940 |1943
+Lynn Fontanne |F |1887 |1983 |95 |1 |0 |L |Guardsman, The |1931 |1931
+Harrison Ford |M |1942 |~ |77 |1 |0 |L |Witness |1985 |1985
+Frederic Forrest |M |1936 |~ |82 |1 |0 |S |Rose, The |1979 |1979
+Robert Forster |M |1941 |~ |78 |1 |0 |S |Jackie Brown |1997 |1997
+Jodie Foster |F |1962 |~ |56 |4 |2 |3L2:1S0 |Accused, The (1988) [w 15] |1976 |1994
+Jamie Foxx |M |1967 |~ |51 |2 |1 |1L1:1S0 |Ray [n 4] |2004 |2004
+Anthony Franciosa |M |1928 |2006 |77 |1 |0 |L |Hatful of Rain, A |1957 |1957
+James Franco |M |1978 |~ |41 |1 |0 |L |127 Hours |2010 |2010
+Morgan Freeman |M |1937 |~ |82 |5 |1 |3L0:2S1 |Million Dollar Baby (2004) |1987 |2009
+Leonard Frey |M |1938 |1988 |49 |1 |0 |S |Fiddler on the Roof |1971 |1971
+Brenda Fricker |F |1945 |~ |74 |1 |1 |S |My Left Foot |1989 |1989
+Clark Gable |M |1901 |1960 |59 |3 |1 |L |It Happened One Night |1934 |1939
+Lady Gaga |F |1986 |~ |33 |1 |0 |L |Star Is Born, A |2018 |2018
+Greta Garbo |F |1905 |1990 |84 |3 |0 |L |Anna Christie |1930 |1939
+Andy García |M |1956 |~ |63 |1 |0 |S |Godfather Part III, The |1990 |1990
+Vincent Gardenia |M |1920 |1992 |72 |2 |0 |S |Bang the Drum Slowly |1973 |1987
+Ava Gardner |F |1922 |1990 |67 |1 |0 |L |Mogambo |1953 |1953
+Andrew Garfield |M |1983 |~ |35 |1 |0 |L |Hacksaw Ridge |2016 |2016
+John Garfield |M |1913 |1952 |39 |2 |0 |1L:1S |Body and Soul |1938 |1947
+William Gargan |M |1905 |1979 |73 |1 |0 |S |They Knew What They Wanted |1940 |1940
+Judy Garland |F |1922 |1969 |47 |2 |0 |1L:1S |Star Is Born, A |1954 |1961
+James Garner |M |1928 |2014 |86 |1 |0 |L |Murphy's Romance |1985 |1985
+Teri Garr |F |1947 * |~ |71 |1 |0 |S |Tootsie |1982 |1982
+Greer Garson |F |1904 |1996 |91 |7 |1 |L |Mrs. Miniver (1942) |1939 |1960
+Janet Gaynor |F |1906 |1984 |77 |2 |1 |L |7th Heaven |1927 |1937
+Michael V. Gazzo |M |1923 |1995 |71 |1 |0 |S |Godfather Part II, The |1974 |1974
+Leo Genn |M |1905 |1978 |72 |1 |0 |S |Quo Vadis |1951 |1951
+Chief Dan George |M |1899 |1981 |82 |1 |0 |S |Little Big Man |1970 |1970
+Gladys George |F |1904 |1954 |50 |1 |0 |L |Valiant Is the Word for Carrie |1936 |1936
+Paul Giamatti |M |1967 |~ |52 |1 |0 |S |Cinderella Man |2005 |2005
+Giancarlo Giannini |M |1942 |~ |77 |1 |0 |L |Seven Beauties |1976 |1976
+John Gielgud |M |1904 |2000 |96 |2 |1 |S |Arthur |1964 |1981
+Jack Gilford |M |1907 |1990 |82 |1 |0 |S |Save the Tiger |1973 |1973
+Lillian Gish |F |1893 |1993 |99 |1 |0 |S |Duel in the Sun |1946 |1946
+Jackie Gleason |M |1916 |1987 |71 |1 |0 |S |Hustler, The |1961 |1961
+James Gleason |M |1882 |1959 |76 |1 |0 |S |Here Comes Mr. Jordan |1941 |1941
+Paulette Goddard |F |1910 |1990 |79 |1 |0 |S |So Proudly We Hail! |1943 |1943
+Whoopi Goldberg |F |1955 |~ |63 |2 |1 |1L0:1S1 |Ghost |1985 |1990
+Thomas Gomez |M |1905 |1971 |65 |1 |0 |S |Ride the Pink Horse |1947 |1947
+Cuba Gooding Jr. |M |1968 |~ |51 |1 |1 |S |Jerry Maguire |1996 |1996
+Dexter Gordon |M |1923 |1990 |67 |1 |0 |L |Round Midnight |1986 |1986
+Ruth Gordon |F |1896 |1985 |88 |2 |1 |S |Rosemary's Baby |1965 |1968
+Ryan Gosling |M |1980 |~ |38 |2 |0 |L |Half Nelson |2006 |2016
+Louis Gossett Jr. |M |1936 |~ |83 |1 |1 |S |Officer and a Gentleman, An |1982 |1982
+Elliott Gould |M |1938 |~ |80 |1 |0 |S |Bob & Carol & Ted & Alice |1969 |1969
+Gloria Grahame |F |1923 |1981 |57 |2 |1 |S |Bad and the Beautiful, The |1947 |1952
+Cary Grant |M |1904 |1986 |82 |2 |0 |L |Penny Serenade |1941 |1944
+Lee Grant |F |1925 * |~ |93 |4 |1 |S |Shampoo (1975) |1951 |1976
+Richard E. Grant |M |1957 |~ |62 |1 |0 |S |Can You Ever Forgive Me? |2018 |2018
+Bonita Granville |F |1923 |1988 |65 |1 |0 |S |These Three |1936 |1936
+Graham Greene |M |1952 |~ |67 |1 |0 |S |Dances with Wolves |1990 |1990
+Sydney Greenstreet |M |1879 |1954 |74 |1 |0 |S |Maltese Falcon, The |1941 |1941
+Joel Grey |M |1932 |~ |87 |1 |1 |S |Cabaret |1972 |1972
+Corinne Griffith |F |1894 |1979 |84 |1 |0 |L |Divine Lady, The |1929 |1929
+Hugh Griffith |M |1912 |1980 |67 |2 |1 |S |Ben-Hur |1959 |1963
+Melanie Griffith |F |1957 |~ |62 |1 |0 |L |Working Girl |1988 |1988
+Rachel Griffiths |F |1968 |~ |50 |1 |0 |S |Hilary and Jackie |1998 |1998
+Alec Guinness |M |1914 |2000 |86 |4 |1 |2L1:2S0 |Bridge on the River Kwai, The (1957) |1952 |1988
+Edmund Gwenn |M |1877 |1959 |81 |2 |1 |S |Miracle on 34th Street |1947 |1950
+Jake Gyllenhaal |M |1980 |~ |38 |1 |0 |S |Brokeback Mountain |2005 |2005
+Maggie Gyllenhaal |F |1977 |~ |41 |1 |0 |S |Crazy Heart |2009 |2009
+Joan Hackett |F |1934 |1983 |49 |1 |0 |S |Only When I Laugh |1981 |1981
+Gene Hackman |M |1930 |~ |89 |5 |2 |2L1:3S1 |French Connection, The (1971) [w 16] |1967 |1992
+Jean Hagen |F |1923 |1977 |54 |1 |0 |S |Singin' in the Rain |1952 |1952
+Jackie Earle Haley |M |1961 |~ |58 |1 |0 |S |Little Children |2006 |2006
+Grayson Hall |F |1922 |1985 |62 |1 |0 |S |Night of the Iguana, The |1964 |1964
+Tom Hanks |M |1956 |~ |63 |5 |2 |L |Philadelphia (1993) [w 17] |1988 |2000
+Marcia Gay Harden |F |1959 |~ |60 |2 |1 |S |Pollock |2000 |2003
+Ann Harding |F |1902 |1981 |79 |1 |0 |L |Holiday |1930 |1930
+Tom Hardy |M |1977 |~ |41 |1 |0 |S |Revenant, The |2015 |2015
+Tess Harper |F |1950 |~ |69 |1 |0 |S |Crimes of the Heart |1986 |1986
+Woody Harrelson |M |1961 |~ |58 |3 |0 |1L:2S |People vs. Larry Flynt, The |1996 |2017
+Barbara Harris |F |1935 |2018 |83 |1 |0 |S |Who Is Harry Kellerman...? |1971 |1971
+Ed Harris |M |1950 |~ |68 |4 |0 |1L:3S |Pollock (2000) |1995 |2002
+Julie Harris |F |1925 |2013 |87 |1 |0 |L |Member of the Wedding, The |1952 |1952
+Naomie Harris |F |1976 |~ |42 |1 |0 |S |Moonlight |2016 |2016
+Richard Harris |M |1930 |2002 |72 |2 |0 |L |This Sporting Life |1963 |1990
+Rosemary Harris |F |1927 |~ |91 |1 |0 |S |Tom & Viv |1994 |1994
+Rex Harrison |M |1908 |1990 |82 |2 |1 |L |My Fair Lady |1963 |1964
+Elizabeth Hartman |F |1943 |1987 |43 |1 |0 |L |Patch of Blue, A |1965 |1965
+Laurence Harvey |M |1928 |1973 |45 |1 |0 |L |Room at the Top |1959 |1959
+Anne Hathaway |F |1982 |~ |36 |2 |1 |1L0:1S1 |Les Misérables |2008 |2012
+Ethan Hawke |M |1970 |~ |48 |2 |0 |S |Training Day |2001 |2014
+John Hawkes |M |1959 |~ |59 |1 |0 |S |Winter's Bone |2010 |2010
+Sally Hawkins |F |1976 |~ |43 |2 |0 |1L:1S |Shape of Water, The |2013 |2017
+Goldie Hawn |F |1945 |~ |73 |2 |1 |1L0:1S1 |Cactus Flower |1969 |1980
+Nigel Hawthorne |M |1929 |2001 |72 |1 |0 |L |Madness of King George, The |1994 |1994
+Sessue Hayakawa |M |1889 |1973 |84 |1 |0 |S |Bridge on the River Kwai, The |1957 |1957
+Salma Hayek |F |1966 |~ |52 |1 |0 |L |Frida |2002 |2002
+Helen Hayes |F |1900 |1993 |92 |2 |2 |1L1:1S1 |Sin of Madelon Claudet, The [w 18] |1931 |1970
+Susan Hayward |F |1917 |1975 |57 |5 |1 |L |I Want to Live! |1947 |1958
+Eileen Heckart |F |1919 |2001 |82 |2 |1 |S |Butterflies Are Free |1956 |1972
+Lucas Hedges |M |1996 |~ |22 |1 |0 |S |Manchester by the Sea |2016 |2016
+Van Heflin |M |1908 |1971 |62 |1 |1 |S |Johnny Eager |1942 |1942
+Mariel Hemingway |F |1961 |~ |57 |1 |0 |S |Manhattan |1979 |1979
+Justin Henry |M |1971 |~ |48 |1 |0 |S |Kramer vs. Kramer |1979 |1979
+Taraji P. Henson |F |1970 |~ |48 |1 |0 |S |Curious Case of Benjamin Button, The |2008 |2008
+Audrey Hepburn |F |1929 |1993 |63 |5 |1 |L |Roman Holiday |1953 |1967
+Katharine Hepburn |F |1907 |2003 |96 |12 |4 |L |Morning Glory [w 19] |1933 |1981
+Barbara Hershey |F |1948 |~ |71 |1 |0 |S |Portrait of a Lady, The |1996 |1996
+Charlton Heston |M |1923 |2008 |84 |1 |1 |L |Ben-Hur |1959 |1959
+William Hickey |M |1927 |1997 |69 |1 |0 |S |Prizzi's Honor |1985 |1985
+Jonah Hill |M |1983 |~ |35 |2 |0 |S |Moneyball |2011 |2013
+Wendy Hiller |F |1912 |2003 |90 |3 |1 |1L0:2S1 |Separate Tables (1958) |1938 |1966
+Judd Hirsch |M |1935 |~ |84 |1 |0 |S |Ordinary People |1980 |1980
+Dustin Hoffman |M |1937 |~ |82 |7 |2 |L |Kramer vs. Kramer (1979) [w 20] |1967 |1997
+Philip Seymour Hoffman |M |1967 |2014 |46 |4 |1 |1L1:3S0 |Capote |2005 |2012
+Hal Holbrook |M |1925 |~ |94 |1 |0 |S |Into the Wild |2007 |2007
+William Holden |M |1918 |1981 |63 |3 |1 |L |Stalag 17 (1953) |1950 |1976
+Judy Holliday |F |1921 |1965 |43 |1 |1 |L |Born Yesterday |1950 |1950
+Stanley Holloway |M |1890 |1982 |91 |1 |0 |S |My Fair Lady |1964 |1964
+Celeste Holm |F |1917 |2012 |95 |3 |1 |S |Gentleman's Agreement |1947 |1950
+Ian Holm |M |1931 |~ |87 |1 |0 |S |Chariots of Fire |1981 |1981
+Oskar Homolka |M |1898 |1978 |79 |1 |0 |S |I Remember Mama |1948 |1948
+Anthony Hopkins |M |1937 |~ |81 |4 |1 |3L1:1S0 |Silence of the Lambs, The |1991 |1997
+Miriam Hopkins |F |1902 |1972 |69 |1 |0 |L |Becky Sharp |1935 |1935
+Dennis Hopper |M |1936 |2010 |74 |1 |0 |S |Hoosiers |1986 |1986
+Bob Hoskins |M |1942 |2014 |71 |1 |0 |L |Mona Lisa |1986 |1986
+Djimon Hounsou |M |1964 |~ |55 |2 |0 |S |In America |2003 |2006
+John Houseman |M |1902 |1988 |86 |1 |1 |S |Paper Chase, The |1973 |1973
+Leslie Howard |M |1893 |1943 |50 |2 |0 |L |Berkeley Square |1933 |1938
+Terrence Howard |M |1969 |~ |50 |1 |0 |L |Hustle & Flow |2005 |2005
+Trevor Howard |M |1913 |1988 |74 |1 |0 |L |Sons and Lovers |1960 |1960
+Jennifer Hudson |F |1981 |~ |37 |1 |1 |S |Dreamgirls |2006 |2006
+Kate Hudson |F |1979 |~ |40 |1 |0 |S |Almost Famous |2000 |2000
+Rock Hudson |M |1925 |1985 |59 |1 |0 |L |Giant |1956 |1956
+Felicity Huffman |F |1962 |~ |56 |1 |0 |L |Transamerica |2005 |2005
+Tom Hulce |M |1953 |~ |65 |1 |0 |L |Amadeus |1984 |1984
+Josephine Hull |F |1877 |1957 |80 |1 |1 |S |Harvey |1950 |1950
+Arthur Hunnicutt |M |1910 |1979 |69 |1 |0 |S |Big Sky, The |1952 |1952
+Helen Hunt |F |1963 |~ |56 |2 |1 |1L1:1S0 |As Good as It Gets |1997 |2012
+Linda Hunt |F |1945 |~ |74 |1 |1 |S |Year of Living Dangerously, The |1983 |1983
+Holly Hunter |F |1958 |~ |61 |4 |1 |2L1:2S0 |Piano, The (1993) [n 5] |1987 |2003
+Kim Hunter |F |1922 |2002 |79 |1 |1 |S |Streetcar Named Desire, A |1951 |1951
+Isabelle Huppert |F |1953 |~ |66 |1 |0 |L |Elle |2016 |2016
+John Hurt |M |1940 |2017 |77 |2 |0 |1L:1S |Elephant Man, The |1978 |1980
+William Hurt |M |1950 |~ |69 |4 |1 |3L1:1S0 |Kiss of the Spider Woman |1985 |2005
+Ruth Hussey |F |1911 |2005 |93 |1 |0 |S |Philadelphia Story, The |1940 |1940
+Anjelica Huston |F |1951 |~ |68 |3 |1 |1L0:2S1 |Prizzi's Honor |1985 |1990
+John Huston |M |1906 |1987 |81 |1 |0 |S |Cardinal, The |1963 |1963
+Walter Huston |M |1883 |1950 |67 |4 |1 |2L0:2S1 |Treasure of the Sierra Madre, The |1936 |1948
+Timothy Hutton |M |1960 |~ |59 |1 |1 |S |Ordinary People |1980 |1980
+Martha Hyer |F |1924 |2014 |89 |1 |0 |S |Some Came Running |1958 |1958
+John Ireland |M |1914 |1992 |78 |1 |0 |S |All the King's Men |1949 |1949
+Jeremy Irons |M |1948 |~ |70 |1 |1 |L |Reversal of Fortune |1990 |1990
+Amy Irving |F |1953 |~ |65 |1 |0 |S |Yentl |1983 |1983
+Burl Ives |M |1909 |1995 |85 |1 |1 |S |Big Country, The |1958 |1958
+Hugh Jackman |M |1968 |~ |50 |1 |0 |L |Les Misérables |2012 |2012
+Glenda Jackson |F |1936 |~ |83 |4 |2 |L |Women in Love [w 21] |1970 |1975
+Samuel L. Jackson |M |1948 |~ |70 |1 |0 |S |Pulp Fiction |1994 |1994
+Richard Jaeckel |M |1926 |1997 |70 |1 |0 |S |Sometimes a Great Notion |1971 |1971
+Sam Jaffe |M |1891 |1984 |93 |1 |0 |S |Asphalt Jungle, The |1950 |1950
+Dean Jagger |M |1903 |1991 |87 |1 |1 |S |Twelve O'Clock High |1949 |1949
+Allison Janney |F |1959 |~ |59 |1 |1 |S |I, Tonya |2017 |2017
+Emil Jannings |M |1884 |1950 |65 |1 |1 |L |Way of All Flesh, The |1927 |1927
+Marianne Jean-Baptiste |F |1967 |~ |52 |1 |0 |S |Secrets & Lies |1996 |1996
+Richard Jenkins |M |1947 |~ |72 |2 |0 |1L:1S |Visitor, The |2008 |2017
+Glynis Johns |F |1923 |~ |95 |1 |0 |S |Sundowners, The |1960 |1960
+Ben Johnson |M |1918 |1996 |77 |1 |1 |S |Last Picture Show, The |1971 |1971
+Celia Johnson |F |1908 |1982 |73 |1 |0 |L |Brief Encounter |1946 |1946
+Angelina Jolie |F |1975 |~ |44 |2 |1 |1L0:1S1 |Girl, Interrupted |1999 |2008
+Carolyn Jones |F |1930 |1983 |53 |1 |0 |S |Bachelor Party, The |1957 |1957
+Felicity Jones |F |1983 |~ |35 |1 |0 |L |Theory of Everything, The |2014 |2014
+James Earl Jones |M |1931 |~ |88 |1 |0 |L |Great White Hope, The |1970 |1970
+Jennifer Jones |F |1919 |2009 |90 |5 |1 |4L1:1S0 |Song of Bernadette, The |1943 |1955
+Shirley Jones |F |1934 |~ |85 |1 |1 |S |Elmer Gantry |1960 |1960
+Tommy Lee Jones |M |1946 |~ |72 |4 |1 |1L0:3S1 |Fugitive, The (1993) |1991 |2012
+Katy Jurado |F |1924 |2002 |78 |1 |0 |S |Broken Lance |1954 |1954
+Madeline Kahn |F |1942 |1999 |57 |2 |0 |S |Paper Moon |1973 |1974
+Daniel Kaluuya |M |1989 |~ |30 |1 |0 |L |Get Out |2017 |2017
+Ida Kamińska |F |1899 |1980 |80 |1 |0 |L |Shop on Main Street, The |1966 |1966
+Carol Kane |F |1952 |~ |67 |1 |0 |L |Hester Street |1975 |1975
+Diane Keaton |F |1946 |~ |73 |4 |1 |L |Annie Hall |1977 |2003
+Michael Keaton |M |1951 |~ |68 |1 |0 |L |Birdman |2014 |2014
+Lila Kedrova |F |1918 |2000 |81 |1 |1 |S |Zorba the Greek |1964 |1964
+Catherine Keener |F |1959 |~ |60 |2 |0 |S |Being John Malkovich |1999 |2005
+Harvey Keitel |M |1939 |~ |80 |1 |0 |S |Bugsy |1991 |1991
+Cecil Kellaway |M |1890 |1973 |82 |2 |0 |S |Luck of the Irish, The |1948 |1967
+Sally Kellerman |F |1937 |~ |82 |1 |0 |S |MASH |1970 |1970
+Gene Kelly |M |1912 |1996 |83 |1 |0 |L |Anchors Aweigh |1945 |1945
+Grace Kelly |F |1929 |1982 |52 |2 |1 |1L1:1S0 |Country Girl, The |1953 |1954
+Nancy Kelly |F |1921 |1995 |73 |1 |0 |L |Bad Seed, The |1956 |1956
+Anna Kendrick |F |1985 |~ |34 |1 |0 |S |Up in the Air |2009 |2009
+Arthur Kennedy |M |1914 |1990 |75 |5 |0 |1L:4S |Bright Victory (1951) |1949 |1958
+George Kennedy |M |1925 |2016 |91 |1 |1 |S |Cool Hand Luke |1967 |1967
+Deborah Kerr |F |1921 |2007 |86 |6 |0 |L |Edward, My Son |1949 |1960
+Nicole Kidman |F |1967 |~ |52 |4 |1 |3L1:1S0 |Hours, The (2002) |2001 |2016
+Rinko Kikuchi |F |1981 |~ |38 |1 |0 |S |Babel |2006 |2006
+Regina King |F |1971 |~ |48 |1 |1 |S |If Beale Street Could Talk |2018 |2018
+Ben Kingsley |M |1943 |~ |75 |4 |1 |2L1:2S0 |Gandhi |1982 |2003
+Greg Kinnear |M |1963 |~ |56 |1 |0 |S |As Good as It Gets |1997 |1997
+Sally Kirkland |F |1941 |~ |77 |1 |0 |L |Anna |1987 |1987
+Kevin Kline |M |1947 |~ |71 |1 |1 |S |Fish Called Wanda, A |1988 |1988
+Shirley Knight |F |1936 |~ |83 |2 |0 |S |Dark at the Top of the Stairs, The |1960 |1962
+Keira Knightley |F |1985 |~ |34 |2 |0 |1L:1S |Pride & Prejudice |2005 |2014
+Alexander Knox |M |1907 |1995 |88 |1 |0 |L |Wilson |1944 |1944
+Susan Kohner |F |1936 |~ |82 |1 |0 |S |Imitation of Life |1959 |1959
+Miliza Korjus |F |1909 |1980 |71 |1 |0 |S |Great Waltz, The |1938 |1938
+Jack Kruschen |M |1922 |2002 |80 |1 |0 |S |Apartment, The |1960 |1960
+Diane Ladd |F |1935 |~ |83 |3 |0 |S |Alice Doesn't Live Here Anymore |1974 |1991
+Jocelyne LaGarde |F |1924 |1979 |55 |1 |0 |S |Hawaii |1966 |1966
+Christine Lahti |F |1950 |~ |69 |1 |0 |S |Swing Shift |1984 |1984
+Burt Lancaster |M |1913 |1994 |80 |4 |1 |L |Elmer Gantry (1960) |1953 |1981
+Elsa Lanchester |F |1902 |1986 |84 |2 |0 |S |Come to the Stable |1949 |1957
+Martin Landau |M |1928 |2017 |89 |3 |1 |S |Ed Wood |1988 |1994
+Diane Lane |F |1965 |~ |54 |1 |0 |L |Unfaithful |2002 |2002
+Hope Lange |F |1933 |2003 |70 |1 |0 |S |Peyton Place |1957 |1957
+Jessica Lange |F |1949 |~ |70 |6 |2 |5L1:1S1 |Blue Sky [n 6] |1982 |1994
+Frank Langella |M |1938 |~ |81 |1 |0 |L |Frost/Nixon |2008 |2008
+Angela Lansbury |F |1925 |~ |93 |3 |0 |S |Gaslight |1944 |1962
+Brie Larson |F |1989 |~ |29 |1 |1 |L |Room |2015 |2015
+Queen Latifah |F |1970 |~ |49 |1 |0 |S |Chicago |2002 |2002
+Charles Laughton |M |1899 |1962 |63 |3 |1 |L |Private Life of Henry VIII, The |1933 |1957
+Piper Laurie |F |1932 |~ |87 |3 |0 |1L:2S |Hustler, The |1961 |1986
+Jude Law |M |1972 |~ |46 |2 |0 |1L:1S |Cold Mountain |1999 |2003
+Jennifer Lawrence |F |1990 |~ |29 |4 |1 |3L1:1S0 |Silver Linings Playbook (2012) |2010 |2015
+Eva Le Gallienne |F |1899 |1991 |92 |1 |0 |S |Resurrection |1980 |1980
+Cloris Leachman |F |1926 |~ |93 |1 |1 |S |Last Picture Show, The |1971 |1971
+Heath Ledger |M |1979 |2008 |28 |2 |1 |1L0:1S1 |Dark Knight, The |2005 |2008
+Peggy Lee |F |1920 |2002 |81 |1 |0 |S |Pete Kelly's Blues |1955 |1955
+Andrea Leeds |F |1914 |1984 |69 |1 |0 |S |Stage Door |1937 |1937
+Janet Leigh |F |1927 |2004 |77 |1 |0 |S |Psycho |1960 |1960
+Jennifer Jason Leigh |F |1962 |~ |57 |1 |0 |S |Hateful Eight, The |2015 |2015
+Vivien Leigh |F |1913 |1967 |53 |2 |2 |L |Gone with the Wind [w 22] |1939 |1951
+Margaret Leighton |F |1922 |1976 |53 |1 |0 |S |Go-Between, The |1971 |1971
+Jack Lemmon |M |1925 |2001 |76 |8 |2 |7L1:1S1 |Save the Tiger (1973) [w 23] |1955 |1982
+Lotte Lenya |F |1898 |1981 |83 |1 |0 |S |Roman Spring of Mrs. Stone, The |1961 |1961
+Melissa Leo |F |1960 |~ |58 |2 |1 |1L0:1S1 |Fighter, The |2008 |2010
+Michael Lerner |M |1941 |~ |78 |1 |0 |S |Barton Fink |1991 |1991
+Jared Leto |M |1971 |~ |47 |1 |1 |S |Dallas Buyers Club |2013 |2013
+Juliette Lewis |F |1973 |~ |46 |1 |0 |S |Cape Fear |1991 |1991
+Laura Linney |F |1964 |~ |55 |3 |0 |2L:1S |You Can Count On Me |2000 |2007
+John Lithgow |M |1945 |~ |73 |2 |0 |S |World According to Garp, The |1982 |1983
+Sondra Locke |F |1944 |2018 |74 |1 |0 |S |Heart Is a Lonely Hunter, The |1968 |1968
+Gene Lockhart |M |1891 |1957 |65 |1 |0 |S |Algiers |1938 |1938
+Robert Loggia |M |1930 |2015 |85 |1 |0 |S |Jagged Edge |1985 |1985
+Carole Lombard |F |1908 |1942 |33 |1 |0 |L |My Man Godfrey |1936 |1936
+Sophia Loren |F |1934 |~ |84 |2 |1 |L |Two Women |1961 |1964
+Joan Lorring |F |1926 |2014 |88 |1 |0 |S |Corn Is Green, The |1945 |1945
+Bessie Love |F |1898 |1986 |87 |1 |0 |L |Broadway Melody, The |1929 |1929
+Paul Lukas |M |1891 |1971 |80 |1 |1 |L |Watch on the Rhine |1943 |1943
+Alfred Lunt |M |1892 |1977 |84 |1 |0 |L |Guardsman, The |1931 |1931
+Ali MacGraw |F |1939 |~ |80 |1 |0 |L |Love Story |1970 |1970
+Shirley MacLaine |F |1934 |~ |85 |5 |1 |L |Terms of Endearment |1958 |1983
+Aline MacMahon |F |1899 |1991 |92 |1 |0 |S |Dragon Seed |1944 |1944
+William H. Macy |M |1950 |~ |69 |1 |0 |S |Fargo |1996 |1996
+Amy Madigan |F |1950 |~ |68 |1 |0 |S |Twice in a Lifetime |1985 |1985
+Virginia Madsen |F |1961 |~ |57 |1 |0 |S |Sideways |2004 |2004
+Anna Magnani |F |1908 |1973 |65 |2 |1 |L |Rose Tattoo, The |1955 |1957
+Marjorie Main |F |1890 |1975 |85 |1 |0 |S |Egg and I, The |1947 |1947
+Mako |M |1933 |2006 |72 |1 |0 |S |Sand Pebbles, The |1966 |1966
+Karl Malden |M |1912 |2009 |97 |2 |1 |S |Streetcar Named Desire, A |1951 |1954
+Rami Malek |M |1981 |~ |38 |1 |1 |L |Bohemian Rhapsody |2018 |2018
+John Malkovich |M |1953 |~ |65 |2 |0 |S |Places in the Heart |1984 |1993
+Dorothy Malone |F |1924 |2018 |93 |1 |1 |S |Written on the Wind |1956 |1956
+Joe Mantell |M |1915 |2010 |94 |1 |0 |S |Marty |1955 |1955
+Lesley Manville |F |1956 |~ |63 |1 |0 |S |Phantom Thread |2017 |2017
+Rooney Mara |F |1985 |~ |34 |2 |0 |1L:1S |Girl with the Dragon Tattoo, The |2011 |2015
+Fredric March |M |1897 |1975 |77 |5 |2 |L |Dr. Jekyll and Mr. Hyde (1931) [w 24] |1930 |1951
+Colette Marchand |F |1925 |2015 |90 |1 |0 |S |Moulin Rouge |1952 |1952
+John Marley |M |1907 |1984 |76 |1 |0 |S |Love Story |1970 |1970
+Lee Marvin |M |1924 |1987 |63 |1 |1 |L |Cat Ballou |1965 |1965
+James Mason |M |1909 |1984 |75 |3 |0 |1L:2S |Star Is Born, A |1954 |1982
+Marsha Mason |F |1942 |~ |77 |4 |0 |L |Cinderella Liberty |1973 |1981
+Daniel Massey |M |1933 |1998 |64 |1 |0 |S |Star! |1968 |1968
+Raymond Massey |M |1896 |1983 |86 |1 |0 |L |Abe Lincoln in Illinois |1940 |1940
+Mary E. Mastrantonio |F |1958 |~ |60 |1 |0 |S |Color of Money, The |1986 |1986
+Marcello Mastroianni |M |1924 |1996 |72 |3 |0 |L |Divorce Italian Style |1962 |1987
+Marlee Matlin |F |1965 |~ |53 |1 |1 |L |Children of a Lesser God |1986 |1986
+Walter Matthau |M |1920 |2000 |79 |3 |1 |2L0:1S1 |Fortune Cookie, The |1966 |1975
+Rachel McAdams |F |1978 |~ |40 |1 |0 |S |Spotlight |2015 |2015
+Mercedes McCambridge |F |1916 |2004 |87 |2 |1 |S |All the King's Men |1949 |1956
+Kevin McCarthy |M |1914 |2010 |96 |1 |0 |S |Death of a Salesman |1951 |1951
+Melissa McCarthy |F |1970 |~ |48 |2 |0 |1L:1S |Can You Ever Forgive Me? |2011 |2018
+Matthew McConaughey |M |1969 |~ |49 |1 |1 |L |Dallas Buyers Club |2013 |2013
+Patty McCormack |F |1945 |~ |73 |1 |0 |S |Bad Seed, The |1956 |1956
+Hattie McDaniel |F |1895 |1952 |57 |1 |1 |S |Gone with the Wind |1939 |1939
+Mary McDonnell |F |1952 |~ |67 |2 |0 |1L:1S |Passion Fish |1990 |1992
+Frances McDormand |F |1957 |~ |62 |5 |2 |2L2:3S0 |Fargo (1996) [w 25] |1988 |2017
+Elizabeth McGovern |F |1961 |~ |58 |1 |0 |S |Ragtime |1981 |1981
+Dorothy McGuire |F |1916 |2001 |85 |1 |0 |L |Gentleman's Agreement |1947 |1947
+Ian McKellen |M |1939 |~ |80 |2 |0 |1L:1S |Gods and Monsters |1998 |2001
+Victor McLaglen |M |1886 |1959 |72 |2 |1 |1L1:1S0 |Informer, The |1935 |1952
+Maggie McNamara |F |1928 |1978 |49 |1 |0 |L |Moon Is Blue, The |1953 |1953
+Steve McQueen |M |1930 |1980 |50 |1 |0 |L |Sand Pebbles, The |1966 |1966
+Janet McTeer |F |1961 |~ |58 |2 |0 |1L:1S |Tumbleweeds |1999 |2011
+Kay Medford |F |1919 |1980 |60 |1 |0 |S |Funny Girl |1968 |1968
+Adolphe Menjou |M |1890 |1963 |73 |1 |0 |L |Front Page, The |1931 |1931
+Vivien Merchant |F |1929 |1982 |53 |1 |0 |S |Alfie |1966 |1966
+Melina Mercouri |F |1920 |1994 |73 |1 |0 |L |Never on Sunday |1960 |1960
+Burgess Meredith |M |1907 |1997 |89 |2 |0 |S |Day of the Locust, The |1975 |1976
+Una Merkel |F |1903 |1986 |82 |1 |0 |S |Summer and Smoke |1961 |1961
+Laurie Metcalf |F |1955 |~ |64 |1 |0 |S |Lady Bird |2017 |2017
+Bette Midler |F |1945 |~ |73 |2 |0 |L |Rose, The |1979 |1991
+Sarah Miles |F |1941 |~ |77 |1 |0 |L |Ryan's Daughter |1970 |1970
+Sylvia Miles |F |1924 |2019 |94 |2 |0 |S |Midnight Cowboy |1969 |1975
+Penelope Milford |F |1948 |~ |71 |1 |0 |S |Coming Home |1978 |1978
+Ray Milland |M |1907 |1986 |79 |1 |1 |L |Lost Weekend, The |1945 |1945
+Jason Miller |M |1939 |2001 |62 |1 |0 |S |Exorcist, The |1973 |1973
+John Mills |M |1908 |2005 |97 |1 |1 |S |Ryan's Daughter |1970 |1970
+Sal Mineo |M |1939 |1976 |37 |2 |0 |S |Rebel Without a Cause |1955 |1960
+Liza Minnelli |F |1946 |~ |73 |2 |1 |L |Cabaret |1969 |1972
+Helen Mirren |F |1945 |~ |74 |4 |1 |2L1:2S0 |Queen, The (2006) |1994 |2009
+Thomas Mitchell |M |1892 |1962 |70 |2 |1 |S |Stagecoach |1937 |1939
+Robert Mitchum |M |1917 |1997 |79 |1 |0 |S |Story of G.I. Joe, The |1945 |1945
+Mo'Nique |F |1967 |~ |51 |1 |1 |S |Precious |2009 |2009
+Fernanda Montenegro |F |1929 |~ |89 |1 |0 |L |Central Station |1998 |1998
+Robert Montgomery |M |1904 |1981 |77 |2 |0 |L |Night Must Fall |1937 |1941
+Ron Moody |M |1924 |2015 |91 |1 |0 |L |Oliver! |1968 |1968
+Dudley Moore |M |1935 |2002 |66 |1 |0 |L |Arthur |1981 |1981
+Grace Moore |F |1898 |1947 |48 |1 |0 |L |One Night of Love |1934 |1934
+Juanita Moore |F |1914 |2014 |99 |1 |0 |S |Imitation of Life |1959 |1959
+Julianne Moore |F |1960 |~ |58 |5 |1 |3L1:2S0 |Still Alice [n 7] |1997 |2014
+Mary Tyler Moore |F |1936 |2017 |80 |1 |0 |L |Ordinary People |1980 |1980
+Terry Moore |F |1929 |~ |90 |1 |0 |S |Come Back, Little Sheba |1952 |1952
+Agnes Moorehead |F |1900 |1974 |73 |4 |0 |S |Magnificent Ambersons, The |1942 |1964
+Rita Moreno |F |1931 |~ |87 |1 |1 |S |West Side Story |1961 |1961
+Frank Morgan |M |1890 |1949 |59 |2 |0 |1L:1S |Affairs of Cellini, The |1934 |1942
+Cathy Moriarty |F |1960 |~ |58 |1 |0 |S |Raging Bull |1980 |1980
+Pat Morita |M |1932 |2005 |73 |1 |0 |S |Karate Kid, The |1984 |1984
+Robert Morley |M |1908 |1992 |84 |1 |0 |S |Marie Antoinette |1938 |1938
+Chester Morris |M |1901 |1970 |69 |1 |0 |L |Alibi |1929 |1929
+Viggo Mortensen |M |1958 |~ |60 |3 |0 |L |Eastern Promises |2007 |2018
+Samantha Morton |F |1977 |~ |42 |2 |0 |1L:1S |In America |1999 |2003
+Armin Mueller-Stahl |M |1930 |~ |88 |1 |0 |S |Shine |1996 |1996
+Carey Mulligan |F |1985 |~ |34 |1 |0 |L |Education, An |2009 |2009
+Paul Muni |M |1895 |1967 |71 |6 [a 2] |1 |L |Story of Louis Pasteur, The (1936) |1929 |1959
+Eddie Murphy |M |1961 |~ |58 |1 |0 |S |Dreamgirls |2006 |2006
+Bill Murray |M |1950 |~ |68 |1 |0 |L |Lost in Translation |2003 |2003
+Don Murray |M |1929 |~ |90 |1 |0 |S |Bus Stop |1956 |1956
+J. Carrol Naish |M |1896 |1973 |77 |2 |0 |S |Sahara |1943 |1945
+Mildred Natwick |F |1905 |1994 |89 |1 |0 |S |Barefoot in the Park |1967 |1967
+Patricia Neal |F |1926 |2010 |84 |2 |1 |L |Hud |1963 |1968
+Liam Neeson |M |1952 |~ |67 |1 |0 |L |Schindler's List |1993 |1993
+Ruth Negga |F |1982 |~ |37 |1 |0 |L |Loving |2016 |2016
+Kate Nelligan |F |1950 |~ |69 |1 |0 |S |Prince of Tides, The |1991 |1991
+Paul Newman |M |1925 |2008 |83 |9 |1 |8L1:1S0 |Color of Money, The (1986) |1958 |2002
+Haing S. Ngor |M |1940 |1996 |55 |1 |1 |S |Killing Fields, The |1984 |1984
+Jack Nicholson |M |1937 |~ |82 |12 |3 |8L2:4S1 |One Flew Over the Cuckoo's Nest (1975) [w 26] |1969 |2002
+David Niven |M |1910 |1983 |73 |1 |1 |L |Separate Tables |1958 |1958
+Nick Nolte |M |1941 |~ |78 |3 |0 |2L:1S |Prince of Tides, The |1991 |2011
+Edward Norton |M |1969 |~ |50 |3 |0 |1L:2S |American History X (1998) |1996 |2014
+Lupita Nyong'o |F |1983 |~ |36 |1 |1 |S |12 Years a Slave |2013 |2013
+Edmond O'Brien |M |1915 |1985 |69 |2 |1 |S |Barefoot Contessa, The |1954 |1964
+Arthur O'Connell |M |1908 |1981 |73 |2 |0 |S |Picnic |1955 |1959
+Dan O'Herlihy |M |1919 |2005 |85 |1 |0 |L |Robinson Crusoe |1954 |1954
+Michael O'Keefe |M |1955 |~ |64 |1 |0 |S |Great Santini, The |1980 |1980
+Ryan O'Neal |M |1941 |~ |78 |1 |0 |L |Love Story |1970 |1970
+Tatum O'Neal |F |1963 |~ |55 |1 |1 |S |Paper Moon |1973 |1973
+Barbara O'Neil |F |1910 |1980 |70 |1 |0 |S |All This, and Heaven Too |1940 |1940
+Peter O'Toole |M |1932 |2013 |81 |8 |0 |L |Lawrence of Arabia |1962 |2006
+Jack Oakie |M |1903 |1978 |74 |1 |0 |S |Great Dictator, The |1940 |1940
+Merle Oberon |F |1911 |1979 |68 |1 |0 |L |Dark Angel, The |1935 |1935
+Sophie Okonedo |F |1968 |~ |51 |1 |0 |S |Hotel Rwanda |2004 |2004
+Gary Oldman |M |1958 |~ |61 |2 |1 |L |Darkest Hour |2011 |2017
+Lena Olin |F |1955 |~ |64 |1 |0 |S |Enemies, A Love Story |1989 |1989
+Edna May Oliver |F |1883 |1942 |59 |1 |0 |S |Drums Along the Mohawk |1939 |1939
+Laurence Olivier |M |1907 |1989 |82 |10 |1 |9L1:1S0 |Hamlet (1948) |1939 |1978
+Edward James Olmos |M |1947 |~ |72 |1 |0 |L |Stand and Deliver |1988 |1988
+Nancy Olson |F |1928 |~ |91 |1 |0 |S |Sunset Boulevard |1950 |1950
+Haley Joel Osment |M |1988 |~ |31 |1 |0 |S |Sixth Sense, The |1999 |1999
+Maria Ouspenskaya |F |1876 |1949 |73 |2 |0 |S |Dodsworth |1936 |1939
+Clive Owen |M |1964 |~ |54 |1 |0 |S |Closer |2004 |2004
+Al Pacino |M |1940 |~ |79 |8 |1 |5L1:3S0 |Scent of a Woman [n 8] |1972 |1992
+Ellen Page |F |1987 |~ |32 |1 |0 |L |Juno |2007 |2007
+Geraldine Page |F |1924 |1987 |62 |8 |1 |4L1:4S0 |Trip to Bountiful, The |1953 |1985
+Jack Palance |M |1919 |2006 |87 |3 |1 |S |City Slickers |1952 |1991
+Chazz Palminteri |M |1952 |~ |67 |1 |0 |S |Bullets over Broadway |1994 |1994
+Gwyneth Paltrow |F |1972 |~ |46 |1 |1 |L |Shakespeare in Love |1998 |1998
+Anna Paquin |F |1982 |~ |37 |1 |1 |S |Piano, The |1993 |1993
+Eleanor Parker |F |1922 |2013 |91 |3 |0 |L |Caged |1950 |1955
+Larry Parks |M |1914 |1975 |60 |1 |0 |L |Jolson Story, The |1946 |1946
+Estelle Parsons |F |1927 |~ |91 |2 |1 |S |Bonnie and Clyde |1967 |1968
+Dev Patel |M |1990 |~ |29 |1 |0 |S |Lion |2016 |2016
+Marisa Pavan |F |1932 |~ |87 |1 |0 |S |Rose Tattoo, The |1955 |1955
+Katina Paxinou |F |1900 |1973 |72 |1 |1 |S |For Whom the Bell Tolls |1943 |1943
+David Paymer |M |1954 |~ |64 |1 |0 |S |Mr. Saturday Night |1992 |1992
+Gregory Peck |M |1916 |2003 |87 |5 |1 |L |To Kill a Mockingbird |1945 |1962
+Sean Penn |M |1960 |~ |59 |5 |2 |L |Mystic River (2003) [w 27] |1995 |2008
+Rosie Perez |F |1964 |~ |54 |1 |0 |S |Fearless |1993 |1993
+Anthony Perkins |M |1932 |1992 |60 |1 |0 |S |Friendly Persuasion |1956 |1956
+Valerie Perrine |F |1943 |~ |75 |1 |0 |L |Lenny |1974 |1974
+Joe Pesci |M |1943 |~ |76 |2 |1 |S |Goodfellas |1980 |1990
+Susan Peters |F |1921 |1952 |31 |1 |0 |S |Random Harvest |1942 |1942
+Michelle Pfeiffer |F |1958 |~ |61 |3 |0 |2L:1S |Fabulous Baker Boys, The (1989) |1988 |1992
+Joaquin Phoenix |M |1974 |~ |44 |3 |0 |2L:1S |Walk the Line (2005) |2000 |2012
+River Phoenix |M |1970 |1993 |23 |1 |0 |S |Running on Empty |1988 |1988
+Mary Pickford |F |1892 |1979 |87 |1 |1 |L |Coquette |1929 |1929
+Walter Pidgeon |M |1897 |1984 |87 |2 |0 |L |Mrs. Miniver |1942 |1943
+Rosamund Pike |F |1979 |~ |40 |1 |0 |L |Gone Girl |2014 |2014
+Brad Pitt |M |1963 |~ |55 |3 |0 |2L:1S |Curious Case of Benjamin Button, The (2008) |1995 |2011
+Joan Plowright |F |1929 |~ |89 |1 |0 |S |Enchanted April |1992 |1992
+Christopher Plummer |M |1929 |~ |89 |3 |1 |S |Beginners (2011) |2009 |2017
+Sidney Poitier |M |1927 |~ |92 |2 |1 |L |Lilies of the Field |1958 |1963
+Michael J. Pollard |M |1939 |~ |80 |1 |0 |S |Bonnie and Clyde |1967 |1967
+Natalie Portman |F |1981 |~ |38 |3 |1 |2L1:1S0 |Black Swan (2010) |2004 |2016
+Pete Postlethwaite |M |1946 |2011 |64 |1 |0 |S |In the Name of the Father |1993 |1993
+William Powell |M |1892 |1984 |91 |3 |0 |L |Thin Man, The |1934 |1947
+Robert Preston |M |1918 |1987 |68 |1 |0 |S |Victor/Victoria |1982 |1982
+Randy Quaid |M |1950 |~ |68 |1 |0 |S |Last Detail, The |1973 |1973
+Anthony Quayle |M |1913 |1989 |76 |1 |0 |S |Anne of the Thousand Days |1969 |1969
+Kathleen Quinlan |F |1954 |~ |64 |1 |0 |S |Apollo 13 |1995 |1995
+Anthony Quinn |M |1915 |2001 |86 |4 |2 |2L0:2S2 |Viva Zapata! [w 28] |1952 |1964
+Luise Rainer |F |1910 |2014 |104 |2 |2 |L |Great Ziegfeld, The [w 29] |1936 |1937
+Claude Rains |M |1889 |1967 |77 |4 |0 |S |Mr. Smith Goes to Washington |1939 |1946
+Marjorie Rambeau |F |1889 |1970 |80 |2 |0 |S |Primrose Path |1940 |1953
+Charlotte Rampling |F |1946 |~ |73 |1 |0 |L |45 Years |2015 |2015
+Anne Ramsey |F |1929 |1988 |59 |1 |0 |S |Throw Momma from the Train |1987 |1987
+Basil Rathbone |M |1892 |1967 |75 |2 |0 |S |Romeo and Juliet |1936 |1938
+Stephen Rea |M |1946 |~ |72 |1 |0 |L |Crying Game, The |1992 |1992
+Robert Redford |M |1936 |~ |83 |1 |0 |L |Sting, The |1973 |1973
+Lynn Redgrave |F |1943 |2010 |67 |2 |0 |1L:1S |Georgy Girl |1966 |1998
+Michael Redgrave |M |1908 |1985 |77 |1 |0 |L |Mourning Becomes Electra |1947 |1947
+Vanessa Redgrave |F |1937 |~ |82 |6 |1 |4L0:2S1 |Julia (1977) |1966 |1992
+Joyce Redman |F |1915 |2012 |96 |2 |0 |S |Tom Jones |1963 |1965
+Eddie Redmayne |M |1982 |~ |37 |2 |1 |L |Theory of Everything, The |2014 |2015
+Donna Reed |F |1921 |1986 |64 |1 |1 |S |From Here to Eternity |1953 |1953
+John C. Reilly |M |1965 |~ |54 |1 |0 |S |Chicago |2002 |2002
+Lee Remick |F |1935 |1991 |55 |1 |0 |L |Days of Wine and Roses |1962 |1962
+Jeremy Renner |M |1971 |~ |48 |2 |0 |1L:1S |Hurt Locker, The |2009 |2010
+Anne Revere |F |1903 |1990 |87 |3 |1 |S |National Velvet (1945) |1943 |1947
+Burt Reynolds |M |1936 |2018 |82 |1 |0 |S |Boogie Nights |1997 |1997
+Debbie Reynolds |F |1932 |2016 |84 |1 |0 |L |Unsinkable Molly Brown, The |1964 |1964
+Beah Richards |F |1920 |2000 |80 |1 |0 |S |Guess Who's Coming to Dinner |1967 |1967
+Miranda Richardson |F |1958 |~ |61 |2 |0 |1L:1S |Tom & Viv |1992 |1994
+Ralph Richardson |M |1902 |1983 |80 |2 |0 |S |Heiress, The |1949 |1984
+Thelma Ritter |F |1902 |1969 |66 |6 |0 |S |All About Eve |1950 |1962
+Emmanuelle Riva |F |1927 |2017 |89 |1 |0 |L |Amour |2012 |2012
+Jason Robards |M |1922 |2000 |78 |3 |2 |S |All the President's Men [w 30] |1976 |1980
+Margot Robbie |F |1990 |~ |29 |1 |0 |L |I, Tonya |2017 |2017
+Tim Robbins |M |1958 |~ |60 |1 |1 |S |Mystic River |2003 |2003
+Eric Roberts |M |1956 |~ |63 |1 |0 |S |Runaway Train |1985 |1985
+Julia Roberts |F |1967 |~ |51 |4 |1 |2L1:2S0 |Erin Brockovich (2000) |1989 |2013
+Rachel Roberts |F |1927 |1980 |53 |1 |0 |L |This Sporting Life |1963 |1963
+Cliff Robertson |M |1923 |2011 |88 |1 |1 |L |Charly |1968 |1968
+Flora Robson |F |1902 |1984 |82 |1 |0 |S |Saratoga Trunk |1946 |1946
+May Robson |F |1858 |1942 |84 |1 |0 |L |Lady for a Day |1933 |1933
+Sam Rockwell |M |1968 |~ |50 |2 |1 |S |Three Billboards Outside Ebbing, Missouri |2017 |2018
+Ginger Rogers |F |1911 |1995 |83 |1 |1 |L |Kitty Foyle |1940 |1940
+Howard Rollins |M |1950 |1996 |46 |1 |0 |S |Ragtime |1981 |1981
+Saoirse Ronan |F |1994 |~ |25 |3 |0 |2L:1S |Brooklyn (2015) |2007 |2017
+Mickey Rooney |M |1920 |2014 |93 |4 |0 |2L:2S |Babes in Arms |1939 |1979
+Diana Ross |F |1944 |~ |75 |1 |0 |L |Lady Sings the Blues |1972 |1972
+Katharine Ross |F |1940 * |~ |79 |1 |0 |S |Graduate, The |1967 |1967
+Tim Roth |M |1961 |~ |58 |1 |0 |S |Rob Roy |1995 |1995
+Mickey Rourke |M |1952 |~ |66 |1 |0 |L |Wrestler, The |2008 |2008
+Gena Rowlands |F |1930 |~ |89 |2 |0 |L |Woman Under the Influence, A |1974 |1980
+Mercedes Ruehl |F |1948 |~ |71 |1 |1 |S |Fisher King, The |1991 |1991
+Mark Ruffalo |M |1967 |~ |51 |3 |0 |S |Kids Are All Right, The |2010 |2015
+Geoffrey Rush |M |1951 |~ |68 |4 |1 |2L1:2S0 |Shine |1996 |2010
+Harold Russell |M |1914 |2002 |88 |1 |1 |S |Best Years of Our Lives, The |1946 |1946
+Rosalind Russell |F |1907 |1976 |69 |4 |0 |L |My Sister Eileen |1942 |1958
+Margaret Rutherford |F |1892 |1972 |80 |1 |1 |S |V.I.P.s, The |1963 |1963
+Amy Ryan |F |1969 |~ |49 |1 |0 |S |Gone Baby Gone |2007 |2007
+Robert Ryan |M |1909 |1973 |63 |1 |0 |S |Crossfire |1947 |1947
+Winona Ryder |F |1971 |~ |47 |2 |0 |1L:1S |Little Women |1993 |1994
+Mark Rylance |M |1960 |~ |59 |1 |1 |S |Bridge of Spies |2015 |2015
+Eva Marie Saint |F |1924 |~ |95 |1 |1 |S |On the Waterfront |1954 |1954
+George Sanders |M |1906 |1972 |65 |1 |1 |S |All About Eve |1950 |1950
+Catalina Sandino Moreno |F |1981 |~ |38 |1 |0 |L |Maria Full of Grace |2004 |2004
+Chris Sarandon |M |1942 |~ |77 |1 |0 |S |Dog Day Afternoon |1975 |1975
+Susan Sarandon |F |1946 |~ |72 |5 |1 |L |Dead Man Walking |1981 |1995
+Telly Savalas |M |1922 |1994 |72 |1 |0 |S |Birdman of Alcatraz |1962 |1962
+Diana Scarwid |F |1955 |~ |63 |1 |0 |S |Inside Moves |1980 |1980
+Roy Scheider |M |1932 |2008 |75 |2 |0 |1L:1S |All That Jazz |1971 |1979
+Maximilian Schell |M |1930 |2014 |83 |3 |1 |2L1:1S0 |Judgment at Nuremberg |1961 |1977
+Joseph Schildkraut |M |1896 |1964 |67 |1 |1 |S |Life of Emile Zola, The |1937 |1937
+Paul Scofield |M |1922 |2008 |86 |2 |1 |1L1:1S0 |Man for All Seasons, A |1966 |1994
+George C. Scott § |M |1927 |1999 |71 |4 |1 [a 3] |2L1:2S0 |Patton (1970) |1959 |1971
+Martha Scott |F |1912 |2003 |90 |1 |0 |L |Our Town |1940 |1940
+Kristin Scott Thomas |F |1960 |~ |59 |1 |0 |L |English Patient, The |1996 |1996
+George Segal |M |1934 |~ |85 |1 |0 |S |Who's Afraid of Virginia Woolf? |1966 |1966
+Peter Sellers |M |1925 |1980 |54 |2 |0 |L |Dr. Strangelove |1964 |1979
+Chloë Sevigny |F |1974 |~ |44 |1 |0 |S |Boys Don't Cry |1999 |1999
+Michael Shannon |M |1974 |~ |45 |2 |0 |S |Revolutionary Road |2008 |2016
+Omar Sharif |M |1932 |2015 |83 |1 |0 |S |Lawrence of Arabia |1962 |1962
+Robert Shaw |M |1927 |1978 |51 |1 |0 |S |Man for All Seasons, A |1966 |1966
+Norma Shearer |F |1902 |1983 |80 |5 |1 |L |Divorcee, The |1930 |1938
+Sam Shepard |M |1943 |2017 |73 |1 |0 |S |Right Stuff, The |1983 |1983
+Talia Shire |F |1946 |~ |73 |2 |0 |1L:1S |Rocky |1974 |1976
+Anne Shirley |F |1918 |1993 |75 |1 |0 |S |Stella Dallas |1937 |1937
+Elisabeth Shue |F |1963 |~ |55 |1 |0 |L |Leaving Las Vegas |1995 |1995
+Gabourey Sidibe |F |1983 |~ |36 |1 |0 |L |Precious |2009 |2009
+Sylvia Sidney |F |1910 |1999 |88 |1 |0 |S |Summer Wishes, Winter Dreams |1973 |1973
+Simone Signoret |F |1921 |1985 |64 |2 |1 |L |Room at the Top |1959 |1965
+J. K. Simmons |M |1955 |~ |64 |1 |1 |S |Whiplash |2014 |2014
+Jean Simmons |F |1929 |2010 |80 |2 |0 |1L:1S |Happy Ending, The |1948 |1969
+Frank Sinatra |M |1915 |1998 |82 |2 |1 |1L0:1S1 |From Here to Eternity |1953 |1955
+Gary Sinise |M |1955 |~ |64 |1 |0 |S |Forrest Gump |1994 |1994
+Lilia Skala |F |1896 |1994 |98 |1 |0 |S |Lilies of the Field |1963 |1963
+Maggie Smith |F |1934 |~ |84 |6 |2 |2L1:4S1 |Prime of Miss Jean Brodie, The (1969) [w 31] |1965 |2001
+Will Smith |M |1968 |~ |50 |2 |0 |L |Ali |2001 |2006
+Carrie Snodgress |F |1945 |2004 |58 |1 |0 |L |Diary of a Mad Housewife |1970 |1970
+Gale Sondergaard |F |1899 |1985 |86 |2 |1 |S |Anthony Adverse |1936 |1946
+Mira Sorvino |F |1967 |~ |51 |1 |1 |S |Mighty Aphrodite |1995 |1995
+Ann Sothern |F |1909 |2001 |92 |1 |0 |S |Whales of August, The |1987 |1987
+Sissy Spacek |F |1949 |~ |69 |6 |1 |L |Coal Miner's Daughter (1980) |1976 |2001
+Kevin Spacey |M |1959 |~ |60 |2 |2 |1L1:1S1 |American Beauty [w 32] |1995 |1999
+Octavia Spencer |F |1972 |~ |47 |3 |1 |S |Help, The |2011 |2017
+June Squibb |F |1929 |~ |89 |1 |0 |S |Nebraska |2013 |2013
+Robert Stack |M |1919 |2003 |84 |1 |0 |S |Written on the Wind |1956 |1956
+Sylvester Stallone |M |1946 |~ |73 |2 |0 |1L:1S |Rocky |1976 |2015
+Terence Stamp |M |1938 |~ |81 |1 |0 |S |Billy Budd |1962 |1962
+Kim Stanley |F |1925 |2001 |76 |2 |0 |1L:1S |Séance on a Wet Afternoon |1964 |1982
+Barbara Stanwyck |F |1907 |1990 |82 |4 |0 |L |Stella Dallas |1937 |1948
+Maureen Stapleton |F |1925 |2006 |80 |4 |1 |S |Reds |1958 |1981
+Imelda Staunton |F |1956 |~ |63 |1 |0 |L |Vera Drake |2004 |2004
+Mary Steenburgen |F |1953 |~ |66 |1 |1 |S |Melvin and Howard |1980 |1980
+Rod Steiger |M |1925 |2002 |77 |3 |1 |2L1:1S0 |In the Heat of the Night |1954 |1967
+Hailee Steinfeld |F |1996 |~ |22 |1 |0 |S |True Grit |2010 |2010
+James Stephenson |M |1889 |1941 |52 |1 |0 |S |Letter, The |1940 |1940
+Jan Sterling |F |1921 |2004 |82 |1 |0 |S |High and the Mighty, The |1954 |1954
+James Stewart |M |1908 |1997 |89 |5 |1 |L |Philadelphia Story, The (1940) |1939 |1959
+Dean Stockwell |M |1936 |~ |83 |1 |0 |S |Married to the Mob |1988 |1988
+Emma Stone |F |1988 |~ |30 |3 |1 |1L1:2S0 |La La Land (2016) |2014 |2018
+Lewis Stone |M |1879 |1953 |73 |1 |0 |L |Patriot, The |1928 |1928
+Sharon Stone |F |1958 |~ |61 |1 |0 |L |Casino |1995 |1995
+Beatrice Straight |F |1914 |2001 |86 |1 |1 |S |Network |1976 |1976
+Lee Strasberg |M |1901 |1982 |80 |1 |0 |S |Godfather Part II, The |1974 |1974
+David Strathairn |M |1949 |~ |70 |1 |0 |L |Good Night, and Good Luck |2005 |2005
+Robert Strauss |M |1913 |1975 |61 |1 |0 |S |Stalag 17 |1953 |1953
+Meryl Streep |F |1949 |~ |70 |21 |3 |17L2:4S1 |Sophie's Choice (1982) [w 33] |1978 |2017
+Barbra Streisand |F |1942 |~ |77 |2 |1 |L |Funny Girl |1968 |1973
+Erich von Stroheim |M |1885 |1957 |71 |1 |0 |S |Sunset Boulevard |1950 |1950
+Gloria Stuart |F |1910 |2010 |100 |1 |0 |S |Titanic |1997 |1997
+Margaret Sullavan |F |1909 |1960 |50 |1 |0 |L |Three Comrades |1938 |1938
+Janet Suzman |F |1939 |~ |80 |1 |0 |L |Nicholas and Alexandra |1971 |1971
+Hilary Swank |F |1974 |~ |45 |2 |2 |L |Boys Don't Cry [w 34] |1999 |2004
+Gloria Swanson |F |1899 |1983 |84 |3 |0 |L |Sadie Thompson |1928 |1950
+Tilda Swinton |F |1960 |~ |58 |1 |1 |S |Michael Clayton |2007 |2007
+Russ Tamblyn |M |1934 |~ |84 |1 |0 |S |Peyton Place |1957 |1957
+Akim Tamiroff |M |1899 |1972 |72 |2 |0 |S |General Died at Dawn, The |1936 |1943
+Jessica Tandy |F |1909 |1994 |85 |2 |1 |1L1:1S0 |Driving Miss Daisy |1989 |1991
+Elizabeth Taylor |F |1932 |2011 |79 |5 |2 |L |BUtterfield 8 (1960) [w 35] |1957 |1966
+Charlize Theron |F |1975 |~ |44 |2 |1 |L |Monster |2003 |2005
+Emma Thompson |F |1959 |~ |60 |4 |1 |3L1:1S0 |Howards End [n 9] |1992 |1995
+Billy Bob Thornton |M |1955 |~ |64 |2 |0 |1L:1S |Sling Blade |1996 |1998
+Uma Thurman |F |1970 |~ |49 |1 |0 |S |Pulp Fiction |1994 |1994
+Lawrence Tibbett |M |1896 |1960 |63 |1 |0 |L |Rogue Song, The |1930 |1930
+Gene Tierney |F |1920 |1991 |70 |1 |0 |L |Leave Her to Heaven |1945 |1945
+Jennifer Tilly |F |1958 |~ |60 |1 |0 |S |Bullets over Broadway |1994 |1994
+Meg Tilly |F |1960 |~ |59 |1 |0 |S |Agnes of God |1985 |1985
+Richard Todd |M |1919 |2009 |90 |1 |0 |L |Hasty Heart, The |1949 |1949
+Marisa Tomei |F |1964 |~ |54 |3 |1 |S |My Cousin Vinny |1992 |2008
+Lily Tomlin |F |1939 |~ |79 |1 |0 |S |Nashville |1975 |1975
+Franchot Tone |M |1905 |1968 |63 |1 |0 |L |Mutiny on the Bounty |1935 |1935
+Topol |M |1935 |~ |83 |1 |0 |L |Fiddler on the Roof |1971 |1971
+Rip Torn |M |1931 |2019 |88 |1 |0 |S |Cross Creek |1983 |1983
+Lee Tracy |M |1898 |1968 |70 |1 |0 |S |Best Man, The |1964 |1964
+Spencer Tracy |M |1900 |1967 |67 |9 |2 |L |Captains Courageous (1937) [w 36] |1936 |1967
+Henry Travers |M |1874 |1965 |91 |1 |0 |S |Mrs. Miniver |1942 |1942
+John Travolta |M |1954 |~ |65 |2 |0 |L |Saturday Night Fever |1977 |1994
+Claire Trevor |F |1910 |2000 |90 |3 |1 |S |Key Largo (1948) |1937 |1954
+Massimo Troisi |M |1953 |1994 |41 |1 |0 |L |Postman, The |1995 |1995
+Stanley Tucci |M |1960 |~ |58 |1 |0 |S |Lovely Bones, The |2009 |2009
+Tom Tully |M |1908 |1982 |73 |1 |0 |S |Caine Mutiny, The |1954 |1954
+Kathleen Turner |F |1954 |~ |65 |1 |0 |L |Peggy Sue Got Married |1986 |1986
+Lana Turner |F |1921 |1995 |74 |1 |0 |L |Peyton Place |1957 |1957
+Susan Tyrrell |F |1945 |2012 |67 |1 |0 |S |Fat City |1972 |1972
+Cicely Tyson |F |1924 |~ |94 |1 |0 |L |Sounder |1972 |1972
+Liv Ullmann |F |1938 |~ |80 |2 |0 |L |Emigrants, The |1972 |1976
+Miyoshi Umeki |F |1929 |2007 |78 |1 |1 |S |Sayonara |1957 |1957
+Mary Ure |F |1933 |1975 |42 |1 |0 |S |Sons and Lovers |1960 |1960
+Peter Ustinov |M |1921 |2004 |82 |3 |2 |S |Spartacus (1960) [w 37] |1951 |1964
+Brenda Vaccaro |F |1939 |~ |79 |1 |0 |S |Once Is Not Enough |1975 |1975
+Jo Van Fleet |F |1915 |1996 |80 |1 |1 |S |East of Eden |1955 |1955
+Diane Varsi |F |1938 |1992 |54 |1 |0 |S |Peyton Place |1957 |1957
+Robert Vaughn |M |1932 |2016 |83 |1 |0 |S |Young Philadelphians, The |1959 |1959
+Alicia Vikander |F |1988 |~ |30 |1 |1 |S |Danish Girl, The |2015 |2015
+Jon Voight |M |1938 |~ |80 |4 |1 |3L1:1S0 |Coming Home (1978) |1969 |2001
+Max von Sydow |M |1929 |~ |90 |2 |0 |1L:1S |Pelle the Conqueror |1988 |2011
+Mark Wahlberg |M |1971 |~ |48 |1 |0 |S |Departed, The |2006 |2006
+Christopher Walken |M |1943 |~ |76 |2 |1 |S |Deer Hunter, The |1978 |2002
+Quvenzhané Wallis |F |2003 |~ |15 |1 |0 |L |Beasts of the Southern Wild |2012 |2012
+Julie Walters |F |1950 |~ |69 |2 |0 |1L:1S |Educating Rita |1983 |2000
+Christoph Waltz |M |1956 |~ |62 |2 |2 |S |Inglourious Basterds [w 38] |2009 |2012
+Jack Warden |M |1920 |2006 |85 |2 |0 |S |Shampoo |1975 |1978
+H. B. Warner |M |1875 |1958 |83 |1 |0 |S |Lost Horizon |1937 |1937
+Lesley Ann Warren |F |1946 |~ |73 |1 |0 |S |Victor/Victoria |1982 |1982
+Denzel Washington |M |1954 |~ |64 |8 |2 |6L1:2S1 |Training Day (2001) [w 39] |1987 |2017
+Ken Watanabe |M |1959 |~ |59 |1 |0 |S |Last Samurai, The |2003 |2003
+Ethel Waters |F |1896 |1977 |80 |1 |0 |S |Pinky |1949 |1949
+Sam Waterston |M |1940 |~ |78 |1 |0 |L |Killing Fields, The |1984 |1984
+Emily Watson |F |1967 |~ |52 |2 |0 |L |Breaking the Waves |1996 |1998
+Lucile Watson |F |1879 |1962 |83 |1 |0 |S |Watch on the Rhine |1943 |1943
+Naomi Watts |F |1968 |~ |50 |2 |0 |L |21 Grams |2003 |2012
+John Wayne |M |1907 |1979 |72 |2 |1 |L |True Grit |1949 |1969
+Jacki Weaver |F |1947 |~ |72 |2 |0 |S |Animal Kingdom |2010 |2012
+Sigourney Weaver |F |1949 |~ |69 |3 |0 |2L:1S |Aliens [n 10] |1986 |1988
+Clifton Webb |M |1889 |1966 |76 |3 |0 |1L:2S |Sitting Pretty |1944 |1948
+Rachel Weisz |F |1970 * |~ |49 |2 |1 |S |Constant Gardener, The |2005 |2018
+Tuesday Weld |F |1943 |~ |75 |1 |0 |S |Looking for Mr. Goodbar |1977 |1977
+Orson Welles |M |1915 |1985 |70 |1 |0 |L |Citizen Kane |1941 |1941
+Oskar Werner |M |1922 |1984 |61 |1 |0 |L |Ship of Fools |1965 |1965
+Forest Whitaker |M |1961 |~ |58 |1 |1 |L |Last King of Scotland, The |2006 |2006
+Stuart Whitman |M |1928 |~ |91 |1 |0 |L |Mark, The |1961 |1961
+James Whitmore |M |1921 |2009 |87 |2 |0 |1L:1S |Give 'em Hell, Harry! |1949 |1975
+May Whitty |F |1865 |1948 |82 |2 |0 |S |Night Must Fall |1937 |1942
+Richard Widmark |M |1914 |2008 |93 |1 |0 |S |Kiss of Death |1947 |1947
+Dianne Wiest |F |1948 |~ |71 |3 |2 |S |Hannah and Her Sisters [w 40] |1986 |1994
+Jack Wild |M |1952 |2006 |53 |1 |0 |S |Oliver! |1968 |1968
+Cornel Wilde |M |1912 |1989 |77 |1 |0 |L |Song to Remember, A |1945 |1945
+Gene Wilder |M |1933 |2016 |83 |1 |0 |S |Producers, The |1968 |1968
+Tom Wilkinson |M |1948 |~ |71 |2 |0 |1L:1S |In the Bedroom |2001 |2007
+Cara Williams |F |1925 |~ |94 |1 |0 |S |Defiant Ones, The |1958 |1958
+Michelle Williams |F |1980 |~ |38 |4 |0 |2L:2S |Blue Valentine (2010) |2005 |2016
+Robin Williams |M |1951 |2014 |63 |4 |1 |3L0:1S1 |Good Will Hunting |1987 |1997
+Chill Wills |M |1902 |1978 |76 |1 |0 |S |Alamo, The |1960 |1960
+Paul Winfield |M |1939 |2004 |64 |1 |0 |L |Sounder |1972 |1972
+Oprah Winfrey |F |1954 |~ |65 |1 |0 |S |Color Purple, The |1985 |1985
+Debra Winger |F |1955 |~ |64 |3 |0 |L |Officer and a Gentleman, An |1982 |1993
+Mare Winningham |F |1959 |~ |60 |1 |0 |S |Georgia |1995 |1995
+Kate Winslet |F |1975 |~ |43 |7 |1 |4L1:3S0 |Reader, The (2008) |1995 |2015
+Shelley Winters |F |1920 |2006 |85 |4 |2 |1L0:3S2 |Diary of Anne Frank, The (1959) [w 41] |1951 |1972
+Reese Witherspoon |F |1976 |~ |43 |2 |1 |L |Walk the Line |2005 |2014
+Natalie Wood |F |1938 |1981 |43 |3 |0 |2L:1S |Splendor in the Grass (1961) |1955 |1963
+Peggy Wood |F |1892 |1978 |86 |1 |0 |S |Sound of Music, The |1965 |1965
+Alfre Woodard |F |1952 |~ |66 |1 |0 |S |Cross Creek |1983 |1983
+James Woods |M |1947 |~ |72 |2 |0 |1L:1S |Salvador |1986 |1996
+Joanne Woodward |F |1930 |~ |89 |4 |1 |L |Three Faces of Eve, The |1957 |1990
+Monty Woolley |M |1888 |1963 |74 |2 |0 |1L:1S |Pied Piper, The |1942 |1944
+Teresa Wright |F |1918 |2005 |86 |3 |1 |1L0:2S1 |Mrs. Miniver [n 11] |1941 |1942
+Margaret Wycherly |F |1881 |1956 |74 |1 |0 |S |Sergeant York |1941 |1941
+Jane Wyman |F |1917 |2007 |90 |4 |1 |L |Johnny Belinda (1948) |1946 |1954
+Ed Wynn |M |1886 |1966 |79 |1 |0 |S |Diary of Anne Frank, The |1959 |1959
+Diana Wynyard |F |1906 |1964 |58 |1 |0 |L |Cavalcade |1933 |1933
+Susannah York |F |1939 |2011 |72 |1 |0 |S |They Shoot Horses, Don't They? |1969 |1969
+Burt Young |M |1940 |~ |79 |1 |0 |S |Rocky |1976 |1976
+Gig Young |M |1913 |1978 |64 |3 |1 |S |They Shoot Horses, Don't They? |1951 |1969
+Loretta Young |F |1913 |2000 |87 |2 |1 |L |Farmer's Daughter, The |1947 |1949
+Roland Young |M |1887 |1953 |65 |1 |0 |S |Topper |1937 |1937
+Renée Zellweger |F |1969 |~ |50 |3 |1 |2L0:1S1 |Cold Mountain |2001 |2003
+Catherine Zeta-Jones |F |1969 |~ |49 |1 |1 |S |Chicago |2002 |2002
+
+        </pre>
+    </div>
+</div>

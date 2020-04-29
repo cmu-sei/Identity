@@ -1,0 +1,47 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model CodeViewModel
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">Login</h1>
+        <p>
+            @ViewBag.AppName requires a second authentication factor.
+        </p>
+        <form asp-route="code">
+            <fieldset>
+                <input type="hidden" asp-for="ReturnUrl" />
+                <input type="hidden" asp-for="Token" />
+                <p>@Model.Token</p>
+                @await Html.PartialAsync("_ValidationSummary")
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Code" required
+                        aria-label="enter 2fa code" asp-for="Code" autofocus="on" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" name="Action" value="submit">Continue</button>
+                </div>
+            </fieldset>
+        </form>
+
+        <form asp-route="code">
+            <input id="send-ReturnUrl" type="hidden" asp-for="ReturnUrl" />
+            <input id="send-Token" type="hidden" asp-for="Token" />
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-secondary btn-sm mb-2" name="Action" value="need">Send me a code</button>
+                @if (Model.CodeSent)
+                {
+                    <p class="text text-info">A code has been sent.</p>
+                } else
+                {
+                    <p class="text text-danger">A code has <em>NOT</em> yet been sent. If you need a code via email, click "Send me a Code".</p>
+                }
+            </div>
+        </form>
+
+        <p class="pt-4">
+            Note: To generate a code without relying on email, see the <i>Configure 2FA</i> link on your profile page (after successfully logging in).
+        </p>
+    </div>
+</div>

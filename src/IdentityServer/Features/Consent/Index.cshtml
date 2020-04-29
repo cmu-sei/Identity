@@ -1,0 +1,107 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model ConsentViewModel
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">Consent</h1>
+        @await Html.PartialAsync("_ValidationSummary")
+
+        <h4>
+            @Model.ClientName
+        </h4>
+
+        <form asp-action="Index" class="consent-form">
+
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            @if (Model.IdentityScopes.Any())
+            {
+                <div class="mb-4">
+                    <div class="mb-2">
+                        Requests this information:
+                    </div>
+                    <hr />
+                    <table class="table table-borderless">
+                        <thead>
+                            <th class="text-right">Scope</th>
+                            <th class="text-left">Claims</th>
+                        </thead>
+                        <tbody>
+
+                        @foreach (var scope in Model.IdentityScopes)
+                        {
+                            <tr>
+                                <td class="text-right">@scope.Name</td>
+                                <td class="text-left">
+                                    <small>@scope.Description</small>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                    <hr />
+                </div>
+            }
+
+            @if (Model.ResourceScopes.Any())
+            {
+                <div class="mb-4">
+                    <div class="mb-2">
+                        To access
+                        @if (Model.ResourceScopes.Count() > 1)
+                        {
+                            <span>these resources:</span>
+                        } else {
+                            <span>this resource:</span>
+                        }
+                    </div>
+                    <ul class="list-group">
+                        @foreach (var scope in Model.ResourceScopes)
+                        {
+                            <div><strong>@scope.Name</strong></div>
+                        }
+                    </ul>
+                </div>
+
+                <hr />
+            }
+
+            @if (Model.RequestOfflineAccess)
+            {
+                <div class="mb-4">
+
+                    <div class="form-check">
+
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="AllowOfflineAccess" />
+                            Allow Offline Access
+                        </label>
+
+                        <small class="form-text">
+                            This client would like to obtain a refresh token
+                            to provide you access to the resources when you
+                            aren't actively logged in to this identity server.
+                        </small>
+                    </div>
+                </div>
+            }
+
+            @if (Model.AllowRememberConsent)
+            {
+                <div class="consent-remember mb-4">
+                    <label>
+                        <input class="consent-scopecheck" asp-for="RememberConsent" />
+                        <span>Remember My Decision</span>
+                    </label>
+                </div>
+            }
+
+
+            <div class="mb-4">
+                <button name="action" value="consent" class="btn btn-primary mr-2" autofocus>Continue</button>
+                <button name="action" value="cancel" class="btn btn-secondary btn-sm">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

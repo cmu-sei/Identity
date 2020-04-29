@@ -1,0 +1,37 @@
+.footer {
+  margin-top: 50px;
+}
+.signout {
+  position: absolute;
+  top: -5;
+}
+.btn-primary {
+  background-color: #b00;
+  border-color: #b00;
+}
+.btn-primary:hover {
+  background-color: #900;
+  border-color: #b00;
+}
+a.jumbo {
+  /* text-decoration: none; */
+  color: black;
+}
+a.jumbo:hover {
+  /* text-decoration: none; */
+  color: #b00;
+}
+.navbar {
+  justify-content: start;
+}
+.nav-link {
+  color: #b00;
+}
+.panel {
+  max-width: 480px;
+  margin: auto;
+}
+.validation-summary-errors ul {
+  list-style: none;
+  padding-left: 0;
+}

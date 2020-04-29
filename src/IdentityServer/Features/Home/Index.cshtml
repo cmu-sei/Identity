@@ -1,0 +1,31 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model HomeViewModel
+
+<div class="row">
+    <div class="col text-center">
+        @if (Model.MSIE)
+        {
+            <p class="alert alert-warning panel">
+                This site may not be fully compatible with Internet Explorer.
+            </p>
+        }
+
+        @if (String.IsNullOrEmpty(Model.Username))
+        {
+            <a class="btn btn-primary btn-lg" asp-controller="account" asp-action="login">Login</a>
+        }
+    </div>
+</div>
+<hr>
+<div>Supporting the following applications:</div>
+
+@foreach(var app in Model.Apps)
+{
+    <div class="row">
+        <div class="col text-center">
+            <a class="btn btn-link" href="@app.ClientUri">@app.DisplayName</a>
+        </div>
+    </div>
+}

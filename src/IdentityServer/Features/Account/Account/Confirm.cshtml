@@ -1,0 +1,72 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model ConfirmViewModel
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">@Model.Action</h1>
+        @if (!String.IsNullOrEmpty(Model.Action))
+        {
+            @if (!Model.CodeConfirmed)
+            {
+                <form asp-route="confirm">
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <input type="hidden" asp-for="Action" />
+                    <fieldset>
+                        @if (String.IsNullOrEmpty(@Model.Email))
+                        {
+                            @await Html.PartialAsync("_ValidationSummary")
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Email" required
+                                    aria-label="enter email address" asp-for="Email" autofocus>
+                            </div>
+                            <p class="small" aria-label="allowed domain list">@Model.AllowedDomains</p>
+                        } else {
+                            <input type="hidden" asp-for="Email" />
+                            <p>@Model.Email</p>
+                            @await Html.PartialAsync("_ValidationSummary")
+                        }
+
+
+                        @if (!Model.CodeSent)
+                        {
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" name="State" value="need">Send Verification Code</button>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-secondary" name="State" value="have">I have a code</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Code" asp-for="Code" aria-label="enter verification code" autofocus="on" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" name="State" value="submit">Confirm</button>
+                            </div>
+                        }
+                    </fieldset>
+                </form>
+            } else {
+                <p>@Model.Email</p>
+                <p class="text text-success">Account Confirmed!</p>
+                <div class="form-group">
+                    <a class="btn btn-primary" asp-action="@Model.Action">Continue</a>
+                </div>
+            }
+
+            @if (Model.Action == "Register" && !String.IsNullOrEmpty(Model.CertificateIssuers))
+            {
+                <hr/>
+                <p>
+                    Client certificates are accepted from <i>@Model.CertificateIssuers</i>.
+                    With those, you are registered automatically when you <a asp-action="login">login</a>.
+                </p>
+            }
+        } else {
+            <p class="text text-danger">Session expired</p>
+            <a class="btn btn-primary" asp-action="login">Retry</a>
+        }
+    </div>
+</div>

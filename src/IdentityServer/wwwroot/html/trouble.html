@@ -1,0 +1,52 @@
+<!-- Copyright 2020 Carnegie Mellon University. -->
+<!-- Released under a MIT (SEI) license. See LICENSE.md in the project root. -->
+
+<h4>Things <i>We</i> Can Change</h4>
+<p class="text-left">
+    It is possible that we failed to include your
+    issuer's certificate in our bundle of accepted
+    issuers.  Please send your certificate's issuer
+    common name.
+</p>
+<p class="text-left">
+    It is also possible that we do not support some
+    older certificates with weaker cryptography.
+    Usually, this just affects certificates that
+    are signed with the sha1RSA algorithm.
+</p>
+
+<h4>Things <i>You</i> Can Change</h4>
+<p class="text-left">
+    Start with a fresh browser.  Browsers tend to vary
+    in how they maintain the state of your certificates.
+    An easy test is to close all your browser windows
+    before opening one to try again.  You can try opening
+    a private or incognito browser also, but if that doesn't
+    work, you should still try the "close-all-first" approach.
+</p>
+<p class="text-left">
+    Be sure to select the correct certificate when the browser
+    prompts you.  Some access card, like USGov PIV cards,
+    present two certificates, only one of which is valid
+    for client authentication. (Usually the first one displayed
+    in the list.)
+</p>
+<p class="text-left">
+    It is possible your web proxy is mangling the
+    TLS handshake and thus <i>not</i> providing
+    your client certificate to the web server. If
+    you can authenticate to other sites using your
+    certificate, it is worth asking your admins if
+    this site needs a bypass from your proxy.
+</p>
+<p class="text-left">
+    If you are behind an enterprise web proxy, there is not
+    much troubleshooting with which we can help. We'd most likely
+    need a packet capture of your TLS handshake from <i>outside</i>
+    your web proxy.  And that will probably just show us
+    that your client certificate is not being included in
+    the handshake.
+</p>
+
+<h4>Happy to Help!</h4>
+<p class="text-left">We are happy to help.  Please contact our support desk.</p>

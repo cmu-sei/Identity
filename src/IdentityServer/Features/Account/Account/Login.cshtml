@@ -1,0 +1,117 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model LoginViewModel
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">Login</h1>
+        @if (Model.MSIE)
+        {
+            <p class="text text-warning p-4">
+                This site may not be compatible with Internet Explorer.
+            </p>
+        }
+
+        @if (Model.LockedSeconds > 0)
+        {
+            <p id="lock-countdown" class="alert alert-warning">
+                This account is currently locked. Unlock time: <span class="ticker">@Model.LockedSeconds</span>
+            </p>
+        }
+
+
+            @if (!String.IsNullOrEmpty(Model.CertificateIssuers))
+            {
+                <h4>Certificate</h4>
+                <p>
+                    This site accepts client certificates from
+                    <i>@(Model.CertificateIssuers)</i>.
+                </p>
+
+                @if (String.IsNullOrEmpty(Model.CertificateSubject))
+                {
+                    <p>
+                        If expecting to use a certificate, you should
+                        <strong>already</strong> have been prompted by your
+                        browser to enter the PIN. If that is not the
+                        case, please refer to
+                        <a asp-action="trouble">troubleshooting</a>.
+                    </p>
+                }
+                else
+                {
+                    <p aria-label="client certificate subject">
+                        <em>@Model.CertificateSubject</em><br/>
+                    </p>
+                    <p>
+                        <form asp-route="Login">
+                            <input id="cert-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>
+
+                            <button type="submit" class="btn btn-primary" name="provider" asp-for="Provider"
+                                aria-label="login with client certificate" value="localcert">Continue</button>
+                        </form>
+                    </p>
+                }
+                <hr/>
+            }
+
+            <h4>Credentials</h4>
+            @await Html.PartialAsync("_ValidationSummary")
+            <form asp-route="Login">
+                <input id="cred-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>
+
+                <fieldset>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="Email" required
+                            aria-label="enter email address" asp-for="Username" autofocus>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Password" required
+                            aria-label="enter password" asp-for="Password" autocomplete="off">
+                    </div>
+                    @if (Model.AllowRememberLogin)
+                    {
+                        <div class="form-group login-remember">
+                            <label asp-for="RememberLogin">
+                                <input asp-for="RememberLogin">
+                                <span>Remember My Login</span>
+                            </label>
+                        </div>
+                    }
+                </fieldset>
+                <p>
+                    <button type="submit" class="btn btn-primary" name="provider"
+                        aria-label="login with credentials" asp-for="Provider" value="local">Continue</button>
+                </p>
+            </form>
+            <a class="btn btn-link btn-sm" asp-action="reset" asp-route-returnUrl="@Model.ReturnUrl">Reset my password</a>
+            <a class="btn btn-link btn-sm" asp-action="register" asp-route-returnUrl="@Model.ReturnUrl">Register for an account</a>
+
+            @if (Model.ExternalSchemes.Length > 0)
+            {
+                <hr />
+                <h4>External</h4>
+                <p>
+                    This site accepts authentication from external providers.
+                    If you are already registered at one, click it to login in.
+                </p>
+
+                @foreach (string scheme in Model.ExternalSchemes)
+                {
+                    <form asp-route="Login">
+                        <input id="ext-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>
+
+                        <p>
+                            <button type="submit" class="btn btn-secondary" name="provider"
+                                aria-label="login with @scheme" asp-for="Provider" value="@scheme">@scheme</button>
+                        </p>
+                    </form>
+                }
+            }
+    </div>
+</div>
+
+@section scripts
+{
+    <script>ticker($('#lock-countdown'), @Model.LockedSeconds, 'd-none');</script>
+}

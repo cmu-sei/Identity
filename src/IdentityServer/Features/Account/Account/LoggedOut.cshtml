@@ -1,0 +1,37 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model LoggedOutViewModel
+<div class="row">
+    <div class="col panel text-center">
+
+        <h1 class="display-4">Logout</h1>
+        <p>You have been logged out.</p>
+        <a class="btn btn-primary" asp-controller="home" asp-action="index">Home</a>
+        @if (Model.RedirectUri != null)
+        {
+            <a class="btn btn-secondary loggedout-redirect" href="@Model.RedirectUri">@Model.ClientName</a>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SignOutIframeUrl))
+        {
+            <iframe width="0" height="0" class="signout" src="@Model.SignOutIframeUrl"></iframe>
+        }
+
+    </div>
+</div>
+
+@section scripts
+{
+    @if (Model.AutomaticRedirect)
+    {
+        <script>
+            window.addEventListener("load", function () {
+                var a = document.querySelector("a.loggedout-redirect");
+                if (a) {
+                    window.location = a.href;
+                }
+            });
+        </script>
+    }
+}

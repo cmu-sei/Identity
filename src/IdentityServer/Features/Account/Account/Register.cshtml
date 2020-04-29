@@ -1,0 +1,58 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model RegisterViewModel
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">Register</h1>
+
+        @if (Model.AllowRegistration)
+        {
+           @if (!String.IsNullOrEmpty(Model.Email))
+            {
+                <form asp-route="register">
+                    <input type="hidden" asp-for="Email" />
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <fieldset>
+                        <p>@Model.Email</p>
+                        @await Html.PartialAsync("_ValidationSummary")
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Password" required
+                                aria-label="enter new password" asp-for="Password" autocomplete="off" autofocus="on">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Confirm Password" required
+                                aria-label="confirm new password" asp-for="ConfirmPassword" autocomplete="off">
+                        </div>
+
+                        <p class="text-warning" aria-label="password complexity requirement">@Model.Complexity</p>
+
+                        <div class="form-group">
+                            <button class="btn btn-primary" name="action" value="reset" type="submit">Register</button>
+                        </div>
+                    </fieldset>
+                </form>
+            } else {
+                <p class="text text-danger">Verification code expired</p>
+                <a class="btn btn-primary" asp-action="register" asp-route-returnUrl="@Model.ReturnUrl">Retry</a>
+            }
+        }
+        else
+        {
+            <div class="col panel text-left">
+                <p class="alert alert-warning">
+                    Registration is disabled for @ViewBag.AppName. Please see an administrator for access.
+                </p>
+            </div>
+        }
+
+        @if (!String.IsNullOrEmpty(Model.CertificateIssuers))
+        {
+            <hr/>
+            <p>
+                Client certificates are accepted from <strong>@Model.CertificateIssuers</strong>.
+                With those, you are registered automatically when you <a asp-action="login">login</a>.
+            </p>
+        }
+    </div>
+</div>

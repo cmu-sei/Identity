@@ -1,0 +1,27 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@using Microsoft.Extensions.Hosting
+@model ErrorViewModel
+@inject IHostEnvironment host
+
+@{
+    var error = Model?.Error?.Error;
+    var description = Model?.Error?.ErrorDescription;
+    var request_id = Model?.Error?.RequestId;
+}
+<div class="row">
+    <div class="col panel text-center">
+        <p class="display-4">Error</p>
+        <p class="text text-danger">"What are you doing, Dave?"</p>
+        <p><em>@error</em></p>
+        @if (description != null)
+        {
+            <p>@description</p>
+        }
+        @if (request_id != null)
+        {
+            <p class="small">Request Id: @request_id</p>
+        }
+    </div>
+</div>

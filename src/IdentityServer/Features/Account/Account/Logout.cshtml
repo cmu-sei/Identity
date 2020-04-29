@@ -1,0 +1,36 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model LogoutViewModel
+
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">Logout</h1>
+        <p>Would you like to logout of @ViewBag.AppName?</p>
+
+        @if (!String.IsNullOrEmpty(@Model.ClientName))
+        {
+            <p>Initiated by @Model.ClientName</p>
+        }
+
+        @if (@Model.ActiveClients?.Length > 0)
+        {
+            <div><u>Current Sessions</u></div>
+            <ul class="list-unstyled" aria-label="current sessions">
+                @foreach (string client in Model.ActiveClients)
+                {
+                    <li>@client</li>
+                }
+            </ul>
+        }
+
+        <form asp-action="Logout">
+            <input type="hidden" name="logoutId" value="@Model.LogoutId"  />
+            <button type="submit" class="btn btn-primary">Logout</button>
+            <a class="btn btn-secondary" href="@Model.Referrer">Cancel</a>
+        </form>
+
+        <div>
+        </div>
+    </div>
+</div>

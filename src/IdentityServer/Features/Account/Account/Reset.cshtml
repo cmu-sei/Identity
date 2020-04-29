@@ -1,0 +1,37 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model ResetViewModel
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">Reset</h1>
+
+        @if (!String.IsNullOrEmpty(Model.Email))
+        {
+            <form asp-route="reset">
+                <input type="hidden" asp-for="Email" />
+                <input type="hidden" asp-for="ReturnUrl" />
+                <fieldset>
+                    <p>@Model.Email</p>
+                    @await Html.PartialAsync("_ValidationSummary")
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Password" required
+                            aria-label="enter new password" asp-for="Password" autocomplete="off" autofocus="on">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" placeholder="Confirm Password" required
+                            aria-label="confirm new password" asp-for="ConfirmPassword" autocomplete="off">
+                    </div>
+                    <p class="small" aria-label="password complexity requirement">@Model.Complexity</p>
+                    <div class="form-group">
+                        <button class="btn btn-primary" name="action"
+                            aria-label="reset password" value="reset" type="submit">Reset</button>
+                    </div>
+                </fieldset>
+            </form>
+        } else {
+            <p class="text text-danger">Verification code expired</p>
+            <a class="btn btn-primary" asp-action="reset" asp-route-returnUrl="@Model.ReturnUrl">Retry</a>
+        }
+    </div>
+</div>

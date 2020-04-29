@@ -1,0 +1,73 @@
+{
+  "Users": [
+    {
+      "Username": "admin@this.ws",
+      "Password": "321ChangeMe!",
+      "GlobalId": "9fd3c38e-58b0-4af1-80d1-1895af91f1f9"
+    }
+  ],
+  "ApiResources": [
+    {
+      "Name": "project-api",
+      "DisplayName": "Project API",
+      "Enabled": true
+    }
+  ],
+  "Clients": [
+    {
+      "Name": "ProjectSwaggerClient",
+      "DisplayName": "Identity Swagger",
+      "Enabled": true,
+      "SeedFlags" : "EnableLocalLogin, AllowRememberConsent, AllowAccessTokensViaBrowser",
+      "SeedGrant": "implicit",
+      "SeedScopes": "openid project-api",
+      "SeedSecret": "some-secret",
+      "Urls": [
+        { "Type": "RedirectUri", "Value": "http://localhost:5555/api/oauth2-redirect.html" },
+        { "Type": "CORSUri", "Value": "http://localhost:5555" }
+      ]
+    },
+    {
+      "Name": "project-ui-client",
+      "DisplayName": "Project Ui",
+      "Enabled": true,
+      "SeedFlags" : "EnableLocalLogin, AllowRememberConsent, Published, RequirePkce, AlwaysIncludeUserClaimsInIdToken",
+      "SeedGrant": "authorization_code",
+      "SeedSecret": "some-secret",
+      "Urls": [
+        { "Type": "ClientUri", "Value": "http://localhost:4200" },
+        { "Type": "CORSUri", "Value": "http://localhost:4200" },
+        { "Type": "RedirectUri", "Value": "http://localhost:4200/oidc" },
+        { "Type": "PostLogoutRedirectUri", "Value": "http://localhost:4200" }
+      ]
+    }
+  ],
+  "UrlTypes": [
+    "ClientUri",
+    "LogoUri",
+    "RedirectUri",
+    "PostLogoutRedirectUri",
+    "CORSUri",
+    "EventReferenceUri",
+    "FrontChannelLogoutUri",
+    "BackChannelLogoutUri",
+    "EventRegistrationHandlerUri"
+  ],
+  "FlagValues": [
+    "Published",
+    "RequireConsent",
+    "AllowRememberConsent",
+    "AllowAccessTokensViaBrowser",
+    "AllowOfflineAccess",
+    "AlwaysSendClientClaims",
+    "AlwaysIncludeUserClaimsInIdToken",
+    "UpdateAccessTokenClaimsOnRefresh",
+    "IncludeJwtId",
+    "EnableLocalLogin",
+    "BackChannelLogoutSessionRequired",
+    "FrontChannelLogoutSessionRequired",
+    "RequireClientSecret",
+    "RequirePkce",
+    "AllowPlainTextPkce"
+  ]
+}

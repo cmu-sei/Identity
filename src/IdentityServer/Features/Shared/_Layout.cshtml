@@ -1,0 +1,60 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    @Html.Raw(ViewBag.Meta)
+    <link rel="stylesheet" href="~/lib/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    @await Html.PartialAsync("_Favicons")
+</head>
+<body>
+
+    <header class="jumbotron jumbotron-fluid mb-0">
+        <div class="container">
+            <p class="display-4"><a class="jumbo" href="/">@ViewBag.AppName</a></p>
+            <p class="lead">Serving OpenId Connect Identity</p>
+        </div>
+    </header>
+
+    <nav class="navbar navbar-light bg-light mb-4">
+        @{
+            if (!string.IsNullOrEmpty(Context.User?.FindFirst("name")?.Value))
+            {
+                <a class="nav-item nav-link" href="/">Home</a>
+                <a class="nav-item nav-link" href="/grants">Grants</a>
+                @if (ViewBag.UiHost != string.Empty)
+                {
+                    <a class="nav-item nav-link" href="@ViewBag.UiHost/profile">Profile</a>
+                    <a class="nav-item nav-link" href="@ViewBag.UiHost/manage">Integration</a>
+
+                    if (Context.User.FindFirst("role")?.Value != "member")
+                    {
+                        <a class="nav-item nav-link" href="@ViewBag.UiHost/account">Accounts</a>
+                    }
+                }
+                <a class="nav-item nav-link pull-right" href="account/logout">Logout</a>
+            }
+        }
+    </nav>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+    </footer>
+
+    <script src="~/lib/jquery.slim.min.js"></script>
+    <script src="~/lib/popper.min.js"></script>
+    <script src="~/lib/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

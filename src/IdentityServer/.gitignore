@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+**/lib/
+appsettings.*.json
+appsettings.*.conf
+seed-data.json
+tempkey.rsa
+key-*.xml
+.DS_Store
+**/javatar/ou/*
+**/javatar/o/*
+**/javatar/u/*
+**/javatar/p/*
+!default.png

@@ -1,0 +1,66 @@
+@* Copyright 2020 Carnegie Mellon University. *@
+@* Released under a MIT (SEI) license. See LICENSE.md in the project root. *@
+
+@model IEnumerable<GrantViewModel>
+
+<div class="row">
+    <div class="col panel text-center">
+        <h1 class="display-4">Grants</h1>
+
+    @if (Model.Any())
+    {
+        <p>
+            You have consented to share the following information:
+        </p>
+        <table class="table">
+            <thead>
+                <th>Client</th>
+                <th>Scopes</th>
+                <th></th>
+            </thead>
+            <tbody>
+
+            @foreach (var grant in Model)
+            {
+                <tr>
+
+                    <td><em>@grant.ClientName</em> <br />
+                        <span>Created:</span> @grant.Created.ToString("yyyy-MM-dd")
+                        @if (@grant.Expires.HasValue)
+                        {
+                            <br />
+                            <span>Expires:</span> @grant.Expires.Value.ToString("yyyy-MM-dd")
+                        }
+                    </td>
+
+                    <td>
+                        <ul class="list-unstyled">
+                            @foreach (var name in grant.IdentityGrantNames)
+                            {
+                                <li>@name</li>
+                            }
+                            @foreach (var name in grant.ApiGrantNames)
+                            {
+                                <li>@name</li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <form asp-action="Revoke">
+                            <input type="hidden" name="clientId" value="@grant.ClientId">
+                            <button class="btn btn-warning" aria-label="revoke permission">&#x2717;</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>
+            You have not given explicit access to any applications.
+        </p>
+    }
+    </div>
+</div>
