@@ -597,7 +597,7 @@ namespace Identity.Accounts.Services
 
             string secret = Base32Encoding.ToString(Encoding.UTF8.GetBytes(code)).Replace("=","");
             string target = account.GetProperty("username");
-            return $"otpauth://totp/{target}?secret={secret.ToLower()}";
+            return $"otpauth://totp/{target}?secret={secret.ToLower()}&algorithm=sha256";
         }
 
         public async Task<TotpResult> ValidateAccountTOTPAsync(string globalId, string code, Func<string, string, Task<bool>> dupeChecker = null)
