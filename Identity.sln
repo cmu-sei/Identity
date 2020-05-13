@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Accounts.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "src\IdentityServer\IdentityServer.csproj", "{11E569B3-9534-47FE-87D8-594DC945AFE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotpCLient", "test\TotpCLient\TotpCLient.csproj", "{34AAE957-01E3-4D6B-8ECD-9C9C29544BBA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotpClient", "test\TotpClient\TotpClient.csproj", "{34AAE957-01E3-4D6B-8ECD-9C9C29544BBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

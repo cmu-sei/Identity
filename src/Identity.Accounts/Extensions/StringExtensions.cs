@@ -12,7 +12,7 @@ namespace Identity.Accounts.Extensions
 {
     public static class StringExtensions
     {
-        public static string ToHash(this string input)
+        public static string ToSha1(this string input)
         {
             using (SHA1 sha1 = SHA1.Create())
             {
