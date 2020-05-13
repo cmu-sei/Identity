@@ -150,7 +150,8 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
 
         public async Task Save(AccountCode token)
         {
-            var existing = await GetAccountCode(token.Hash);
+            var existing = await DbContext.AccountCodes.FindAsync(token.Hash);
+
             if (existing != null)
             {
                 existing.Code = token.Code;
