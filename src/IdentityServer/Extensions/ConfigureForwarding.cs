@@ -36,18 +36,19 @@ namespace Microsoft.Extensions.DependencyInjection
                     config.ForwardLimit = null;
                 }
 
-                if (!string.IsNullOrEmpty(options.KnownNetworks))
-                {
-                    foreach (string item in options.KnownNetworks.Split(new char[] { ' ', ','}, StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        string[] net = item.Split('/');
+                string nets = options.KnownNetworks;
+                if (string.IsNullOrEmpty(nets))
+                    nets = "10.0.0.0/8 172.16.0.0/12 192.168.0.0/24 ::ffff:a00:0/104 ::ffff:b00a:0/108 ::ffff:c0d0:0/120";
 
-                        if (IPAddress.TryParse(net.First(), out IPAddress ipaddr)
-                            && Int32.TryParse(net.Last(), out int prefix)
-                        )
-                        {
-                            config.KnownNetworks.Add(new IPNetwork(ipaddr, prefix));
-                        }
+                foreach (string item in nets.Split(new char[] { ' ', ','}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    string[] net = item.Split('/');
+
+                    if (IPAddress.TryParse(net.First(), out IPAddress ipaddr)
+                        && Int32.TryParse(net.Last(), out int prefix)
+                    )
+                    {
+                        config.KnownNetworks.Add(new IPNetwork(ipaddr, prefix));
                     }
                 }
 
