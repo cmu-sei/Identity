@@ -29,7 +29,7 @@ Other projects that rely on the IdentityServer can script an API call to quickly
             "Id": "project-swagger",
             "GrantType": "implicit",
             "Scopes": "openid project-api",
-            "RedirectUrl": "http://localhost:5004/api/oauth-redirect.html"
+            "RedirectUrl": "http://localhost:5004/api/oauth2-redirect.html"
         }
     ]
 }
