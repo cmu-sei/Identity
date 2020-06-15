@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using Identity.Accounts.Abstractions;
 using Identity.Accounts.Data.EntityFrameworkCore;
-using Identity.Accounts.Models;
 using Identity.Accounts.Options;
 using Identity.Clients.Abstractions;
 using Identity.Clients.Data;
@@ -18,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
@@ -31,6 +31,8 @@ namespace IdentityServer.Extensions
             {
                 var services = scope.ServiceProvider;
 
+                var loggerFactory = services.GetService<Microsoft.Extensions.Logging.ILoggerFactory>();
+                ILogger logger = loggerFactory.CreateLogger("DatabaseInitialization");
                 IConfiguration config = services.GetRequiredService<IConfiguration>();
                 IHostEnvironment env = services.GetService<IHostEnvironment>();
                 AccountDbContext accountDb =  services.GetRequiredService<AccountDbContext>();
@@ -157,36 +159,36 @@ namespace IdentityServer.Extensions
 
                 if (seedUsers.Count() > 0)
                 {
-                    var loggerFactory = services.GetService<Microsoft.Extensions.Logging.ILoggerFactory>();
                     IAccountService accountSvc = services.GetRequiredService<IAccountService>();
-
-                    accountOptions.Registration.AllowedDomains = "";
 
                     foreach (DbSeedUser seedUser in seedUsers)
                     {
                         try
                         {
-                            if (accountSvc.FindByGuidAsync(seedUser.GlobalId).Result != null)
-                                continue;
+                            // override seed-data with config data for password
+                            string secret = secretOptions
+                                .Where(i => i.Key == seedUser.Username || i.Key == seedUser.GlobalId)
+                                .FirstOrDefault()?.Value ?? seedUser.Password;
 
-                            //override seed-data with config data for password
-                            string secret = secretOptions.Where(i => i.Key == seedUser.Username || i.Key == seedUser.GlobalId).FirstOrDefault()?.Value ?? seedUser.Password;
-
-                            accountSvc.RegisterWithCredentialsAsync(
-                                new Credentials {
-                                    Username = seedUser.Username,
-                                    Password = secret
-                                },
-                                seedUser.GlobalId)
-                                .Wait();
+                            accountSvc.RegisterUsername(
+                                seedUser.Username,
+                                seedUser.Password,
+                                seedUser.GlobalId
+                            ).Wait();
                         }
-                        catch {}
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, $"Failed to register {seedUser.Username}");
+                        }
                     }
                 }
 
                 foreach (var resource in seedGrants)
                 {
-                    if (!clientDb.Resources.Any(r => r.Type == ResourceType.Grant && r.Name == resource.Name))
+                    if (!clientDb.Resources.Any(r =>
+                        r.Type == ResourceType.Grant
+                        && r.Name == resource.Name
+                    ))
                     {
                         var entity = new Identity.Clients.Data.Resource
                         {
@@ -203,7 +205,10 @@ namespace IdentityServer.Extensions
 
                 foreach (IdentityServer4.Models.ApiResource resource in seedApi)
                 {
-                    if (!clientDb.Resources.Any(r => r.Type == ResourceType.Api && r.Name == resource.Name))
+                    if (!clientDb.Resources.Any(r =>
+                        r.Type == ResourceType.Api
+                        && r.Name == resource.Name
+                    ))
                     {
                         var entity = new Identity.Clients.Data.Resource
                         {
@@ -228,7 +233,10 @@ namespace IdentityServer.Extensions
 
                 foreach (var resource in seedScopes)
                 {
-                    if (!clientDb.Resources.Any(r => r.Type == ResourceType.Identity && r.Name == resource.Name))
+                    if (!clientDb.Resources.Any(r =>
+                        r.Type == ResourceType.Identity
+                        && r.Name == resource.Name
+                    ))
                     {
                         var entity = new Identity.Clients.Data.Resource
                         {

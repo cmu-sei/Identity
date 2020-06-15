@@ -48,6 +48,7 @@ namespace Identity.Accounts.Abstractions
         Task<Account> RegisterWithCredentialsAsync(Credentials credentials, string globalId);
         Task<Account> RegisterExternalUser(ClaimsPrincipal principal, string location);
         Task<UsernameRegistration[]> RegisterUsernames(UsernameRegistrationModel model);
+        Task<Account> RegisterUsername(string userMailto, string password, string globalId = null);
         Task<Account> RegisterWithCertificateAsync(X509Certificate2 certificate);
         Task<Account> RegisterWithValidatedSubjectAsync(string subject);
         Task RemoveAccountAsync(int accountId, string accountName);

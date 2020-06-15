@@ -105,7 +105,7 @@ namespace Identity.Accounts.Services
                 var result = new UsernameRegistration(userMailto);
                 try
                 {
-                    await RegisterUsername(result, model.Password);
+                    await RegisterUsername(userMailto, model.Password);
                 }
                 catch (Exception ex)
                 {
@@ -115,19 +115,18 @@ namespace Identity.Accounts.Services
             }
             return results.ToArray();
         }
-        public async Task<Account> RegisterUsername(UsernameRegistration registration, string password)
+
+        public async Task<Account> RegisterUsername(string userMailto, string password, string globalId = null)
         {
-            return await RegisterUsername(registration, password, Guid.NewGuid().ToString());
-        }
-        public async Task<Account> RegisterUsername(UsernameRegistration registration, string password, string globalId)
-        {
+
+            var registration = new UsernameRegistration(userMailto);
 
             Data.Account account = await Register(
                 registration.Username,
                 registration.DisplayName,
                 AccountTokenType.Credential,
                 registration.IsAffiliate,
-                globalId
+                globalId ?? Guid.NewGuid().ToString()
             );
 
             if (_options.Registration.StoreEmail && registration.Username.IsEmailAddress())
