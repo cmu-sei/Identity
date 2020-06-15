@@ -23,10 +23,8 @@ namespace Identity.Accounts.Services
         {
             _options = storeOptions;
             _logger = logger;
-            _path = Path.Combine(
-                environment.ContentRoot,
-                _options.IssuerCertificatesPath ?? "certs"
-            );
+            _path = environment.ContentRoot;
+
             Load();
         }
 

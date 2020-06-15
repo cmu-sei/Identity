@@ -5,7 +5,7 @@ namespace Identity.Accounts.Options
 {
     public class CertValidationOptions
     {
-        public string IssuerCertificatesPath { get; set; } = "./certs";
+        public string IssuerCertificatesPath { get; set; } = "certs";
         public bool CheckRevocationOnline { get; set; }
         public bool CheckChainRevocation { get; set; }
         public int VerificationTimeoutSeconds { get; set; }
