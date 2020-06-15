@@ -63,7 +63,7 @@ namespace IdentityServer
             _database = Configuration.GetSection("Database").Get<DatabaseOptions>() ?? new DatabaseOptions();
 
             var accountOptions = Configuration.GetSection("Account").Get<AccountOptions>() ?? new AccountOptions();
-            _certificatePath = Path.Combine(env.ContentRootPath, accountOptions.Authentication.SigningCertificate ?? "server.pfx");
+            _certificatePath = Path.Combine(env.ContentRootPath, accountOptions.Authentication.SigningCertificate ?? "signer.pfx");
             _certificatePass = accountOptions.Authentication.SigningCertificatePassword;
 
             _javatar = Configuration.GetSection("JAvatar").Get<JAvatar.Options>() ?? new JAvatar.Options();
@@ -265,11 +265,11 @@ namespace IdentityServer
 
             app.UseJsonExceptions();
 
+            if (_headers.LogHeaders)
+                app.UseHeaderInspection();
+
             if (!string.IsNullOrEmpty(_headers.Forwarding.TargetHeaders))
                 app.UseForwardedHeaders();
-
-            if (_headers.LogHeaders)
-                app.UseHeaderInspection(true);
 
             if (_headers.UseHsts)
                 app.UseHsts();
