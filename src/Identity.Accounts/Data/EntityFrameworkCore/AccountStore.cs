@@ -74,7 +74,7 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
 
             if (account == null)
             {
-                string sha1 = key.ToHash();
+                string sha1 = key.ToSha1();
 
                 account = await LoadByHash(sha1);
 
@@ -130,7 +130,7 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
         public async Task<bool> IsTokenUnique(string hash)
         {
             string sha2 = hash.ToSha256();
-            string sha1 = hash.ToHash();
+            string sha1 = hash.ToSha1();
             return !(await DbContext.AccountTokens.AnyAsync(t => t.Hash == sha2 || t.Hash == sha1));
         }
 
@@ -143,14 +143,15 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
             var code = await DbContext.AccountCodes.FindAsync(key.ToSha256());
 
             if (code == null)
-                code= await DbContext.AccountCodes.FindAsync(key.ToHash());
+                code= await DbContext.AccountCodes.FindAsync(key.ToSha1());
 
             return code;
         }
 
         public async Task Save(AccountCode token)
         {
-            var existing = await GetAccountCode(token.Hash);
+            var existing = await DbContext.AccountCodes.FindAsync(token.Hash);
+
             if (existing != null)
             {
                 existing.Code = token.Code;
@@ -161,6 +162,7 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
             {
                 DbContext.AccountCodes.Add(token);
             }
+
             await DbContext.SaveChangesAsync();
         }
 

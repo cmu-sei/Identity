@@ -1,6 +1,3 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
-
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IdentityServer.Data.Migrations.SqlServer.AccountDb
@@ -20,10 +17,22 @@ namespace IdentityServer.Data.Migrations.SqlServer.AccountDb
                 oldClrType: typeof(string),
                 oldType: "nvarchar(40)",
                 oldMaxLength: 40);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Hash",
+                table: "AccountCodes",
+                maxLength: 64,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(40)",
+                oldMaxLength: 40);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql(@"UPDATE ""AccountProperties"" SET ""Key"" = 'org' where ""Key"" = 'picture_o';");
+            migrationBuilder.Sql(@"UPDATE ""AccountProperties"" SET ""Key"" = 'orgunit' where ""Key"" = 'picture_ou';");
+
             migrationBuilder.AlterColumn<string>(
                 name: "Hash",
                 table: "AccountTokens",
@@ -31,7 +40,16 @@ namespace IdentityServer.Data.Migrations.SqlServer.AccountDb
                 maxLength: 40,
                 nullable: false,
                 oldClrType: typeof(string),
-                oldMaxLength: 128);
+                oldMaxLength: 64);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "Hash",
+                table: "AccountCodes",
+                type: "nvarchar(40)",
+                maxLength: 40,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldMaxLength: 64);
         }
     }
 }

@@ -105,7 +105,7 @@ namespace Identity.Accounts.Services
                 var result = new UsernameRegistration(userMailto);
                 try
                 {
-                    await RegisterUsername(result, model.Password);
+                    await RegisterUsername(userMailto, model.Password);
                 }
                 catch (Exception ex)
                 {
@@ -115,19 +115,18 @@ namespace Identity.Accounts.Services
             }
             return results.ToArray();
         }
-        public async Task<Account> RegisterUsername(UsernameRegistration registration, string password)
+
+        public async Task<Account> RegisterUsername(string userMailto, string password, string globalId = null)
         {
-            return await RegisterUsername(registration, password, Guid.NewGuid().ToString());
-        }
-        public async Task<Account> RegisterUsername(UsernameRegistration registration, string password, string globalId)
-        {
+
+            var registration = new UsernameRegistration(userMailto);
 
             Data.Account account = await Register(
                 registration.Username,
                 registration.DisplayName,
                 AccountTokenType.Credential,
                 registration.IsAffiliate,
-                globalId
+                globalId ?? Guid.NewGuid().ToString()
             );
 
             if (_options.Registration.StoreEmail && registration.Username.IsEmailAddress())
@@ -569,35 +568,37 @@ namespace Identity.Accounts.Services
             return Mapper.Map<AccountCode>(accountCode);
         }
 
-        public async Task<string> GenerateAccountTOTPAsync(string globalId)
+        public async Task<string> GenerateAccountTOTPAsync(string globalId, string issuer = null)
         {
-            string code = "";
             var account = await _store.LoadByGuid(globalId);
 
-            if (account != null)
+            if (account == null)
+                return "";
+
+            var token = account.Tokens.Where(t => t.Type == AccountTokenType.TOTP).FirstOrDefault();
+
+            if (token != null)
             {
-                code = Guid.NewGuid().ToString().ToSha256();
-                var token = account.Tokens.Where(t => t.Type == AccountTokenType.TOTP).FirstOrDefault();
-                if (token != null)
-                {
-                    account.Tokens.Remove(token);
-                }
-
-                token = new Data.AccountToken
-                {
-                    Type = AccountTokenType.TOTP,
-                    Hash = code,
-                    WhenCreated = DateTime.UtcNow,
-                    UserId = account.Id
-                };
-
-                account.Tokens.Add(token);
-                await _store.Update(account);
+                account.Tokens.Remove(token);
             }
 
-            string secret = Base32Encoding.ToString(Encoding.UTF8.GetBytes(code)).Replace("=","");
-            string target = account.GetProperty("username");
-            return $"otpauth://totp/{target}?secret={secret.ToLower()}";
+            token = new Data.AccountToken
+            {
+                Type = AccountTokenType.TOTP,
+                Hash = Guid.NewGuid().ToString().ToSha1(),
+                WhenCreated = DateTime.UtcNow,
+                UserId = account.Id
+            };
+
+            account.Tokens.Add(token);
+            await _store.Update(account);
+
+            string secret = Base32Encoding.ToString(Encoding.UTF8.GetBytes(token.Hash)).Replace("=","").ToLower();
+            string username = account.GetProperty("username");
+            string result = $"otpauth://totp/{username}?secret={secret}"; //&algorithm=SHA256";
+            if (!string.IsNullOrEmpty(issuer))
+                result += $"&issuer={issuer}";
+            return result;
         }
 
         public async Task<TotpResult> ValidateAccountTOTPAsync(string globalId, string code, Func<string, string, Task<bool>> dupeChecker = null)
@@ -617,7 +618,7 @@ namespace Identity.Accounts.Services
                 var token = account.Tokens.Where(t => t.Type == AccountTokenType.TOTP).FirstOrDefault();
                 if (token != null)
                 {
-                    var otp = new OtpNet.Totp(Encoding.UTF8.GetBytes(token.Hash), mode: OtpHashMode.Sha256);
+                    var otp = new OtpNet.Totp(Encoding.UTF8.GetBytes(token.Hash)); //, mode: OtpHashMode.Sha256);
                     if (otp.VerifyTotp(code, out long matchedStep, new OtpNet.VerificationWindow(1, 1)))
                     {
                         result.Valid = (dupeChecker != null)
@@ -820,7 +821,7 @@ namespace Identity.Accounts.Services
             var token = account.Tokens
                 .Where(t =>
                     t.Hash == accountName.ToSha256() ||
-                    t.Hash == accountName.ToHash()
+                    t.Hash == accountName.ToSha1()
                 ).SingleOrDefault();
 
             if (token != null)

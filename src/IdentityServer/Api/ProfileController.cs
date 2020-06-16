@@ -138,8 +138,7 @@ namespace IdentityServer.Api
         [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> GenerateTOTP()
         {
-            string url = await _svc.GenerateAccountTOTPAsync(User.GetSubjectId());
-            url += "&issuer=" + HttpContext.Request.Host.Host;
+            string url = await _svc.GenerateAccountTOTPAsync(User.GetSubjectId(), Request.Host.Host);
 
             Audit(AuditId.GenerateTotp);
 

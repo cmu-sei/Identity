@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System;
 using System.Linq;
@@ -39,16 +39,23 @@ namespace Identity.Clients.Services
 
             var existing = resources
                 .Where(r => r.Type == ResourceType.Api)
-                .Select(r => r.Name)
                 .ToList();
 
-            var todo = model.Apis.ToList().Except(existing);
-            foreach (string scope in todo)
+            foreach (string scope in model.Apis)
             {
+                var current = existing.SingleOrDefault(r => r.Name == scope);
+                if (current != null)
+                    await _resources.Delete(current.Id);
+
                 await _resources.Add(new Data.Resource{
                     Type = ResourceType.Api,
                     Name = scope,
-                    Enabled = true
+                    Enabled = true,
+                    Claims = new Data.ResourceClaim[] {
+                        new Data.ResourceClaim {
+                            Type = scope
+                        }
+                    }.ToList()
                 });
             }
 
@@ -80,9 +87,6 @@ namespace Identity.Clients.Services
 
             if ("implicit hybrid".Contains(client.GrantType))
                 entity.Flags |= ClientFlag.AllowAccessTokensViaBrowser;
-
-            // if ("authorization_code".Equals(client.GrantType))
-            //     entity.Flags |= ClientFlag.RequirePkce;
 
             if (client.RedirectUrl.HasValue())
             {

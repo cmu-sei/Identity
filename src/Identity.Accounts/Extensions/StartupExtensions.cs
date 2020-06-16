@@ -64,7 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddSingleton<EnvironmentOptions>(sp => new EnvironmentOptions {
                     ContentRoot = System.IO.Path.Combine(
                         contentRoot,
-                        opt.CertValidation.IssuerCertificatesPath
+                        opt.CertValidation.IssuerCertificatesPath ?? "certs"
                     )
                 });
 

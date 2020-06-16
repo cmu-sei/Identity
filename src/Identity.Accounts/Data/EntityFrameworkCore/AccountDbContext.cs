@@ -36,7 +36,7 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
             builder.Entity<AccountCode>(b =>
             {
                 b.HasKey(o => o.Hash);
-                b.Property(o => o.Hash).HasMaxLength(40);
+                b.Property(o => o.Hash).HasMaxLength(64);
             });
 
             builder.Entity<AccountProperty>(b =>
