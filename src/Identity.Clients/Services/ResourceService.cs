@@ -92,6 +92,11 @@ namespace Identity.Clients.Services
             entity.Name = model.Name ?? $"new-api-{_profile.Name.ToKebabCase()}-{new Random().Next().ToString("x")}";
             entity.DisplayName = model.DisplayName ?? entity.Name;
 
+            entity.Claims.Add(new Data.ResourceClaim
+            {
+                Type = ResourceType.Api.ToString(),
+            });
+
             entity.Enabled = _profile.IsPrivileged;
 
             if (entity.Type == ResourceType.Api && !_profile.IsPrivileged)
