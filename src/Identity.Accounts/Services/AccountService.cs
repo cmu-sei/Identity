@@ -35,7 +35,7 @@ namespace Identity.Accounts.Services
             IIssuerService issuerService,
             IProfileService profileService,
             IMapper mapper,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor = null
         ){
             _options = options;
             _logger = logger;
@@ -45,7 +45,7 @@ namespace Identity.Accounts.Services
             _store = store;
             Mapper = mapper;
 
-            var http = httpContextAccessor.HttpContext;
+            var http = httpContextAccessor?.HttpContext;
 
             string url = http is HttpContext
                 ? $"{http.Request.Scheme}://{http.Request.Host.Value}"

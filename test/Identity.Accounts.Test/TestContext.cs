@@ -68,8 +68,8 @@ namespace Tests.Common
                     new TestLogger<AccountService>(),
                     TestCertificates.CertStoreFactory(),
                     null,
-                    null,
-                    Mapper
+                    Mapper,
+                    null
                 );
         }
         public OverrideService GetOverrideService()

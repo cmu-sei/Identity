@@ -100,7 +100,7 @@ namespace Identity.Accounts.Tests
                 userAdded = svc.RegisterWithCredentialsAsync(creds).Result;
                 int code = svc.GenerateAccountCodeAsync(creds.Username).Result.Code;
                 creds.Code = code.ToString();
-                creds.Password = PassGen(code);
+                creds.Password = "321ChangeMe!";
             }
 
             using (var test = CreateTestContext())
