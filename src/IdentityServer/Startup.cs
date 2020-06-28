@@ -280,14 +280,14 @@ namespace IdentityServer
                     .AddRewrite(@"^api/v4/user", "api/profile/alt", true)
             );
 
-            app.UseRouting();
-
-            app.UseCors(_headers.Cors.Name);
+            app.UseStaticFiles();
 
             if (_branding.IncludeSwagger)
                 app.UseConfiguredSwagger(_authOptions, _branding);
 
-            app.UseStaticFiles();
+            app.UseRouting();
+
+            app.UseCors(_headers.Cors.Name);
 
             app.UseAuthentication();
 

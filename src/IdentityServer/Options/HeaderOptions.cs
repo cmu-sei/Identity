@@ -1,6 +1,8 @@
 // Copyright 2020 Carnegie Mellon University.
 // Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
+using System;
+using System.Linq;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace IdentityServer.Options
@@ -36,17 +38,47 @@ namespace IdentityServer.Options
         public string[] Methods { get; set; } = new string[]{};
         public string[] Headers { get; set; } = new string[]{};
         public bool AllowCredentials { get; set; }
+
+        [Obsolete]
         public bool AllowAnyOrigin { get; set; }
+
+        [Obsolete]
         public bool AllowAnyMethod { get; set; }
+
+        [Obsolete]
         public bool AllowAnyHeader { get; set; }
+
         public CorsPolicy Build()
         {
             CorsPolicyBuilder policy = new CorsPolicyBuilder();
-            if (AllowAnyOrigin) policy.AllowAnyOrigin(); else policy.WithOrigins(Origins);
-            if (AllowAnyMethod) policy.AllowAnyMethod(); else policy.WithMethods(Origins);
-            if (AllowAnyHeader) policy.AllowAnyHeader(); else policy.WithHeaders(Origins);
-            if (AllowCredentials && Origins?.Length > 0) policy.AllowCredentials(); else policy.DisallowCredentials();
+
+            ApplyAlls();
+
+            var origins = Origins.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            if (origins.Any()) {
+                if (origins.First() == "*") policy.AllowAnyOrigin(); else policy.WithOrigins(origins);
+                if (AllowCredentials && origins.First() != "*") policy.AllowCredentials(); else policy.DisallowCredentials();
+            }
+
+            var methods = Methods.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            if (methods.Any()) {
+                if (methods.First() == "*") policy.AllowAnyMethod(); else policy.WithMethods(methods);
+            }
+
+            var headers = Headers.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+            if (headers.Any()) {
+                if (headers.First() == "*") policy.AllowAnyHeader(); else policy.WithHeaders(headers);
+            }
+
             return policy.Build();
+        }
+
+        [Obsolete]
+        private void ApplyAlls()
+        {
+            if (AllowAnyOrigin) Origins = new string[] { "*" };
+            if (AllowAnyMethod) Methods = new string[] { "*" };
+            if (AllowAnyHeader) Headers = new string[] { "*" };
         }
     }
 }
