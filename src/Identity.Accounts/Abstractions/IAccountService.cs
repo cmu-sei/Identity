@@ -35,8 +35,6 @@ namespace Identity.Accounts.Abstractions
         Task<AccountCode> GenerateAccountCodeAsync(int id);
         Task<AccountCode> GenerateAccountCodeAsync(string account, bool mustExist = true);
         Task<string> GenerateAccountTOTPAsync(string guid, string issuer = null);
-        Task<string> GenerateAuthenticationTokenAsync(int accountId);
-        object GenerateJwtToken(string guid, string name);
         Task<bool> HasAccounts();
         bool IsDomainValid(string accountName);
         bool IsExpired(DateTime dt);

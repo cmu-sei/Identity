@@ -33,7 +33,6 @@ namespace Identity.Accounts.Services
             AccountOptions options,
             ILogger<AccountService> logger,
             IIssuerService issuerService,
-            ITokenService tokenService,
             IProfileService profileService,
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor
@@ -42,7 +41,6 @@ namespace Identity.Accounts.Services
             _logger = logger;
             _certStore = issuerService;
             _profileService = profileService ?? new DefaultProfileService(store, _options);
-            _tokenService = tokenService ?? new DefaultTokenService(options.Token, _profileService);
             _rand = new Random();
             _store = store;
             Mapper = mapper;
@@ -60,7 +58,6 @@ namespace Identity.Accounts.Services
         protected readonly AccountOptions _options;
         protected readonly ILogger _logger;
         protected readonly IIssuerService _certStore;
-        protected readonly ITokenService _tokenService;
         protected readonly IProfileService _profileService;
         protected IMapper Mapper { get; }
         protected Random _rand;
@@ -685,17 +682,6 @@ namespace Identity.Accounts.Services
                 && code == _options.Password.InitialResetCode;
         }
 
-        public async Task<string> GenerateAuthenticationTokenAsync(int accountId)
-        {
-            //TODO: return a SAML token or something that can be passed to a Relying Party
-            await Task.Delay(0);
-            return "";
-        }
-
-        public virtual object GenerateJwtToken(string globalId, string name)
-        {
-            return _tokenService.GenerateJwt(globalId, name);
-        }
         #endregion
 
         #region Account Modification

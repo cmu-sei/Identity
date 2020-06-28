@@ -39,7 +39,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<IAccountService, AccountService>()
                 .AddScoped<IPropertyService, PropertyService>()
                 .AddScoped<IOverrideService, OverrideService>()
-                .AddScoped<ITokenService, DefaultTokenService>()
                 .AddScoped<IProfileService, DefaultProfileService>()
                 .AddSingleton<IIssuerService, DefaultIssuerService>();
 
@@ -56,10 +55,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             builder.Services.AddOptions()
                 .Configure<AccountOptions>(config)
-                .Configure<TokenOptions>(config.GetSection("Token"))
                 .Configure<CertValidationOptions>(config.GetSection("CertValidation"))
                 .AddScoped(sp => sp.GetService<IOptionsMonitor<AccountOptions>>().CurrentValue)
-                .AddScoped(sp => sp.GetService<IOptionsMonitor<TokenOptions>>().CurrentValue)
                 .AddSingleton<CertValidationOptions>(sp => sp.GetService<IOptions<CertValidationOptions>>().Value)
                 .AddSingleton<EnvironmentOptions>(sp => new EnvironmentOptions {
                     ContentRoot = System.IO.Path.Combine(
