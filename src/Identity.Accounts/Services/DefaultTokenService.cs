@@ -42,7 +42,7 @@ namespace Identity.Accounts.Services
             JwtSecurityToken jwt = new JwtSecurityToken(
                 issuer: _options.Issuer,
                 audience: _options.Audience,
-                claims: _profileService.GetClaimsAsync(globalId, name).Result,
+                claims: _profileService.GetClaimsAsync(globalId, name, "").Result,
                 //notBefore: now,
                 expires: now.AddMinutes(_options.ExpirationMinutes),
                 signingCredentials: signer);
@@ -54,7 +54,7 @@ namespace Identity.Accounts.Services
                 token_type = "Bearer",
                 access_token = encodedJwt,
                 expires_in = _options.ExpirationMinutes * 60,
-                profile = _profileService.GetProfileAsync(globalId, name).Result
+                profile = _profileService.GetProfileAsync(globalId, name, "").Result
             };
         }
     }

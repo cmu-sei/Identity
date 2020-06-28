@@ -21,12 +21,13 @@ namespace Identity.Accounts.Mappers
                 .ForMember(d => d.LockedSeconds, opt => opt.MapFrom(s => s.LockDurationSeconds()))
                 .ForMember(d => d.LockTimeRemaining, opt => opt.MapFrom(s => s.LockDuration()))
                 .AfterMap((s, d, r) => {
-                    var opt = r.Items["ProfileOptions"] as ProfileOptions;
-                    if (!string.IsNullOrEmpty(opt.ImageServerUrl))
+                    var opt = r.Items["profileOptions"] as ProfileOptions;
+                    string url = r.Items["serviceUrl"].ToString();
+                    if (!string.IsNullOrEmpty(url))
                     {
-                        d.Avatar = $"{opt.ImageServerUrl}/{opt.AvatarPath}/{s.GlobalId}";
-                        d.OrgLogo = $"{opt.ImageServerUrl}/{opt.OrgLogoPath}/{s.GetProperty(ClaimTypes.OrgLogo)}";
-                        d.UnitLogo = $"{opt.ImageServerUrl}/{opt.UnitLogoPath}/{s.GetProperty(ClaimTypes.UnitLogo)}";
+                        d.Avatar = $"{url}/{opt.AvatarPath}/{s.GlobalId}";
+                        d.OrgLogo = $"{url}/{opt.OrgLogoPath}/{s.GetProperty(ClaimTypes.OrgLogo)}";
+                        d.UnitLogo = $"{url}/{opt.UnitLogoPath}/{s.GetProperty(ClaimTypes.UnitLogo)}";
                     }
                 });
 
@@ -45,12 +46,13 @@ namespace Identity.Accounts.Mappers
                 .ForMember(d => d.Org, opt => opt.MapFrom(s => s.GetProperty(ClaimTypes.Org)))
                 .ForMember(d => d.Unit, opt => opt.MapFrom(s => s.GetProperty(ClaimTypes.Unit)))
                 .AfterMap((s, d, r) => {
-                    var opt = r.Items["ProfileOptions"] as ProfileOptions;
-                    if (!string.IsNullOrEmpty(opt.ImageServerUrl))
+                    var opt = r.Items["profileOptions"] as ProfileOptions;
+                    string url = r.Items["serviceUrl"].ToString();
+                    if (!string.IsNullOrEmpty(url))
                     {
-                        d.Avatar = $"{opt.ImageServerUrl}/{opt.AvatarPath}/{s.GlobalId}";
-                        d.OrgLogo = $"{opt.ImageServerUrl}/{opt.OrgLogoPath}/{s.GetProperty(ClaimTypes.OrgLogo)}";
-                        d.UnitLogo = $"{opt.ImageServerUrl}/{opt.UnitLogoPath}/{s.GetProperty(ClaimTypes.UnitLogo)}";
+                        d.Avatar = $"{url}/{opt.AvatarPath}/{s.GlobalId}";
+                        d.OrgLogo = $"{url}/{opt.OrgLogoPath}/{s.GetProperty(ClaimTypes.OrgLogo)}";
+                        d.UnitLogo = $"{url}/{opt.UnitLogoPath}/{s.GetProperty(ClaimTypes.UnitLogo)}";
                     }
                 });
 

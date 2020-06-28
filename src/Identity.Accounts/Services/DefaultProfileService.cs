@@ -1,7 +1,9 @@
 // Copyright 2020 Carnegie Mellon University.
 // Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Identity.Accounts.Abstractions;
@@ -25,10 +27,10 @@ namespace Identity.Accounts.Services
         private readonly IAccountStore _store;
         private readonly AccountOptions _options;
 
-        public async Task<Claim[]> GetClaimsAsync(string globalId, string name)
+        public async Task<Claim[]> GetClaimsAsync(string globalId, string name, string url)
         {
             List<Claim> claims = new List<Claim>();
-            var profile = await GetProfileAsync(globalId, name) as Dictionary<string, string>;
+            var profile = await GetProfileAsync(globalId, name, url) as Dictionary<string, string>;
             if (profile != null)
             {
                 foreach (string prop in profile.Keys)
@@ -47,7 +49,7 @@ namespace Identity.Accounts.Services
             return claims.ToArray();
         }
 
-        public async Task<object> GetProfileAsync(string globalId, string name)
+        public async Task<object> GetProfileAsync(string globalId, string name, string url)
         {
             var account = await _store.LoadByGuid(globalId);
             var profile = new Dictionary<string,string>();
@@ -59,6 +61,13 @@ namespace Identity.Accounts.Services
             }
             else
             {
+                var uri = new Uri(url);
+                string[] segments = uri.Host.Split('.');
+                int x = segments.Length > 2
+                    ? segments.Length - 2
+                    : 0;
+                string domain = string.Join('.', segments.Skip(x));
+
                 //profile scope
                 profile.Add(ClaimTypes.Name,  account.GetProperty(ClaimTypes.Name));
                 profile.Add(ClaimTypes.Username, account.GetProperty(ClaimTypes.Username));
@@ -75,7 +84,7 @@ namespace Identity.Accounts.Services
                 }
 
                 //email scope
-                profile.Add(ClaimTypes.Email, account.GetProperty(ClaimTypes.Email) ?? $"{account.GlobalId}@{_options.Profile.Domain}");
+                profile.Add(ClaimTypes.Email, account.GetProperty(ClaimTypes.Email) ?? $"{account.GlobalId}@{domain}");
                 profile.Add(ClaimTypes.EmailVerified, (!profile[ClaimTypes.Email].StartsWith(account.GlobalId)).ToString().ToLower());
 
                 //organization scope
@@ -83,17 +92,16 @@ namespace Identity.Accounts.Services
                 profile.Add(ClaimTypes.Unit, account.GetProperty(ClaimTypes.Unit));
 
                 // set avatar defaults
-                if (!string.IsNullOrEmpty(_options.Profile.ImageServerUrl))
-                {
-                    profile.Add(ClaimTypes.Avatar,
-                        $"{_options.Profile.ImageServerUrl}/{_options.Profile.AvatarPath}/{account.GlobalId}");
+                string imageServerUrl = _options.Profile.ImageServerUrl ?? url + _options.Profile.ImagePath;
 
-                    profile.Add(ClaimTypes.OrgLogo,
-                        $"{_options.Profile.ImageServerUrl}/{_options.Profile.OrgLogoPath}/{account.GetProperty(ClaimTypes.OrgLogo)}");
+                profile.Add(ClaimTypes.Avatar,
+                    $"{imageServerUrl}/{_options.Profile.AvatarPath}/{account.GlobalId}");
 
-                    profile.Add(ClaimTypes.UnitLogo,
-                        $"{_options.Profile.ImageServerUrl}/{_options.Profile.UnitLogoPath}/{account.GetProperty(ClaimTypes.UnitLogo)}");
-                }
+                profile.Add(ClaimTypes.OrgLogo,
+                    $"{imageServerUrl}/{_options.Profile.OrgLogoPath}/{account.GetProperty(ClaimTypes.OrgLogo)}");
+
+                profile.Add(ClaimTypes.UnitLogo,
+                    $"{imageServerUrl}/{_options.Profile.UnitLogoPath}/{account.GetProperty(ClaimTypes.UnitLogo)}");
             }
 
             return profile;

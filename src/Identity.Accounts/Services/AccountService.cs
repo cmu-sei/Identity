@@ -19,6 +19,7 @@ using Identity.Accounts.Exceptions;
 using Identity.Accounts.Extensions;
 using Identity.Accounts.Models;
 using Identity.Accounts.Options;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OtpNet;
@@ -34,7 +35,8 @@ namespace Identity.Accounts.Services
             IIssuerService issuerService,
             ITokenService tokenService,
             IProfileService profileService,
-            IMapper mapper
+            IMapper mapper,
+            IHttpContextAccessor httpContextAccessor
         ){
             _options = options;
             _logger = logger;
@@ -44,6 +46,14 @@ namespace Identity.Accounts.Services
             _rand = new Random();
             _store = store;
             Mapper = mapper;
+
+            var http = httpContextAccessor.HttpContext;
+
+            string url = http is HttpContext
+                ? $"{http.Request.Scheme}://{http.Request.Host.Value}"
+                : "";
+
+            _serviceUrl = options.Profile.ImageServerUrl ?? url + options.Profile.ImagePath;
         }
 
         protected readonly IAccountStore _store;
@@ -54,6 +64,7 @@ namespace Identity.Accounts.Services
         protected readonly IProfileService _profileService;
         protected IMapper Mapper { get; }
         protected Random _rand;
+        string _serviceUrl = "";
 
         #region Registration
 
@@ -90,7 +101,8 @@ namespace Identity.Accounts.Services
             await UpdatePasswordAsync(account, credentials.Password);
 
             return Mapper.Map<Account>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 });
         }
 
@@ -141,7 +153,8 @@ namespace Identity.Accounts.Services
             }
 
             return Mapper.Map<Account>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 });
         }
 
@@ -156,7 +169,8 @@ namespace Identity.Accounts.Services
             var detail = new CertificateSubjectDetail(subject);
             Data.Account account = await Register(detail.ExternalId, detail.DisplayName, AccountTokenType.Certificate, detail.IsAffiliate);
             return Mapper.Map<Account>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 });
         }
 
@@ -425,7 +439,8 @@ namespace Identity.Accounts.Services
             OnUserAuthenticated(account);
             await _store.Update(account);
             return Mapper.Map<Account>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 });
         }
 
@@ -891,7 +906,8 @@ namespace Identity.Accounts.Services
             await _store.Update(account);
 
             return Mapper.Map<Account>(account, opts => {
-                opts.Items["ProfileOptions"] = _options.Profile;
+                opts.Items["serviceUrl"] = _serviceUrl;
+                opts.Items["profileOptions"] = _options.Profile;
             });
         }
 
@@ -916,7 +932,8 @@ namespace Identity.Accounts.Services
             Data.Account account = await _store.Load(id);
             return (account != null)
                 ? Mapper.Map<Account>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 })
                 : null;
         }
@@ -926,7 +943,8 @@ namespace Identity.Accounts.Services
             Data.Account account = await _store.LoadByToken(accountName);
             return (account != null)
                 ? Mapper.Map<Account>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 })
                 : null;
         }
@@ -936,7 +954,8 @@ namespace Identity.Accounts.Services
             Data.Account account = await _store.LoadByGuid(guid);
             return (account != null)
                 ? Mapper.Map<Account>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 })
                 : null;
         }
@@ -947,7 +966,8 @@ namespace Identity.Accounts.Services
             // TODO: consider returning filtered claims here
             return (account != null && (isSelf || account.IsPublic || _options.Profile.ForcePublic))
                 ? Mapper.Map<AccountProfile>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 })
                 : new AccountProfile();
         }
@@ -981,7 +1001,8 @@ namespace Identity.Accounts.Services
             Data.Account account = await _store.LoadByGuid(guid);
             return (account != null)
                 ? Mapper.Map<AlternateAccountProfile>(account, opts => {
-                    opts.Items["ProfileOptions"] = _options.Profile;
+                    opts.Items["serviceUrl"] = _serviceUrl;
+                    opts.Items["profileOptions"] = _options.Profile;
                 })
                 : new AlternateAccountProfile();
         }
@@ -997,7 +1018,8 @@ namespace Identity.Accounts.Services
                 .ToArrayAsync(ct);
 
             return Mapper.Map<Account[]>(list, opts => {
-                opts.Items["ProfileOptions"] = _options.Profile;
+                opts.Items["serviceUrl"] = _serviceUrl;
+                opts.Items["profileOptions"] = _options.Profile;
             });
         }
 
@@ -1043,7 +1065,8 @@ namespace Identity.Accounts.Services
 
                 if (account != null)
                     return Mapper.Map<Account[]>(new Data.Account[] { account }, opts => {
-                        opts.Items["ProfileOptions"] = _options.Profile;
+                        opts.Items["serviceUrl"] = _serviceUrl;
+                        opts.Items["profileOptions"] = _options.Profile;
                     });
             }
 
@@ -1092,7 +1115,8 @@ namespace Identity.Accounts.Services
             var list = await query.ToArrayAsync(ct);
 
             return Mapper.Map<Account[]>(list, opts => {
-                opts.Items["ProfileOptions"] = _options.Profile;
+                opts.Items["serviceUrl"] = _serviceUrl;
+                opts.Items["profileOptions"] = _options.Profile;
             });
         }
 
