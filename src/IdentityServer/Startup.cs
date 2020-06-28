@@ -74,6 +74,23 @@ namespace IdentityServer
                 new JAvatar.ImageFolder { Name = accountOptions.Profile.UnitLogoPath, NameMode = JAvatar.FileNameMode.SubjectAppend, Browseable = true }
             };
 
+            // TODO: move this up into javatar library
+            foreach (var folder in _javatar.Folders)
+                Directory.CreateDirectory(Path.Combine("wwwroot/javatar", folder.Name));
+
+            string png = Path.Combine("wwwroot/javatar", accountOptions.Profile.OrgLogoPath, "default.png");
+            if (!File.Exists(png))
+                File.Copy("wwwroot/javatar-o-default.png", png);
+
+            png = Path.Combine("wwwroot/javatar", accountOptions.Profile.UnitLogoPath, "default.png");
+            if (!File.Exists(png))
+                File.Copy("wwwroot/javatar-u-default.png", png);
+
+            png = Path.Combine("wwwroot/javatar", accountOptions.Profile.AvatarPath, "default.png");
+            if (!File.Exists(png) && accountOptions.Profile.UseDefaultAvatar)
+                File.Copy("wwwroot/javatar-p-default.png", png);
+
+
             // By default, Microsoft has some legacy claim mapping that converts
             // standard JWT claims into proprietary ones. This removes those mappings.
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();

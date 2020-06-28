@@ -12,5 +12,6 @@ namespace Identity.Accounts.Options
         public string OrgLogoPath { get; set; } = "o";
         public string AvatarPath { get; set; } = "p";
         public string DefaultLogo { get; set; } = "default.png";
+        public bool UseDefaultAvatar { get; set; }
     }
 }
