@@ -481,8 +481,9 @@ namespace IdentityServer.Features.Account
                 {
                     ModelState.AddModelError("", "Email not confirmed");
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger.LogError(ex, "Error during password reset");
                     ModelState.AddModelError("", "Invalid request");
                     _cookies.Remove(CONFIRM_COOKIE);
                 }
@@ -584,6 +585,7 @@ namespace IdentityServer.Features.Account
                 }
                 catch (Exception ex)
                 {
+                    Logger.LogError(ex, "Error registering account.");
                     ModelState.AddModelError("", ex.GetType().Name);
                 }
             }
