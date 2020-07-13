@@ -20,7 +20,12 @@
                                 <input class="form-control" placeholder="Email" required
                                     aria-label="enter email address" asp-for="Email" autofocus>
                             </div>
-                            <p class="small" aria-label="allowed domain list">@Model.AllowedDomains</p>
+
+                            @if (Model.Action == "Register")
+                            {
+                                <p class="small" aria-label="allowed domain list">@Model.AllowedDomains</p>
+                            }
+
                         } else {
                             <input type="hidden" asp-for="Email" />
                             <p>@Model.Email</p>

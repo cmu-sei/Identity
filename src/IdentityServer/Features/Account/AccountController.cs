@@ -355,13 +355,20 @@ namespace IdentityServer.Features.Account
                 //on email change, validate deeper
                 if (model.Email != state.Token)
                 {
-                    if (!_accountSvc.IsDomainValid(model.Email))
+                    if (state.Action == "Register"
+                        && !_accountSvc.IsDomainValid(model.Email)
+                    ){
                         ModelState.AddModelError("", "Invalid domain");
+                    }
+
                     bool exists = ! await _accountSvc.IsTokenUniqueAsync(model.Email);
+
                     if (state.Action == "Register" && exists)
                         ModelState.AddModelError("", "Unable to register that account");
+
                     if (state.Action == "Reset" && ! exists)
                         ModelState.AddModelError("", "Unable to reset that account");
+
                     if (!ModelState.IsValid)
                     {
                         return View(vm);
