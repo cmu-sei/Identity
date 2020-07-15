@@ -128,7 +128,7 @@ namespace IdentityServer.Api
             {
                 To = String.Join("; ", addresses.ToArray()),
                 Subject = message.Subject,
-                Text = message.Body
+                Html = message.Body
             });
 
             return Ok();
