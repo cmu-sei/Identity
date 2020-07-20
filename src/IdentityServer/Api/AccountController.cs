@@ -107,6 +107,9 @@ namespace IdentityServer.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> SendEmail([FromBody]RelayMailMessage message)
         {
+            if (message.Body.Contains("##sendall##"))
+                return await SendEmailAll(message);
+
             List<string> addresses = new List<string>();
             foreach(string id in message.To)
             {
@@ -124,12 +127,76 @@ namespace IdentityServer.Api
             if (addresses.Count == 0)
                 throw new Exception("No valid addresses.");
 
-            await _mailer.Send(new MailMessage
+            var response = await _mailer.Send(new MailMessage
             {
                 To = String.Join("; ", addresses.ToArray()),
                 Subject = message.Subject,
                 Html = message.Body
             });
+
+            Logger.LogDebug("");
+
+            return Ok();
+        }
+
+        [HttpPost("api/account/mailall")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> SendEmailAll([FromBody]RelayMailMessage message)
+        {
+            var list = await _svc.FindAll(new SearchModel());
+
+            var results = new List<MailMessageStatus>(list.Length);
+
+            string msgId = Guid.NewGuid().ToString("N");
+
+            foreach (var account in list)
+            {
+                List<string> addresses = new List<string>();
+                string name = account.Properties.FirstOrDefault(p => p.Key == Identity.Accounts.ClaimTypes.Name)?.Value;
+                foreach (var email in account.Properties.Where(p => p.Key == Identity.Accounts.ClaimTypes.Email).Select(p => p.Value))
+                {
+                    addresses.Add($"{name} <{email}>");
+                }
+
+                if (addresses.Count == 0)
+                    continue;
+
+                string to = String.Join("; ", addresses.ToArray());
+
+                var response = await _mailer.Send(new MailMessage
+                {
+                    To = to,
+                    Subject = message.Subject,
+                    Html = message.Body.Replace("{name}", name),
+                    MessageId = $"{msgId}-{to}"
+                });
+
+                results.Add(response);
+            }
+
+            bool done = false;
+            int pass = 0;
+
+            while  (!done && pass < 3)
+            {
+                await Task.Delay(10000);
+
+                done = true;
+                foreach (var item in results.Where(r => r.Status == "pending"))
+                {
+                    var response = await _mailer.Status(item.ReferenceId);
+                    item.Status = response.Status;
+                    done &= item.Status != "pending";
+                }
+
+                pass += 1;
+            }
+
+            Logger.LogInformation("send mail success: {0}", results.Where(r => r.Status == "success").Count());
+            foreach (var item in results.Where(r => r.Status != "success"))
+            {
+                Logger.LogInformation("send mail fail: {0} {1}", item.Status, item.MessageId);
+            }
 
             return Ok();
         }
@@ -146,6 +213,8 @@ namespace IdentityServer.Api
     public class RelayMailMessage
     {
         public string[] To { get; set; }
+        public string[] Cc { get; set; }
+        public string[] Bcc { get; set; }
         public string From { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
