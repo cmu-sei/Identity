@@ -17,7 +17,7 @@
 
     <header class="jumbotron jumbotron-fluid mb-0">
         <div class="container">
-            <p class="display-4"><a class="jumbo" href="/">@ViewBag.AppName</a></p>
+            <p class="display-4"><a class="jumbo" href="~/">@ViewBag.AppName</a></p>
             <p class="lead">Serving OpenId Connect Identity</p>
         </div>
     </header>
@@ -26,8 +26,8 @@
         @{
             if (!string.IsNullOrEmpty(Context.User?.FindFirst("name")?.Value))
             {
-                <a class="nav-item nav-link" href="/">Home</a>
-                <a class="nav-item nav-link" href="/grants">Grants</a>
+                <a class="nav-item nav-link" href="~/">Home</a>
+                <a class="nav-item nav-link" href="~/grants">Grants</a>
                 @if (ViewBag.UiHost != string.Empty)
                 {
                     <a class="nav-item nav-link" href="@ViewBag.UiHost/profile">Profile</a>

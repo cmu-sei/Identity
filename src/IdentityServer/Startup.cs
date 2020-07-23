@@ -291,6 +291,8 @@ namespace IdentityServer
             if (_headers.UseHsts)
                 app.UseHsts();
 
+            app.UsePathBase(_branding.PathBase);
+
             app.UseRewriter(
                 new RewriteOptions()
                     .AddRewrite(@"^oauth/(.*)", "connect/$1", true)

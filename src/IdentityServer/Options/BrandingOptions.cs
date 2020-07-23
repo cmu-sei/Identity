@@ -6,6 +6,7 @@ namespace IdentityServer.Options
     public class BrandingOptions
     {
         public string ApplicationName { get; set; } = "Identity";
+        public string PathBase { get; set; }
         public string LogoUrl { get; set; }
         public string UiHost { get; set; }
         public string Title { get; set; } = "OpenID Connect";
