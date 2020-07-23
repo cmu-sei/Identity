@@ -107,20 +107,21 @@ namespace IdentityServer.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> SendEmail([FromBody]RelayMailMessage message)
         {
-            if (message.Body.Contains("##sendall##"))
-                return await SendEmailAll(message);
-
             List<string> addresses = new List<string>();
             foreach(string id in message.To)
             {
                 var account = await _svc.FindByGuidAsync(id);
+
                 if (account != null)
                 {
-                    string name = account.Properties.FirstOrDefault(p => p.Key == Identity.Accounts.ClaimTypes.Name)?.Value;
-                    foreach (var email in account.Properties.Where(p => p.Key == Identity.Accounts.ClaimTypes.Email).Select(p => p.Value))
-                    {
-                        addresses.Add($"{name} <{email}>");
-                    }
+                    string name = account.Properties
+                        .FirstOrDefault(p => p.Key == Identity.Accounts.ClaimTypes.Name)?.Value;
+
+                    addresses.AddRange(account.Properties
+                        .Where(p => p.Key == Identity.Accounts.ClaimTypes.Email)
+                        .Select(p => $"{name} <{p.Value}>")
+                        .ToList()
+                    );
                 }
             }
 
@@ -134,8 +135,6 @@ namespace IdentityServer.Api
                 Html = message.Body
             });
 
-            Logger.LogDebug("");
-
             return Ok();
         }
 
@@ -143,7 +142,12 @@ namespace IdentityServer.Api
         [ProducesResponseType(200)]
         public async Task<IActionResult> SendEmailAll([FromBody]RelayMailMessage message)
         {
-            var list = await _svc.FindAll(new SearchModel());
+            var list = await _svc.FindAll(
+                new SearchModel
+                {
+                    Term = "#enabled"
+                }
+            );
 
             var results = new List<MailMessageStatus>(list.Length);
 
@@ -151,25 +155,28 @@ namespace IdentityServer.Api
 
             foreach (var account in list)
             {
-                List<string> addresses = new List<string>();
-                string name = account.Properties.FirstOrDefault(p => p.Key == Identity.Accounts.ClaimTypes.Name)?.Value;
-                foreach (var email in account.Properties.Where(p => p.Key == Identity.Accounts.ClaimTypes.Email).Select(p => p.Value))
-                {
-                    addresses.Add($"{name} <{email}>");
-                }
+                string name = account.Properties
+                    .FirstOrDefault(p => p.Key == Identity.Accounts.ClaimTypes.Name)?.Value;
+
+                var addresses = account.Properties
+                    .Where(p => p.Key == Identity.Accounts.ClaimTypes.Email)
+                    .Select(p => $"{name} <{p.Value}>")
+                    .ToList();
 
                 if (addresses.Count == 0)
                     continue;
 
                 string to = String.Join("; ", addresses.ToArray());
 
-                var response = await _mailer.Send(new MailMessage
+                var msg = new MailMessage
                 {
                     To = to,
                     Subject = message.Subject,
                     Html = message.Body.Replace("{name}", name),
                     MessageId = $"{msgId}-{to}"
-                });
+                };
+
+                var response = await _mailer.Send(msg);
 
                 results.Add(response);
             }
@@ -177,11 +184,12 @@ namespace IdentityServer.Api
             bool done = false;
             int pass = 0;
 
-            while  (!done && pass < 3)
+            while  (!done && pass < 5)
             {
                 await Task.Delay(10000);
 
                 done = true;
+
                 foreach (var item in results.Where(r => r.Status == "pending"))
                 {
                     var response = await _mailer.Status(item.ReferenceId);
@@ -193,6 +201,7 @@ namespace IdentityServer.Api
             }
 
             Logger.LogInformation("send mail success: {0}", results.Where(r => r.Status == "success").Count());
+
             foreach (var item in results.Where(r => r.Status != "success"))
             {
                 Logger.LogInformation("send mail fail: {0} {1}", item.Status, item.MessageId);

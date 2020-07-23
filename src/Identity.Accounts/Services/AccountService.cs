@@ -1072,6 +1072,10 @@ namespace Identity.Accounts.Services
                         query = query.Where(a => a.Role != AccountRole.Member);
                         break;
 
+                        case "#enabled":
+                        query = query.Where(a => a.Status == AccountStatus.Enabled);
+                        break;
+
                         case "#disabled":
                         query = query.Where(a => a.Status == AccountStatus.Disabled);
                         break;
