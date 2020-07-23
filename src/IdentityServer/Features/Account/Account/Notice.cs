@@ -6,6 +6,7 @@ namespace IdentityServer.Models
     public class NoticeModel
     {
         public string ReturnUrl { get; set; }
+        public string EncodedReturnUrl { get; set; }
         public string Next { get; set; }
     }
 

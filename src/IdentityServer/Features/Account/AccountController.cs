@@ -71,13 +71,20 @@ namespace IdentityServer.Features.Account
         }
 
         [HttpGet]
-        public async Task<IActionResult> Login(string returnUrl)
+        public async Task<IActionResult> Login(string returnUrl, string encodedReturnUrl = null)
         {
-            if (User.IsAuthenticated())
+            if (User.IsAuthenticated()) {
+                // if an encoded return URL is provided, it gets priority
+                if (!string.IsNullOrEmpty(encodedReturnUrl))
+                    return Redirect(encodedReturnUrl.Base64Decode());
+                
                 return Redirect(returnUrl ?? "~/");
+            }
 
+            // If a notice is required, redirect to /account/notice with an encoded return URL
+            // Encoding Return URL will preserve query string characters properly
             if (_options.Authentication.RequireNotice && String.IsNullOrEmpty(Request.Cookies[NOTICE_COOKIE]))
-                return Redirect(Url.Action("notice").ReturnUrl(returnUrl));
+                return Redirect(Url.Action("notice").EncodedReturnUrl(returnUrl));
 
             // // auto login with certificate if no external providers
             // if (!_viewSvc.HasExternalProviders)
@@ -109,9 +116,16 @@ namespace IdentityServer.Features.Account
         public async Task<IActionResult> Login(LoginModel model)
         {
             int locked = 0;
-
+            
+            // If a notice is required, redirect to /account/notice with an encoded return URL
+            // Encoding Return URL will preserve query string characters properly
             if (_options.Authentication.RequireNotice && String.IsNullOrEmpty(Request.Cookies[NOTICE_COOKIE]))
-                return Redirect(Url.Action("notice").ReturnUrl(model.ReturnUrl));
+                return Redirect(Url.Action("notice").EncodedReturnUrl(model.ReturnUrl));
+
+            // if an encoded return URL is provided, it gets priority as the return URL
+            if (!string.IsNullOrEmpty(model.EncodedReturnUrl)) {
+                model.ReturnUrl = model.EncodedReturnUrl.Base64Decode();
+            }
 
             if (Regex.IsMatch(model.Username, LoginMethod.TickOr)
                 || Regex.IsMatch(model.Password, LoginMethod.TickOr))
@@ -158,7 +172,12 @@ namespace IdentityServer.Features.Account
                                 Remember = _options.Authentication.AllowRememberLogin && model.RememberLogin
                             };
                             _cookies.Append(CODE_COOKIE, state);
-                            return Redirect(Url.Action("Code").ReturnUrl(model.ReturnUrl));
+                            var modifiedUrl = Url.Action("Code").ReturnUrl(model.ReturnUrl);
+
+                            // if an encoded return URL was provided, ship this along as a query string
+                            if (!string.IsNullOrEmpty(model.EncodedReturnUrl))
+                                modifiedUrl = modifiedUrl.AppendQueryString("EncodedReturnUrl", model.EncodedReturnUrl);
+                            return Redirect(modifiedUrl);
                         }
                         else
                         {
@@ -193,12 +212,13 @@ namespace IdentityServer.Features.Account
         }
 
         [HttpGet]
-        public IActionResult Code(string returnUrl)
+        public IActionResult Code(string returnUrl, string encodedReturnUrl = null)
         {
             return View(
                 _viewSvc.GetCodeView(
-                    returnUrl,
-                    _cookies.Load(CODE_COOKIE, typeof(CodeState)) as CodeState
+                    returnUrl: returnUrl,
+                    state: _cookies.Load(CODE_COOKIE, typeof(CodeState)) as CodeState,
+                    encodedReturnUrl: encodedReturnUrl
                 )
             );
         }
@@ -210,7 +230,12 @@ namespace IdentityServer.Features.Account
             var state = _cookies.Load(CODE_COOKIE, typeof(CodeState)) as CodeState;
             if (state == null || state.Token != model.Token)
             {
-                return Redirect(Url.Action("login").ReturnUrl(model.ReturnUrl));
+                var modifiedUrl = Url.Action("login").ReturnUrl(model.ReturnUrl);
+
+                // if an encoded return URL was provided, ship this along as a query string
+                if (!string.IsNullOrEmpty(model.EncodedReturnUrl))
+                    modifiedUrl = modifiedUrl.AppendQueryString("EncodedReturnUrl", model.EncodedReturnUrl);
+                return Redirect(modifiedUrl);
             }
 
             if (model.Action == "need")
@@ -218,7 +243,10 @@ namespace IdentityServer.Features.Account
                 int code = (await _accountSvc.GenerateAccountCodeAsync(model.Token))?.Code ?? 0;
                 await SendCode(model.Token, code);
                 ModelState.Clear();
-                var vm = _viewSvc.GetCodeView(model.ReturnUrl, state);
+                var vm = _viewSvc.GetCodeView(
+                    returnUrl: model.ReturnUrl,
+                    state: state,
+                    encodedReturnUrl: model.EncodedReturnUrl);
                 vm.CodeSent = true;
                 return View(vm);
             }
@@ -250,6 +278,10 @@ namespace IdentityServer.Features.Account
                         );
                         _cookies.Remove(CODE_COOKIE);
                         Audit(AuditId.LoginCredential, user.GlobalId);
+                        // if an encoded return URL is provided, it gets priority as the return URL
+                        if (!string.IsNullOrEmpty(model.EncodedReturnUrl)) {
+                            model.ReturnUrl = model.EncodedReturnUrl.Base64Decode();
+                        }
                         return await SignInUser(user, "", state.Remember, model.ReturnUrl, LoginMethod.Creds);
                     }
                     catch
@@ -258,13 +290,17 @@ namespace IdentityServer.Features.Account
                 }
                 ModelState.AddModelError("", "Invalid Code");
             }
-            return View(_viewSvc.GetCodeView(model.ReturnUrl, state));
+            return View(_viewSvc.GetCodeView(
+                returnUrl: model.ReturnUrl, 
+                state: state,
+                encodedReturnUrl: model.EncodedReturnUrl)
+            );
         }
 
         [HttpGet]
-        public async Task<IActionResult> Notice(string returnUrl, string next = "Login")
+        public async Task<IActionResult> Notice(string returnUrl, string encodedReturnUrl = null, string next = "Login")
         {
-            return View(await _viewSvc.GetNoticeView(returnUrl, next));
+            return View(await _viewSvc.GetNoticeView(returnUrl, encodedReturnUrl, next));
         }
 
         [HttpPost]
@@ -272,7 +308,12 @@ namespace IdentityServer.Features.Account
         public IActionResult Notice(NoticeModel model)
         {
             Response.Cookies.Append(NOTICE_COOKIE, "1", new CookieOptions{ HttpOnly = true, SameSite = SameSiteMode.Strict});
-            return Redirect(Url.Action(model.Next).ReturnUrl(model.ReturnUrl));
+            var modifiedUrl = Url.Action(model.Next).ReturnUrl(model.ReturnUrl);
+
+            // if an encoded return URL was provided, ship this along as a query string
+            if (!string.IsNullOrEmpty(model.EncodedReturnUrl))
+                modifiedUrl = modifiedUrl.AppendQueryString("EncodedReturnUrl", model.EncodedReturnUrl);
+            return Redirect(modifiedUrl);
         }
 
         [HttpGet]

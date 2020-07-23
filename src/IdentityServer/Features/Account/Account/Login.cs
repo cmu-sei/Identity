@@ -13,6 +13,7 @@ namespace IdentityServer.Models
         public string Password { get; set; }
         public bool RememberLogin { get; set; }
         public string ReturnUrl { get; set; }
+        public string EncodedReturnUrl { get; set; }
         public string Provider { get; set; }
     }
 

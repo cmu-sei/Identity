@@ -40,6 +40,13 @@ namespace IdentityServer.Extensions
                 : $"{url}?ReturnUrl={Uri.EscapeDataString(Uri.UnescapeDataString(returnUrl))}";
         }
 
+        public static string EncodedReturnUrl(this string url, string returnUrl)
+        {
+            return String.IsNullOrEmpty(returnUrl)
+                ? url
+                : $"{url}?EncodedReturnUrl={Uri.EscapeDataString(Uri.UnescapeDataString(returnUrl.Base64Encode()))}";
+        }
+
         public static string AppendQueryString(this string url, string key, string value)
         {
             if (String.IsNullOrEmpty(value))
@@ -48,6 +55,16 @@ namespace IdentityServer.Extensions
             string item = Uri.EscapeDataString(key) + "=" + Uri.EscapeDataString(Uri.UnescapeDataString(value));
             string prefix = url.Contains('?') ? "&" : "?";
             return url + prefix + item;
+        }
+
+        public static string Base64Encode(this string plainText) {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        public static string Base64Decode(this string base64EncodedData) {
+           var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
         public static Claim ToClaim(this string value)

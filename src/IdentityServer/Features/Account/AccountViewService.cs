@@ -118,9 +118,9 @@ namespace IdentityServer.Features.Account
             return vm;
         }
 
-        public async Task<NoticeModel> GetNoticeView(string returnUrl, string next = "Login")
+        public async Task<NoticeModel> GetNoticeView(string returnUrl, string encodedReturnUrl = null, string next = "Login")
         {
-            var model = new NoticeViewModel { ReturnUrl = returnUrl, Next = next};
+            var model = new NoticeViewModel { ReturnUrl = returnUrl, EncodedReturnUrl = encodedReturnUrl, Next = next};
             model.Text = await LoadConfigFile(_options.Authentication.NoticeFile)
                 ?? "This site uses cookies to manage authentication.";
             return model;
@@ -134,10 +134,11 @@ namespace IdentityServer.Features.Account
             return model;
         }
 
-        public CodeViewModel GetCodeView(string returnUrl, CodeState state)
+        public CodeViewModel GetCodeView(string returnUrl, CodeState state, string encodedReturnUrl = null)
         {
             return new CodeViewModel() {
                 ReturnUrl = returnUrl,
+                EncodedReturnUrl = encodedReturnUrl,
                 Token = state?.Token,
             };
         }

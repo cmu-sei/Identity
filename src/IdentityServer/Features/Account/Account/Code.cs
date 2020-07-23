@@ -13,6 +13,7 @@ namespace IdentityServer.Models
         public string Code { get; set; }
         public string Action { get; set; }
         public string ReturnUrl { get; set; }
+        public string EncodedReturnUrl { get; set; }
     }
 
     public class CodeViewModel : CodeModel
