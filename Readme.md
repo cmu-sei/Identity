@@ -29,6 +29,18 @@ This app is generally integrated with *identity-ui*, *JAvatar* and *AppMailRelay
 * `bash pullcdn.sh` or `pullcdn.ps1`
 * `dotnet build`
 
+### Run
+Default settings are provided for "no-config" startup, meaning you can simple build the code and run.
+However, these are *not* production worthy settings.
+Namely, it uses an In-Memory database.
+You'll want to change that to PostgreSQL or SqlServer.
+
+Additionally, you'll want to set the `Account_AdminEmail` and `Account_AdminPassword` to have creds
+to log in with.  Require2FA is true by default, so you should also add a `Account_OverrideCode` to
+use as a temporary 2FA code, or set Require2FA to false.
+
+`dotnet run` will get the code running at `http://localhost:5000` and swagger is at `/api`
+
 ### Support
 
 Please use the issue tracker for bug reports and feature requests.

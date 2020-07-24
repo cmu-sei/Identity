@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System.Threading.Tasks;
 using IdentityServer4.Models;
@@ -40,7 +40,7 @@ namespace IdentityServer.Services
                     .ToArray();
 
                 foreach (string scope in allowedScopes)
-                    if (!model.Scopes.Contains(scope))
+                    if (model.Scopes.HasValue() && !model.Scopes.Contains(scope))
                         model.Scopes += " " + scope;
 
                 string clientUrl = model.RedirectUrls
@@ -72,7 +72,7 @@ namespace IdentityServer.Services
                     ClientName = model.DisplayName,
                     Description = model.Description,
                     AllowedGrantTypes = model.Grants.Split(" "),
-                    AllowedScopes = model.Scopes.Split(" "),
+                    AllowedScopes = model.Scopes?.Split(" "),
                     PairWiseSubjectSalt = model.PairWiseSubjectSalt,
                     RequirePkce = model.RequirePkce,
                     AllowAccessTokensViaBrowser = model.AllowAccessTokensViaBrowser,
