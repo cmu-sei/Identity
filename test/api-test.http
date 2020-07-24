@@ -11,8 +11,9 @@ POST {{api}}/resource/devimport
         {
             "Id": "dev-client",
             "Secret": "dev-secret",
-            "GrantType": "password",
-            "Scopes": "openid profile identity-api identity-api-privileged"
+            "GrantType": "client_credentials",
+            "Scopes": "openid profile identity-api identity-api-privileged",
+            "RedirectUrl": "http://localhost:5000"
         }
     ]
 }
@@ -26,46 +27,21 @@ grant_type=client_credentials
 &client_id=dev-client
 &client_secret=dev-secret
 
-# &scope=openid profile identity-api identity-api-privileged
-
 ###
 GET {{api}}/accounts
 {{auth}}
 
 ###
-POST {{api}}/account/mail
+POST {{api}}/account/spam
 {{auth}}
 {{json}}
 
 {
-    "To": [
+    "to": [
         "9fd3c38e-58b0-4af1-80d1-1895af91f1f9",
         "3269cb19-1d39-40d3-a55e-e3e9779b6e0b",
-        "ac4d3e32-c2d6-4f99-9aef-0fcd62a568a6",
+        "ac4d3e32-c2d6-4f99-9aef-0fcd62a568a6"
     ],
-    "Subject": "cmu-sei",
-    "Body": "this is an email body.  don't squander it."
-}
-
-
-###
-POST {{api}}/resource/devimport
-{{json}}
-
-{
-    "Apis": [ "project-api" ],
-    "Clients": [
-        {
-            "Id": "identity-ui",
-            "GrantType": "authorization_code",
-            "Scopes": "openid role identity-api",
-            "RedirectUrl": "http://localhost:4200/oidc"
-        },
-        {
-            "Id": "project-swagger",
-            "GrantType": "implicit",
-            "Scopes": "openid project-api",
-            "RedirectUrl": "http://localhost:5004/api/oauth-redirect.html"
-        }
-    ]
+    "subject": "cmu-sei",
+    "body": "Dear {name}, this is an email body.  don't squander it."
 }

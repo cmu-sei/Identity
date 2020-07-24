@@ -51,7 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
             string contentRoot
         ){
             var config = accountConfigurationSection();
-            var opt = config.Get<AccountOptions>();
+            var opt = config.Get<AccountOptions>() ?? new AccountOptions();
 
             builder.Services.AddOptions()
                 .Configure<AccountOptions>(config)

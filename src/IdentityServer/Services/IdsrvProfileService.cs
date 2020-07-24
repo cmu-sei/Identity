@@ -34,7 +34,7 @@ namespace IdentityServer.Services
 
             if (!String.IsNullOrEmpty(id))
             {
-                string host = $"{_http.Request.Scheme}://{_http.Request.Host.Value}";
+                string host = $"{_http.Request.Scheme}://{_http.Request.Host.Value}{_http.Request.PathBase}";
                 var claims  = (await _profileSvc.GetClaimsAsync(id, name, host)).ToList();
                 context.AddRequestedClaims(claims);
 
