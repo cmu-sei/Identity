@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System;
 using System.Security.Claims;
@@ -37,7 +37,7 @@ namespace IdentityServer.Extensions
         {
             return String.IsNullOrEmpty(returnUrl)
                 ? url
-                : $"{url}?ReturnUrl={Uri.EscapeDataString(Uri.UnescapeDataString(returnUrl))}";
+                : $"{url}?ReturnUrl={Uri.EscapeDataString(returnUrl)}";
         }
 
         public static string AppendQueryString(this string url, string key, string value)
