@@ -108,9 +108,12 @@ namespace IdentityServer.Api
         public async Task<IActionResult> SendEmail([FromBody]RelayMailMessage message)
         {
             List<string> addresses = new List<string>();
-            foreach(string id in message.To)
+            foreach(string id in message.To.Select(x => x.Trim()))
             {
                 var account = await _svc.FindByGuidAsync(id);
+
+                if (account == null)
+                    account = await _svc.FindByAccountAsync(id);
 
                 if (account != null)
                 {
@@ -131,6 +134,9 @@ namespace IdentityServer.Api
             var response = await _mailer.Send(new MailMessage
             {
                 To = String.Join("; ", addresses.ToArray()),
+                Cc = string.Join("; ", message.Cc),
+                Bcc = string.Join("; ", message.Bcc),
+                From = message.From,
                 Subject = message.Subject,
                 Html = message.Body
             });
@@ -138,9 +144,9 @@ namespace IdentityServer.Api
             return Ok();
         }
 
-        [HttpPost("api/account/mailall")]
+        [HttpPost("api/account/mailbatch")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> SendEmailAll([FromBody]RelayMailMessage message)
+        public async Task<IActionResult> SendEmailBatch([FromBody]RelayMailMessage message)
         {
             var list = await _svc.FindAll(
                 new SearchModel
@@ -148,6 +154,18 @@ namespace IdentityServer.Api
                     Term = "#enabled"
                 }
             );
+
+            // domain subset
+            if (
+                message.To.First().StartsWith("@")
+                && message.To.First() != "@here"
+            )
+            {
+                list = list
+                    .Where(a => a.Properties.Any(p =>
+                        p.Key == "email" && p.Value.EndsWith(message.To.First()))
+                    ).ToArray();
+            }
 
             var results = new List<MailMessageStatus>(list.Length);
 
@@ -171,6 +189,9 @@ namespace IdentityServer.Api
                 var msg = new MailMessage
                 {
                     To = to,
+                    Cc = string.Join("; ", message.Cc),
+                    Bcc = string.Join("; ", message.Bcc),
+                    From = message.From,
                     Subject = message.Subject,
                     Html = message.Body.Replace("{name}", name),
                     MessageId = $"{msgId}-{to}"
