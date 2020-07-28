@@ -94,7 +94,7 @@ namespace Identity.Clients.Services
 
             entity.Claims.Add(new Data.ResourceClaim
             {
-                Type = ResourceType.Api.ToString(),
+                Type = entity.Name,
             });
 
             entity.Enabled = _profile.IsPrivileged;
@@ -102,7 +102,17 @@ namespace Identity.Clients.Services
             if (entity.Type == ResourceType.Api && !_profile.IsPrivileged)
                 entity.Managers.Add(new Data.ResourceManager { SubjectId = _profile.Id, Name = _profile.Name });
 
-            await _store.Add(entity);
+            try
+            {
+                await _store.Add(entity);
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetBaseException().Message.ToLower().Contains("unique"))
+                    throw new ResourceNameNotUniqueException();
+                else
+                    throw new ResourceUpdateException();
+            }
 
             return Mapper.Map<Resource>(entity);
         }
@@ -124,6 +134,8 @@ namespace Identity.Clients.Services
             entity.Enabled = _profile.IsPrivileged
                 ? model.Enabled
                 : state;
+
+            entity.Claims.First().Type = entity.Name;
 
             UpdateManagers(entity, model.Managers);
 
