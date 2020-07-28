@@ -274,18 +274,32 @@ namespace Identity.Accounts.Tests
         }
 
         [Theory]
-        [InlineData("test1@sei.cmu.edu")]
-        //[InlineData("test1@andrew.cmu.edu")]
-        //[InlineData("test1@cmu.edu")]
-        [InlineData("test1@cert.org")]
-        //[InlineData("cmu.edu@gmail.com")]
+        [InlineData("test1@school.site")]
+        [InlineData("test1@college.edu")]
+        [InlineData("test1@domain.org")]
+        [InlineData("test1@sub.domain.org")]
+        [InlineData("test1@sub.sub.domain.org")]
         public void DomainPassesValidCheck(string accountName)
         {
             using (var test = CreateTestContext())
             {
-                test.Options.Registration.AllowedDomains = "sei.cmu.edu cert.org";
+                test.Options.Registration.AllowedDomains = ".edu | school.site | domain.org";
                 var svc = test.GetAccountService();
                 Assert.True(svc.IsDomainValid(accountName));
+            }
+        }
+
+        [Theory]
+        [InlineData("test1@college.school")]
+        [InlineData("test1@subdomain.org")]
+        [InlineData("test1@mail.com")]
+        public void BadDomainFailsValidCheck(string accountName)
+        {
+            using (var test = CreateTestContext())
+            {
+                test.Options.Registration.AllowedDomains = ".edu | school.site | domain.org";
+                var svc = test.GetAccountService();
+                Assert.False(svc.IsDomainValid(accountName));
             }
         }
 

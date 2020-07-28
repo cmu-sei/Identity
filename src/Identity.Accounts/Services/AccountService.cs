@@ -1129,15 +1129,29 @@ namespace Identity.Accounts.Services
 
         public bool IsDomainValid(string accountName)
         {
-            string domains = String.Join("|",
-                _options.Registration.AllowedDomains.Split(
-                    new char[] { ' ', ',', '\t', '|'},
-                    StringSplitOptions.RemoveEmptyEntries)
-            );
-            string regex = $"({domains})$";
+            if (!_options.Registration.AllowedDomains.HasValue())
+                return true;
 
-            return !_options.Registration.AllowedDomains.HasValue()
-                || Regex.IsMatch(accountName, regex, RegexOptions.IgnoreCase);
+            var allowed = _options.Registration.AllowedDomains.Split(
+                new char[] { ' ', ',', '\t', '|'},
+                StringSplitOptions.RemoveEmptyEntries
+            ).Select(x =>
+                x.StartsWith(".")
+                    ? x.Substring(1)
+                    : x
+            );
+
+            var domain = accountName.Split("@").Last();
+
+            while (!string.IsNullOrEmpty(domain))
+            {
+                if (allowed.Contains(domain))
+                    return true;
+
+                domain = string.Join(".", domain.Split(".").Skip(1).ToArray());
+            }
+
+            return false;
         }
 
         public bool IsExpired(DateTime dt)
