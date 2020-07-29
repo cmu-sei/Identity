@@ -1030,6 +1030,11 @@ namespace Identity.Accounts.Services
             return model;
         }
 
+        public async Task<AccountStats> GetStats(DateTime since)
+        {
+            return await _store.GetStats(since);
+        }
+
         public async Task<Account[]> FindAll(SearchModel search, CancellationToken ct = default(CancellationToken))
         {
             // try direct values

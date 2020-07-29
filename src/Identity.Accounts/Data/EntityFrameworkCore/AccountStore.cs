@@ -134,6 +134,20 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
             return !(await DbContext.AccountTokens.AnyAsync(t => t.Hash == sha2 || t.Hash == sha1));
         }
 
+        public async Task<Models.AccountStats> GetStats(DateTime since)
+        {
+            return new Models.AccountStats
+            {
+                Since = since,
+                AccountsCreated = await DbContext.Accounts.CountAsync(
+                    a => a.WhenCreated > since
+                ),
+                AccountsAuthed = await DbContext.Accounts.CountAsync(
+                    a => a.WhenAuthenticated > since
+                )
+            };
+        }
+
         #endregion
 
         #region AccountCode

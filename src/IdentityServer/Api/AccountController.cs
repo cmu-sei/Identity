@@ -231,6 +231,14 @@ namespace IdentityServer.Api
             return Ok();
         }
 
+        [HttpGet("api/stats")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AccountStats), 200)]
+        public async Task<IActionResult> GetStats([FromQuery] DateTime since)
+        {
+            return Ok(await _svc.GetStats(since));
+        }
+
         [HttpGet("api/version")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(string), 200)]

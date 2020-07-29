@@ -45,3 +45,6 @@ POST {{api}}/account/spam
     "subject": "cmu-sei",
     "body": "Dear {name}, this is an email body.  don't squander it."
 }
+
+###
+GET {{api}}/stats?since=2020-07-01

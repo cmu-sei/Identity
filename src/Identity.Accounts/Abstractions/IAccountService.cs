@@ -32,6 +32,7 @@ namespace Identity.Accounts.Abstractions
         Task<Account[]> FindAll(SearchModel search, CancellationToken ct = default(CancellationToken));
         Task<Account[]> FindUpdated(string since, CancellationToken ct = default(CancellationToken));
         Task<TokenSummary> GetTokenSummary(TokenSummary model);
+        Task<AccountStats> GetStats(DateTime since);
         Task<AccountCode> GenerateAccountCodeAsync(int id);
         Task<AccountCode> GenerateAccountCodeAsync(string account, bool mustExist = true);
         Task<string> GenerateAccountTOTPAsync(string guid, string issuer = null);
