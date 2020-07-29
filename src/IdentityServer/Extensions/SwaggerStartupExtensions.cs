@@ -1,9 +1,10 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using IdentityServer;
 using IdentityServer.Options;
 using Microsoft.AspNetCore.Builder;
@@ -20,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
             BrandingOptions brandingOptions
         )
         {
+            string xmlDoc = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -31,10 +34,15 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 options.EnableAnnotations();
 
-                if (File.Exists("IdentityServer.xml"))
-                {
-                    options.IncludeXmlComments("IdentityServer.xml");
-                }
+#if DEBUG
+                string[] files = Directory.GetFiles("bin", xmlDoc, SearchOption.AllDirectories);
+
+                if (files.Length > 0)
+                    options.IncludeXmlComments(files[0]);
+#else
+                if (File.Exists(xmlDoc))
+                    options.IncludeXmlComments(xmlDoc);
+#endif
 
                 // if (!string.IsNullOrEmpty(authOptions.Authority))
                 // {
@@ -87,7 +95,7 @@ namespace Microsoft.Extensions.DependencyInjection
             app.UseSwaggerUI(cfg =>
             {
                 cfg.RoutePrefix = "api";
-                cfg.SwaggerEndpoint("/api/v1/openapi.json", $"{brandingOptions.ApplicationName} (v1)");
+                cfg.SwaggerEndpoint(brandingOptions.PathBase + "/api/v1/openapi.json", $"{brandingOptions.ApplicationName} (v1)");
                 // cfg.OAuthClientId(authOptions.SwaggerClient?.ClientId);
                 // cfg.OAuthAppName(authOptions.SwaggerClient?.ClientName ?? authOptions.SwaggerClient?.ClientId);
             });

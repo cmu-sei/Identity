@@ -27,7 +27,7 @@ namespace IdentityServer.Features
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            string host = $"{Request.Scheme}://{Request.Host}";
+            string host = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
             ViewBag.AppName = Branding.ApplicationName;
             ViewBag.Title = $"{Branding.ApplicationName} | {Branding.Title}";
             ViewBag.UiHost = Branding.UiHost;

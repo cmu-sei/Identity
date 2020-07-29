@@ -48,7 +48,7 @@ namespace Identity.Accounts.Services
             var http = httpContextAccessor?.HttpContext;
 
             string url = http is HttpContext
-                ? $"{http.Request.Scheme}://{http.Request.Host.Value}"
+                ? $"{http.Request.Scheme}://{http.Request.Host.Value}{http.Request.PathBase}"
                 : "";
 
             _serviceUrl = options.Profile.ImageServerUrl ?? url + options.Profile.ImagePath;
@@ -228,6 +228,7 @@ namespace Identity.Accounts.Services
             Data.Account account = new Data.Account {
                 GlobalId = (globalId.HasValue()) ? globalId : Guid.NewGuid().ToString(),
                 WhenCreated = DateTime.UtcNow,
+                WhenAuthenticated = DateTime.UtcNow
             };
 
             if (!await HasAccounts())
