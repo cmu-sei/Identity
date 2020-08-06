@@ -271,7 +271,7 @@ namespace IdentityServer.Features.Account
         [ValidateAntiForgeryToken]
         public IActionResult Notice(NoticeModel model)
         {
-            Response.Cookies.Append(NOTICE_COOKIE, "1", new CookieOptions{ HttpOnly = true, SameSite = SameSiteMode.Strict});
+            _cookies.Append(NOTICE_COOKIE, "1", -1);
             return Redirect(Url.Action(model.Next).ReturnUrl(model.ReturnUrl));
         }
 
