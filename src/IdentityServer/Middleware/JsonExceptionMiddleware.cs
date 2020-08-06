@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System;
 using System.Linq;
@@ -8,18 +8,22 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using IdentityServer.Middleware;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityServer.Middleware
 {
     public class JsonExceptionMiddleware
     {
         public JsonExceptionMiddleware(
-            RequestDelegate next
+            RequestDelegate next,
+            ILogger<JsonExceptionMiddleware> logger
         )
         {
             _next = next;
+            _logger = logger;
         }
         private readonly RequestDelegate _next;
+        private ILogger<JsonExceptionMiddleware> _logger;
 
         public async Task Invoke(HttpContext context)
         {
@@ -28,6 +32,8 @@ namespace IdentityServer.Middleware
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error");
+
                 if (!context.Response.HasStarted)
                 {
                     context.Response.StatusCode = 500;
