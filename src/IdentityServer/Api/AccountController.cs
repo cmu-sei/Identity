@@ -250,9 +250,9 @@ namespace IdentityServer.Api
 
     public class RelayMailMessage
     {
-        public string[] To { get; set; }
-        public string[] Cc { get; set; }
-        public string[] Bcc { get; set; }
+        public string[] To { get; set; } = new string[] {};
+        public string[] Cc { get; set; } = new string[] {};
+        public string[] Bcc { get; set; } = new string[] {};
         public string From { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
