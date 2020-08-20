@@ -306,13 +306,13 @@ namespace IdentityServer
 
             app.UseRouting();
 
+            app.UseIdentityServer();
+
             app.UseCors(_headers.Cors.Name);
 
             app.UseAuthentication();
 
             app.UseAuthorization();
-
-            app.UseIdentityServer();
 
             app.UseEndpoints(endpoints =>
             {
