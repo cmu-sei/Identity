@@ -35,11 +35,13 @@ However, these are *not* production worthy settings.
 Namely, it uses an In-Memory database.
 You'll want to change that to PostgreSQL or SqlServer.
 
-Additionally, you'll want to set the `Account_AdminEmail` and `Account_AdminPassword` to have creds
-to log in with.  Require2FA is true by default, so you should also add a `Account_OverrideCode` to
+Additionally, you'll want to set the `Account__AdminEmail` and `Account__AdminPassword` to have creds
+to log in with.  Require2FA is true by default, so you should also add a `Account__OverrideCode` to
 use as a temporary 2FA code, or set Require2FA to false.
 
-`dotnet run` will get the code running at `http://localhost:5000` and swagger is at `/api`
+If you haven't yet pulled the bootstrap dependencies, `bash pullcdn.sh` or `pullcdn.ps1` to do so.  This is a one-time task, or infrequent anyway.
+
+`dotnet run` in the src/IdentityServer folder will get the app running at `http://localhost:5000` and swagger is at `/api`
 
 ### Support
 

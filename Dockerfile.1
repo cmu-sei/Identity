@@ -1,8 +1,0 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS prod
-ARG commit
-ENV COMMIT=$commit
-COPY publish /app
-WORKDIR /app
-EXPOSE 80
-ENV ASPNETCORE_URLS=http://*:80
-CMD [ "dotnet", "IdentityServer.dll" ]

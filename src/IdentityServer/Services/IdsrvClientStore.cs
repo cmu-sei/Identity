@@ -121,7 +121,7 @@ namespace IdentityServer.Services
                     }).ToArray(),
                 };
 
-                if (client.AllowedCorsOrigins.Count == 0)
+                if (client.AllowedCorsOrigins.Count == 0 && clientUrl.HasValue())
                     client.AllowedCorsOrigins = new string[] { clientUrl };
 
                 return client;

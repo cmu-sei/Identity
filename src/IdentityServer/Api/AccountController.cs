@@ -131,15 +131,21 @@ namespace IdentityServer.Api
             if (addresses.Count == 0)
                 throw new Exception("No valid addresses.");
 
-            var response = await _mailer.Send(new MailMessage
+            var msg = new MailMessage
             {
                 To = String.Join("; ", addresses.ToArray()),
                 Cc = string.Join("; ", message.Cc),
                 Bcc = string.Join("; ", message.Bcc),
                 From = message.From,
                 Subject = message.Subject,
-                Html = message.Body
-            });
+            };
+
+            if (message.Body.StartsWith("<!doctype html", true, null))
+                msg.Html = message.Body;
+            else
+                msg.Text = message.Body;
+
+            var response = await _mailer.Send(msg);
 
             return Ok();
         }
@@ -193,9 +199,13 @@ namespace IdentityServer.Api
                     Bcc = string.Join("; ", message.Bcc),
                     From = message.From,
                     Subject = message.Subject,
-                    Html = message.Body.Replace("{name}", name),
                     MessageId = $"{msgId}-{to}"
                 };
+
+                if (message.Body.StartsWith("<!doctype html", true, null))
+                    msg.Html = message.Body.Replace("{name}", name);
+                else
+                    msg.Text = message.Body.Replace("{name}", name);
 
                 var response = await _mailer.Send(msg);
 
