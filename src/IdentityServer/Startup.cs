@@ -306,9 +306,9 @@ namespace IdentityServer
 
             app.UseRouting();
 
-            app.UseIdentityServer();
-
             app.UseCors(_headers.Cors.Name);
+
+            app.UseIdentityServer();
 
             app.UseAuthentication();
 
