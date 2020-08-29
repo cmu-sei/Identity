@@ -22,6 +22,7 @@ namespace IdentityServer.Options
         public string KnownProxies { get; set; }
         public string KnownNetworks { get; set; }
         public string TargetHeaders { get; set; }
+        public string ForwardedForHeaderName { get; set; }
     }
 
     public class SecurityHeaderOptions

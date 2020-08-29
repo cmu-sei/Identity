@@ -63,6 +63,11 @@ namespace Microsoft.Extensions.DependencyInjection
                     }
                 }
 
+                if (!string.IsNullOrEmpty(options.ForwardedForHeaderName))
+                {
+                    config.ForwardedForHeaderName = options.ForwardedForHeaderName;
+                }
+
             });
 
             return services;
