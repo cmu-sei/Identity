@@ -23,8 +23,8 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
             {
                 b.HasIndex(o => o.GlobalId);
                 b.Property(p => p.GlobalId).HasMaxLength(36);
-                b.Property(p => p.WhereAuthenticated).HasMaxLength(36);
-                b.Property(p => p.WhereLastAuthenticated).HasMaxLength(36);
+                b.Property(p => p.WhereAuthenticated).HasMaxLength(48);
+                b.Property(p => p.WhereLastAuthenticated).HasMaxLength(48);
             });
 
             builder.Entity<AccountToken>(b =>

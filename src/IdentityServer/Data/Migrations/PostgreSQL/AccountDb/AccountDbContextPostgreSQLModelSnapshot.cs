@@ -16,7 +16,7 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.AccountDb
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.3")
+                .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("Identity.Accounts.Data.Account", b =>
@@ -61,12 +61,12 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.AccountDb
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("WhereAuthenticated")
-                        .HasColumnType("character varying(36)")
-                        .HasMaxLength(36);
+                        .HasColumnType("character varying(48)")
+                        .HasMaxLength(48);
 
                     b.Property<string>("WhereLastAuthenticated")
-                        .HasColumnType("character varying(36)")
-                        .HasMaxLength(36);
+                        .HasColumnType("character varying(48)")
+                        .HasMaxLength(48);
 
                     b.HasKey("Id");
 
