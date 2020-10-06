@@ -688,6 +688,16 @@ namespace Identity.Accounts.Services
         #region Account Modification
 
         /// <summary>
+        /// Run any fix up procedures that aren't handled in migrations
+        /// </summary>
+        /// <returns></returns>
+        public async Task FixAccounts()
+        {
+            if (_options.Registration.StoreName)
+                await _store.FixUsernames();
+        }
+
+        /// <summary>
         /// Change account password.
         /// </summary>
         /// <param name="accountId"></param>

@@ -148,6 +148,29 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
             };
         }
 
+        public async Task FixUsernames()
+        {
+            var accounts = await DbContext.Accounts
+                .Include(a => a.Properties)
+                .Where(a => !a.Properties.Any(p => p.Key == ClaimTypes.Username))
+                .ToListAsync();
+
+            foreach (var account in accounts)
+            {
+                string name = account.Properties.FirstOrDefault(p => p.Key == ClaimTypes.Name)?.Value;
+
+                if (string.IsNullOrWhiteSpace(name))
+                    continue;
+
+                account.Properties.Add(new AccountProperty
+                {
+                    Key = ClaimTypes.Username,
+                    Value = $"{name.ToAccountSlug()}.{account.Id.ToString("x4")}"
+                });
+            }
+            await DbContext.SaveChangesAsync();
+        }
+
         #endregion
 
         #region AccountCode

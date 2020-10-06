@@ -38,6 +38,7 @@ namespace IdentityServer.Extensions
                 AccountDbContext accountDb =  services.GetRequiredService<AccountDbContext>();
                 ClientDbContext clientDb = services.GetRequiredService<ClientDbContext>();
                 AccountOptions accountOptions = services.GetService<IOptionsSnapshot<AccountOptions>>().Value;
+                IAccountService accountSvc = services.GetRequiredService<IAccountService>();
                 var secretOptions = config.GetSection("SeedData").Get<DbSeedKVP[]>() ?? new DbSeedKVP[] { };
 
                 if (!accountDb.Database.IsInMemory())
@@ -159,8 +160,6 @@ namespace IdentityServer.Extensions
 
                 if (seedUsers.Count() > 0)
                 {
-                    IAccountService accountSvc = services.GetRequiredService<IAccountService>();
-
                     foreach (DbSeedUser seedUser in seedUsers)
                     {
                         try
@@ -324,7 +323,11 @@ namespace IdentityServer.Extensions
                     }
                 }
 
+                // run any method migrations
+                accountSvc.FixAccounts().Wait();
+
             }
+
             return appHost;
         }
     }

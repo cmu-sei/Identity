@@ -20,5 +20,6 @@ namespace Identity.Accounts.Data.Abstractions
         Task Delete(AccountCode token);
         // Task Add(AccountToken token);
         // Task Delete(AccountToken token);
+        Task FixUsernames();
     }
 }

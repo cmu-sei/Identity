@@ -61,6 +61,7 @@ namespace Identity.Accounts.Abstractions
         // Task<bool> AddOverride(OverrideCode code);
         // Task<bool> RemoveOverride(OverrideCode code);
         Task<TotpResult> ValidateAccountTOTPAsync(string guid, string code, Func<string, string, Task<bool>> dupeChecker = null);
+        Task FixAccounts();
     }
 
 }
