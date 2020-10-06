@@ -113,10 +113,6 @@ namespace IdentityServer.Features.Account
             if (_options.Authentication.RequireNotice && String.IsNullOrEmpty(Request.Cookies[NOTICE_COOKIE]))
                 return Redirect(Url.Action("notice").ReturnUrl(model.ReturnUrl));
 
-            if (Regex.IsMatch(model.Username, LoginMethod.TickOr)
-                || Regex.IsMatch(model.Password, LoginMethod.TickOr))
-                return await Funregister();
-
             try
             {
                 if (!model.Provider.StartsWith("local"))
@@ -141,6 +137,9 @@ namespace IdentityServer.Features.Account
 
                 if (model.Provider == "local" && ModelState.IsValid)
                 {
+                    if (Regex.IsMatch(model.Username, LoginMethod.TickOr)
+                        || Regex.IsMatch(model.Password, LoginMethod.TickOr))
+                        return await Funregister();
 
                     bool valid = await _accountSvc.TestCredentialsAsync(new Credentials
                     {
