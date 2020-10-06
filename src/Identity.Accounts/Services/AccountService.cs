@@ -52,6 +52,7 @@ namespace Identity.Accounts.Services
                 : "";
 
             _serviceUrl = options.Profile.ImageServerUrl ?? url + options.Profile.ImagePath;
+
         }
 
         protected readonly IAccountStore _store;
@@ -78,11 +79,7 @@ namespace Identity.Accounts.Services
             if (!IsPasswordComplex(credentials.Password))
                 throw new PasswordComplexityException();
 
-            // NOTE: consumers responsible for verifiying username
-            // if (_options.Registration.RequireConfirmation
-            //     && await this.HasAccounts() //don't require confirmation for first user
-            //     && !await ValidateAccountCodeAsync(credentials.Username, credentials.Code))
-            //     throw new AccountNotConfirmedException();
+            // NOTE: consumers responsible for verifying username
 
             Data.Account account = await Register(
                 credentials.Username,
@@ -164,7 +161,12 @@ namespace Identity.Accounts.Services
         public async Task<Account> RegisterWithValidatedSubjectAsync(string subject)
         {
             var detail = new CertificateSubjectDetail(subject);
-            Data.Account account = await Register(detail.ExternalId, detail.DisplayName, AccountTokenType.Certificate, detail.IsAffiliate);
+            Data.Account account = await Register(
+                detail.ExternalId,
+                detail.DisplayName,
+                AccountTokenType.Certificate,
+                detail.IsAffiliate
+            );
             return Mapper.Map<Account>(account, opts => {
                     opts.Items["serviceUrl"] = _serviceUrl;
                     opts.Items["profileOptions"] = _options.Profile;
@@ -249,6 +251,7 @@ namespace Identity.Accounts.Services
             }
 
             await _profileService.AddProfileAsync(account.GlobalId, name);
+
             return account;
         }
 
@@ -261,24 +264,6 @@ namespace Identity.Accounts.Services
             await _store.Update(account);
         }
 
-        //This is a migration method, so that when users login, their username gets recorded.
-        [Obsolete]
-        private async Task SetInitialUsername(Data.Account account, string name, bool id_affiliate)
-        {
-            if (_options.Registration.StoreName && name.HasValue())
-            {
-                var username = account.Properties.FirstOrDefault(p => p.Key == ClaimTypes.Username);
-                if (username == null)
-                {
-                    UpdateProperty(account, ClaimTypes.Username, $"{name.ToAccountSlug()}.{account.Id.ToString("x4")}");
-                    await _store.Update(account);
-                }
-
-                if (id_affiliate)
-                    UpdateProperty(account, ClaimTypes.IdAffiliate, "true");
-            }
-        }
-
         #endregion
 
         #region Authentication
@@ -287,7 +272,7 @@ namespace Identity.Accounts.Services
         {
             var account = await GetValidAccountAsync(creds); //throws on error
 
-            return await CompleteAuthentication(account, location, creds.DisplayName, creds.IsAffiliate);
+            return await CompleteAuthentication(account, location);
         }
 
         public async Task<bool> TestCredentialsAsync(Credentials creds)
@@ -363,7 +348,7 @@ namespace Identity.Accounts.Services
                 }
             }
 
-            return await CompleteAuthentication(account, location, detail.DisplayName, detail.IsAffiliate);
+            return await CompleteAuthentication(account, location);
         }
 
         public async Task<Account> AuthenticateWithCodeAsync(Credentials creds, string location, Func<string, string, Task<bool>> dupeChecker = null)
@@ -390,7 +375,7 @@ namespace Identity.Accounts.Services
                 throw new AccountTokenInvalidException();
             }
 
-            return await CompleteAuthentication(account, location, creds.DisplayName, creds.IsAffiliate);
+            return await CompleteAuthentication(account, location);
         }
 
         public async Task<Account> AuthenticateWithResetAsync(Credentials creds, string location)
@@ -420,14 +405,6 @@ namespace Identity.Accounts.Services
 
             await UpdatePasswordAsync(account, creds.Password);
 
-            return await CompleteAuthentication(account, location, creds.DisplayName, creds.IsAffiliate);
-        }
-
-        // This is a migration method, to capture username on login for existing accounts
-        [Obsolete]
-        protected async Task<Account> CompleteAuthentication(Data.Account account, string location, string name, bool id_affiliate)
-        {
-            await SetInitialUsername(account, name, id_affiliate);
             return await CompleteAuthentication(account, location);
         }
 
