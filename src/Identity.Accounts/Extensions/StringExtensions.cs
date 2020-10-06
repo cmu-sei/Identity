@@ -17,10 +17,15 @@ namespace Identity.Accounts.Extensions
             using (SHA1 sha1 = SHA1.Create())
             {
                 return BitConverter.ToString(sha1
-                    .ComputeHash(Encoding.UTF8.GetBytes(input.ToLower())))
+                    .ComputeHash(Encoding.UTF8.GetBytes(input)))
                     .Replace("-", "")
                     .ToLower();
             }
+        }
+
+        public static string ToNormalizedSha1(this string input)
+        {
+            return input.ToLower().ToSha1();
         }
 
         public static string ToSha256(this string input)
@@ -28,10 +33,15 @@ namespace Identity.Accounts.Extensions
             using (SHA256 alg = SHA256.Create())
             {
                 return BitConverter.ToString(alg
-                    .ComputeHash(Encoding.UTF8.GetBytes(input.ToLower())))
+                    .ComputeHash(Encoding.UTF8.GetBytes(input)))
                     .Replace("-", "")
                     .ToLower();
             }
+        }
+
+        public static string ToNormalizedSha256(this string input)
+        {
+            return input.ToLower().ToSha256();
         }
 
         public static bool HasValue(this string s)

@@ -239,7 +239,7 @@ namespace Identity.Accounts.Services
             await _store.Add(account);
 
             account.Tokens.Add(new Data.AccountToken {
-                Hash = accountName.ToSha256(),
+                Hash = accountName.ToNormalizedSha256(),
                 WhenCreated = DateTime.UtcNow,
                 Type = type
             });
@@ -329,12 +329,12 @@ namespace Identity.Accounts.Services
                     account = await _store.LoadByToken(detail.DeprecatedExternalId);
                     if (account != null)
                     {
-                        var token = account.Tokens.Where(t => t.Hash == detail.DeprecatedExternalId.ToSha256()).Single();
+                        var token = account.Tokens.Where(t => t.Hash == detail.DeprecatedExternalId.ToNormalizedSha256()).Single();
                         account.Tokens.Remove(token);
                         account.Tokens.Add(new Data.AccountToken
                         {
                             Type = AccountTokenType.Certificate,
-                            Hash = detail.ExternalId.ToSha256(),
+                            Hash = detail.ExternalId.ToNormalizedSha256(),
                             WhenCreated = DateTime.UtcNow,
                         });
 
@@ -460,7 +460,7 @@ namespace Identity.Accounts.Services
             account.Tokens.Add(new Data.AccountToken
             {
                 Type = AccountTokenType.Certificate,
-                Hash = certificateToken.ToSha256(),
+                Hash = certificateToken.ToNormalizedSha256(),
                 WhenCreated = DateTime.UtcNow
             });
 
@@ -533,7 +533,7 @@ namespace Identity.Accounts.Services
             if (mustExist && await IsTokenUniqueAsync(accountName))
                 return new AccountCode();
 
-            return await GenerateAccountCodeWithHashAsync(accountName.ToSha256());
+            return await GenerateAccountCodeWithHashAsync(accountName.ToNormalizedSha256());
         }
 
         public async Task<AccountCode> GenerateAccountCodeAsync(int id)
@@ -575,7 +575,7 @@ namespace Identity.Accounts.Services
             token = new Data.AccountToken
             {
                 Type = AccountTokenType.TOTP,
-                Hash = Guid.NewGuid().ToString().ToSha1(),
+                Hash = Guid.NewGuid().ToString().ToNormalizedSha1(),
                 WhenCreated = DateTime.UtcNow,
                 UserId = account.Id
             };
@@ -767,7 +767,7 @@ namespace Identity.Accounts.Services
 
             account.Tokens.Add(new Data.AccountToken
             {
-                Hash = username.ToSha256(),
+                Hash = username.ToNormalizedSha256(),
                 Type = AccountTokenType.Credential,
                 WhenCreated = DateTime.UtcNow
             });
@@ -809,8 +809,8 @@ namespace Identity.Accounts.Services
 
             var token = account.Tokens
                 .Where(t =>
-                    t.Hash == accountName.ToSha256() ||
-                    t.Hash == accountName.ToSha1()
+                    t.Hash == accountName.ToNormalizedSha256() ||
+                    t.Hash == accountName.ToNormalizedSha1()
                 ).SingleOrDefault();
 
             if (token != null)

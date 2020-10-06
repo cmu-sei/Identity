@@ -68,13 +68,13 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
         /// <returns></returns>
         public async Task<Account> LoadByToken(string key)
         {
-            string sha2 = key.ToSha256();
+            string sha2 = key.ToNormalizedSha256();
 
             var account = await LoadByHash(sha2);
 
             if (account == null)
             {
-                string sha1 = key.ToSha1();
+                string sha1 = key.ToNormalizedSha1();
 
                 account = await LoadByHash(sha1);
 
@@ -129,8 +129,8 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
 
         public async Task<bool> IsTokenUnique(string hash)
         {
-            string sha2 = hash.ToSha256();
-            string sha1 = hash.ToSha1();
+            string sha2 = hash.ToNormalizedSha256();
+            string sha1 = hash.ToNormalizedSha1();
             return !(await DbContext.AccountTokens.AnyAsync(t => t.Hash == sha2 || t.Hash == sha1));
         }
 
@@ -177,10 +177,10 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
 
         public async Task<AccountCode> GetAccountCode(string key)
         {
-            var code = await DbContext.AccountCodes.FindAsync(key.ToSha256());
+            var code = await DbContext.AccountCodes.FindAsync(key.ToNormalizedSha256());
 
             if (code == null)
-                code= await DbContext.AccountCodes.FindAsync(key.ToSha1());
+                code= await DbContext.AccountCodes.FindAsync(key.ToNormalizedSha1());
 
             return code;
         }
