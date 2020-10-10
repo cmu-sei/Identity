@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using AppMailClient;
 using Identity.Accounts.Abstractions;
 using Identity.Accounts.Models;
+using IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -84,6 +85,15 @@ namespace IdentityServer.Api
             int success = result.Count(r => string.IsNullOrEmpty(r.Message));
             Audit(AuditId.RegisteredCredential, "import", success);
             return Json(result);
+        }
+
+        [HttpPut("api/account/{id}/token")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> AddUsername([FromRoute]string id, [FromBody] Credentials model)
+        {
+            await _svc.AddAccountUsernameAsync(id, model.Username);
+            Audit(AuditId.AddUsername, id, model.Username);
+            return Ok();
         }
 
         [HttpPut("api/account/property")]

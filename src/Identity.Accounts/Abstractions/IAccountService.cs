@@ -12,6 +12,7 @@ namespace Identity.Accounts.Abstractions
 {
     public interface IAccountService
     {
+        Task AddAccountUsernameAsync(string accountId, string username);
         Task AddorUpdateAccountAsync(string accountId, string username);
         Task<Account> AddAccountCertificate(string guid, X509Certificate2 certificate);
         Task<Account> AddAccountValidatedSubject(string guid, string subject);

@@ -732,6 +732,42 @@ namespace Identity.Accounts.Services
 
             await _store.Update(account);
         }
+        /// <summary>
+        /// Add a username to an existing account.
+        /// Primarily an admin function as it bypasses domain checks.
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public async Task AddAccountUsernameAsync(string accountId, string username)
+        {
+            if (! await IsTokenUniqueAsync(username))
+                throw new AccountNotUniqueException();
+
+            var account = await _store.LoadByGuid(accountId);
+
+            if (account == null)
+                throw new InvalidOperationException();
+
+            account.Tokens.Add(new Data.AccountToken
+            {
+                Hash = username.ToNormalizedSha256(),
+                Type = AccountTokenType.Credential,
+                WhenCreated = DateTime.UtcNow
+            });
+
+            if (_options.Registration.StoreEmail && username.IsEmailAddress())
+            {
+                account.Properties.Add(new Data.AccountProperty
+                {
+                    Key = ClaimTypes.Email,
+                    Value = username
+                });
+            }
+                // UpdateProperty(account, ClaimTypes.Email, username);
+
+            await _store.Update(account);
+        }
 
         /// <summary>
         /// Add or Update an email address to an existing account.
@@ -780,7 +816,6 @@ namespace Identity.Accounts.Services
                     Value = username
                 });
             }
-                // UpdateProperty(account, ClaimTypes.Email, username);
 
             await _store.Update(account);
         }

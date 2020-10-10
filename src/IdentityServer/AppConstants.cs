@@ -32,6 +32,7 @@ namespace IdentityServer
         public const int UserRole = 2000;
         public const int UserState = 2001;
         public const int ClearLock = 2002;
+        public const int AddUsername = 2003;
 
     }
 
