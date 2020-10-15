@@ -122,6 +122,10 @@ namespace IdentityServer
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
+            // use lax cookies in dev so secure isn't required
+            if (_env.IsDevelopment())
+                services.ConfigureLaxCookies();
+
             services.ConfigureForwarding(_headers.Forwarding);
 
             services.AddCors(
@@ -281,6 +285,8 @@ namespace IdentityServer
             app.UseExceptionHandler("/Home/Error");
 
             app.UseJsonExceptions();
+
+            app.UseCookiePolicy();
 
             if (_headers.LogHeaders)
                 app.UseHeaderInspection();
