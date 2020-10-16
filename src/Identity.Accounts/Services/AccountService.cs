@@ -787,7 +787,8 @@ namespace Identity.Accounts.Services
             if (account == null)
                 throw new InvalidOperationException();
 
-            if (!IsDomainValid(username) &&
+            if (!_options.Registration.AllowAnyDomainUsernames &&
+                !IsDomainValid(username) &&
                 !account.Tokens.Any(t => t.Type == AccountTokenType.Certificate))
                 throw new RegistrationDomainException();
 
@@ -1047,8 +1048,9 @@ namespace Identity.Accounts.Services
             model.ComplexityRegex = _options.Password.ComplexityExpression;
             model.ComplexityRequirement = _options.Password.ComplexityText;
             model.AllowMultipleCredentials = _options.Registration.AllowMultipleUsernames;
-            model.AllowedDomains = _options.Registration.AllowedDomains;
-
+            model.AllowedDomains = !_options.Registration.AllowAnyDomainUsernames
+                ? _options.Registration.AllowedDomains
+                : "";
             return model;
         }
 

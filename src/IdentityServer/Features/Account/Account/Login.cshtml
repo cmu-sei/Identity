@@ -19,10 +19,9 @@
             </p>
         }
 
-
             @if (!String.IsNullOrEmpty(Model.CertificateIssuers))
             {
-                <h4>Certificate</h4>
+                <h4 class="mt-4">Certificate</h4>
                 <p>
                     This site accepts client certificates from
                     <i>@(Model.CertificateIssuers)</i>.
@@ -55,7 +54,7 @@
                 <hr/>
             }
 
-            <h4>Credentials</h4>
+            <h4 class="mt-4">Credentials</h4>
             @await Html.PartialAsync("_ValidationSummary")
             <form asp-route="Login">
                 <input id="cred-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>
@@ -90,7 +89,7 @@
             @if (Model.ExternalSchemes.Length > 0)
             {
                 <hr />
-                <h4>External</h4>
+                <h4 class="mt-4">External</h4>
                 <p>
                     This site accepts authentication from external providers.
                     If you are already registered at one, click it to login in.
