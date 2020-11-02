@@ -71,6 +71,8 @@ namespace IdentityServer.Options
                 if (headers.First() == "*") policy.AllowAnyHeader(); else policy.WithHeaders(headers);
             }
 
+            policy.SetIsOriginAllowedToAllowWildcardSubdomains();
+
             return policy.Build();
         }
 
