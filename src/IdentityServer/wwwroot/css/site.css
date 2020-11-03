@@ -13,6 +13,10 @@
   background-color: #900;
   border-color: #b00;
 }
+.btn-primary:disabled {
+  background-color: lightgray;
+  border-color: lightgray;
+}
 a.jumbo {
   /* text-decoration: none; */
   color: black;
@@ -34,4 +38,7 @@ a.jumbo:hover {
 .validation-summary-errors ul {
   list-style: none;
   padding-left: 0;
+}
+hr.spaced {
+  margin: 48px 0;
 }

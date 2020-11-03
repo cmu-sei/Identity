@@ -21,6 +21,8 @@
 
             @if (!String.IsNullOrEmpty(Model.CertificateIssuers))
             {
+                <hr class="spaced"/>
+
                 <h4 class="mt-4">Certificate</h4>
                 <p>
                     This site accepts client certificates from
@@ -51,12 +53,12 @@
                         </form>
                     </p>
                 }
-                <hr/>
+                <hr class="spaced"/>
             }
 
             <h4 class="mt-4">Credentials</h4>
             @await Html.PartialAsync("_ValidationSummary")
-            <form asp-route="Login">
+            <form id="credsform" asp-route="Login">
                 <input id="cred-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>
 
                 <fieldset>
@@ -79,7 +81,7 @@
                     }
                 </fieldset>
                 <p>
-                    <button type="submit" class="btn btn-primary" name="provider"
+                    <button type="submit" class="btn btn-primary" disabled name="provider"
                         aria-label="login with credentials" asp-for="Provider" value="local">Continue</button>
                 </p>
             </form>
@@ -88,7 +90,7 @@
 
             @if (Model.ExternalSchemes.Length > 0)
             {
-                <hr />
+                <hr class="spaced"/>
                 <h4 class="mt-4">External</h4>
                 <p>
                     This site accepts authentication from external providers.
@@ -113,4 +115,5 @@
 @section scripts
 {
     <script>ticker($('#lock-countdown'), @Model.LockedSeconds, 'd-none');</script>
+    <script>enableForm($('#credsform'));</script>
 }

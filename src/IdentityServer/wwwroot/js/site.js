@@ -1,6 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
-
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 function ticker($div, ticks, toggleClass) {
     this.reset = function(v) {
@@ -25,4 +24,17 @@ function ticker($div, ticks, toggleClass) {
     }
 
     $div.data('ticks', ticks).on('tick', tick).trigger('tick');
+}
+
+function enableForm($div) {
+    function check() {
+        let enabled = true;
+        $r.each(function() {
+            enabled &= $(this).val().length;
+        });
+        $b.prop('disabled', !enabled);
+    }
+    const $b = $div.find("button");
+    const $r = $div.find("[required]");
+    $r.on('input', check);
 }
