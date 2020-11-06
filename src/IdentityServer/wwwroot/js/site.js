@@ -30,7 +30,7 @@ function enableForm($div) {
     function check() {
         let enabled = true;
         $r.each(function() {
-            enabled &= $(this).val().length;
+            enabled &= !!$(this).val().length;
         });
         $b.prop('disabled', !enabled);
     }
