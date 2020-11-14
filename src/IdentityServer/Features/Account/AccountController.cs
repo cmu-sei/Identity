@@ -79,27 +79,21 @@ namespace IdentityServer.Features.Account
             if (_options.Authentication.RequireNotice && String.IsNullOrEmpty(Request.Cookies[NOTICE_COOKIE]))
                 return Redirect(Url.Action("notice").ReturnUrl(returnUrl));
 
-            // // auto login with certificate if no external providers
-            // if (!_viewSvc.HasExternalProviders)
-            // {
-            //     if (Request.HasCertificate(_options.Authentication.ClientCertHeader, out X509Certificate2 cert))
-            //         return await LoginWithCertificate(cert, returnUrl);
+            if (_options.Authentication.AllowAutoLogin)
+            {
+                if (Request.HasCertificate(_options.Authentication.ClientCertHeader, out X509Certificate2 cert))
+                    return await LoginWithCertificate(cert, returnUrl);
 
-            //     // if (Request.HasValidatedSubject(_options.Authentication.ClientCertSubjectHeader, out string subject))
-            //     if (HasValidatedSubject(Request, out string subject))
-            //         return await LoginWithValidatedSubject(subject, returnUrl);
+                if (Request.HasValidatedSubject(
+                    _options.Authentication.ClientCertHeader,
+                    _options.Authentication.ClientCertSubjectHeader,
+                    _options.Authentication.ClientCertVerifyHeader,
+                    out string subject)
+                ){
+                    return await LoginWithValidatedSubject(subject, returnUrl);
+                }
 
-            //     // if (_options.Authentication.RequireCertificate)
-            //     // {
-            //     //     Logger.LogInformation(
-            //     //         new EventId(LogEventId.AuthFailedWithCertRequired),
-            //     //         "Invalid Certificate subject:{Subject} reason:{Reason} ip:{Ip}",
-            //     //         Request.Headers[_options.Authentication.ClientCertSubjectHeader],
-            //     //         Request.Headers[_options.Authentication.ClientCertVerifyHeader],
-            //     //         GetRemoteIp()
-            //     //     );
-            //     // }
-            // }
+            }
 
             return View(await _viewSvc.GetLoginView(returnUrl));
         }

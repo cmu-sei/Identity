@@ -14,6 +14,7 @@ namespace Identity.Accounts.Options
         public int LockThreshold { get; set; }
 
         public bool AllowCredentialLogin { get; set; } = true;
+        public bool AllowAutoLogin { get; set; } = true;
         public bool AllowLocalLogin { get; set; } = true;
         public bool AllowRememberLogin { get; set; } = true;
         public int RememberMeLoginDays { get; set; } = 30;

@@ -226,11 +226,6 @@ namespace IdentityServer.Features.Account
             return null;
         }
 
-        public bool HasExternalProviders
-        {
-            get { return _authOptions.ExternalOidc.Length > 0; }
-        }
-
         private bool IsMSIE(string agent)
         {
             string msiePattern = "msie\\s|trident";
