@@ -38,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
                 string nets = options.KnownNetworks;
                 if (string.IsNullOrEmpty(nets))
-                    nets = "10.0.0.0/8 172.16.0.0/12 192.168.0.0/24 ::ffff:a00:0/104 ::ffff:b00a:0/108 ::ffff:c0d0:0/120";
+                    nets = "10.0.0.0/8 172.16.0.0/12 192.168.0.0/24 ::ffff:a00:0/104 ::ffff:ac10:0/108 ::ffff:c0a8:0/120";
 
                 foreach (string item in nets.Split(new char[] { ' ', ','}, StringSplitOptions.RemoveEmptyEntries))
                 {
