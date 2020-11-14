@@ -53,40 +53,46 @@
                         </form>
                     </p>
                 }
-                <hr class="spaced"/>
             }
 
-            <h4 class="mt-4">Credentials</h4>
-            @await Html.PartialAsync("_ValidationSummary")
-            <form id="credsform" asp-route="Login">
-                <input id="cred-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>
+            @if (Model.AllowCredentialLogin)
+            {
+                @if (!string.IsNullOrEmpty(Model.CertificateIssuers))
+                {
+                    <hr class="spaced"/>
+                }
+                <h4 class="mt-4">Credentials</h4>
+                @await Html.PartialAsync("_ValidationSummary")
+                <form id="credsform" asp-route="Login">
+                    <input id="cred-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>
 
-                <fieldset>
-                    <div class="form-group">
-                        <input class="form-control" placeholder="Email" required
-                            aria-label="enter email address" asp-for="Username" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password" required
-                            aria-label="enter password" asp-for="Password" autocomplete="off">
-                    </div>
-                    @if (Model.AllowRememberLogin)
-                    {
-                        <div class="form-group login-remember">
-                            <label asp-for="RememberLogin">
-                                <input asp-for="RememberLogin">
-                                <span>Remember My Login</span>
-                            </label>
+                    <fieldset>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Email" required
+                                aria-label="enter email address" asp-for="Username" autofocus>
                         </div>
-                    }
-                </fieldset>
-                <p>
-                    <button type="submit" class="btn btn-primary" disabled name="provider"
-                        aria-label="login with credentials" asp-for="Provider" value="local">Continue</button>
-                </p>
-            </form>
-            <a class="btn btn-link btn-sm" asp-action="reset" asp-route-returnUrl="@Model.ReturnUrl">Reset my password</a>
-            <a class="btn btn-link btn-sm" asp-action="register" asp-route-returnUrl="@Model.ReturnUrl">Register for an account</a>
+                        <div class="form-group">
+                            <input type="password" class="form-control" placeholder="Password" required
+                                aria-label="enter password" asp-for="Password" autocomplete="off">
+                        </div>
+                        @if (Model.AllowRememberLogin)
+                        {
+                            <div class="form-group login-remember">
+                                <label asp-for="RememberLogin">
+                                    <input asp-for="RememberLogin">
+                                    <span>Remember My Login</span>
+                                </label>
+                            </div>
+                        }
+                    </fieldset>
+                    <p>
+                        <button type="submit" class="btn btn-primary" disabled name="provider"
+                            aria-label="login with credentials" asp-for="Provider" value="local">Continue</button>
+                    </p>
+                </form>
+                <a class="btn btn-link btn-sm" asp-action="reset" asp-route-returnUrl="@Model.ReturnUrl">Reset my password</a>
+                <a class="btn btn-link btn-sm" asp-action="register" asp-route-returnUrl="@Model.ReturnUrl">Register for an account</a>
+            }
 
             @if (Model.ExternalSchemes.Length > 0)
             {

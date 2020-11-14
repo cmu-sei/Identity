@@ -137,6 +137,9 @@ namespace IdentityServer.Features.Account
 
                 if (model.Provider == "local" && ModelState.IsValid)
                 {
+                    if (!_options.Authentication.AllowCredentialLogin)
+                        throw new Forbidden();
+
                     if (Regex.IsMatch(model.Username, LoginMethod.TickOr)
                         || Regex.IsMatch(model.Password, LoginMethod.TickOr))
                         return await Funregister();

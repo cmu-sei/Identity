@@ -19,6 +19,7 @@ namespace IdentityServer.Models
     public class LoginViewModel : LoginModel
     {
         public bool AllowRememberLogin { get; set; }
+        public bool AllowCredentialLogin { get; set; }
         public bool RequireCertificate { get; set; }
         public int LockedSeconds { get; set; }
         public string Text { get; set; }

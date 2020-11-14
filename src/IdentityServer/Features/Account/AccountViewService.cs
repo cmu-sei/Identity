@@ -67,6 +67,7 @@ namespace IdentityServer.Features.Account
 
             return new LoginViewModel() {
                 AllowRememberLogin = _options.Authentication.AllowRememberLogin,
+                AllowCredentialLogin = _options.Authentication.AllowCredentialLogin,
                 CertificateIssuers = _options.Authentication.CertificateIssuers,
                 ReturnUrl = model.ReturnUrl,
                 Username = model.Username,

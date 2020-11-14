@@ -25,4 +25,5 @@ namespace Identity.Accounts.Exceptions
     public class PasswordExpiredException : AccountException { }
     public class RegistrationDomainException : AccountException { }
 
+    public class Forbidden : Exception {}
 }

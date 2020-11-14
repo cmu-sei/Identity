@@ -13,6 +13,7 @@ namespace Identity.Accounts.Options
         public string TroubleFile { get; set; } = "wwwroot/html/trouble.html";
         public int LockThreshold { get; set; }
 
+        public bool AllowCredentialLogin { get; set; } = true;
         public bool AllowLocalLogin { get; set; } = true;
         public bool AllowRememberLogin { get; set; } = true;
         public int RememberMeLoginDays { get; set; } = 30;
