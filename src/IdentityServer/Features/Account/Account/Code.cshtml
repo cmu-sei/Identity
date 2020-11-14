@@ -8,40 +8,55 @@
         <p>
             @ViewBag.AppName requires a second authentication factor.
         </p>
-        <form asp-route="code">
-            <fieldset>
-                <input type="hidden" asp-for="ReturnUrl" />
-                <input type="hidden" asp-for="Token" />
-                <p>@Model.Token</p>
-                @await Html.PartialAsync("_ValidationSummary")
+        @if (Model.CodeSent || Model.HasCode || Model.Action == "validate")
+        {
+            <form asp-route="code">
+                <fieldset>
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <input type="hidden" asp-for="Token" />
+
+                    <p>@Model.Token</p>
+
+                    @await Html.PartialAsync("_ValidationSummary")
+
+                    @if (Model.CodeSent)
+                    {
+                        <p class="text text-info">A code has been sent.</p>
+                    }
+
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Code"
+                            aria-label="enter 2fa code" asp-for="Code" autofocus="on" autocomplete="off">
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary" name="Action" value="submit">Continue</button>
+                        <button type="submit" class="btn btn-secondary" name="Action" value="reset">Reset</button>
+                    </div>
+
+                </fieldset>
+            </form>
+
+            <p class="pt-4">
+                Note: To generate a code without relying on email, see the <i>Configure 2FA</i> link on your profile page (after successfully logging in).
+            </p>
+        }
+        else
+        {
+            <form asp-route="code">
+                <input id="send-ReturnUrl" type="hidden" asp-for="ReturnUrl" />
+                <input id="send-Token" type="hidden" asp-for="Token" />
+
                 <div class="form-group">
-                    <input class="form-control" type="password" placeholder="Code" required
-                        aria-label="enter 2fa code" asp-for="Code" autofocus="on" autocomplete="off">
+                    <button type="submit" class="btn btn-secondary btn-sm mb-2" name="Action" value="have">I have a code</button>
                 </div>
+
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary" name="Action" value="submit">Continue</button>
+                    <button type="submit" class="btn btn-secondary btn-sm mb-2" name="Action" value="need">Send me a code</button>
                 </div>
-            </fieldset>
-        </form>
 
-        <form asp-route="code">
-            <input id="send-ReturnUrl" type="hidden" asp-for="ReturnUrl" />
-            <input id="send-Token" type="hidden" asp-for="Token" />
+            </form>
+        }
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-secondary btn-sm mb-2" name="Action" value="need">Send me a code</button>
-                @if (Model.CodeSent)
-                {
-                    <p class="text text-info">A code has been sent.</p>
-                } else
-                {
-                    <p class="text text-danger">A code has <em>NOT</em> yet been sent. If you need a code via email, click "Send me a Code".</p>
-                }
-            </div>
-        </form>
-
-        <p class="pt-4">
-            Note: To generate a code without relying on email, see the <i>Configure 2FA</i> link on your profile page (after successfully logging in).
-        </p>
     </div>
 </div>

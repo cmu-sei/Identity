@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System.ComponentModel.DataAnnotations;
 
@@ -18,6 +18,7 @@ namespace IdentityServer.Models
     public class CodeViewModel : CodeModel
     {
         public bool CodeSent { get; set; }
+        public bool HasCode { get; set; }
     }
 
     public class CodeState

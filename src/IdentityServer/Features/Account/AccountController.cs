@@ -212,6 +212,13 @@ namespace IdentityServer.Features.Account
                 return Redirect(Url.Action("login").ReturnUrl(model.ReturnUrl));
             }
 
+            if (model.Action == "reset")
+            {
+                ModelState.Clear();
+                var vm = _viewSvc.GetCodeView(model.ReturnUrl, state);
+                return View(vm);
+            }
+
             if (model.Action == "need")
             {
                 int code = (await _accountSvc.GenerateAccountCodeAsync(model.Token))?.Code ?? 0;
@@ -222,9 +229,17 @@ namespace IdentityServer.Features.Account
                 return View(vm);
             }
 
+            if (model.Action == "have")
+            {
+                ModelState.Clear();
+                var vm = _viewSvc.GetCodeView(model.ReturnUrl, state);
+                vm.HasCode = true;
+                return View(vm);
+            }
+
             if (ModelState.IsValid)
             {
-                if (model.Token == state.Token)
+                if (model.Token == state.Token && !string.IsNullOrWhiteSpace(model.Code))
                 {
                     try
                     {
@@ -257,7 +272,10 @@ namespace IdentityServer.Features.Account
                 }
                 ModelState.AddModelError("", "Invalid Code");
             }
-            return View(_viewSvc.GetCodeView(model.ReturnUrl, state));
+
+            var result = _viewSvc.GetCodeView(model.ReturnUrl, state);
+            result.Action = "validate";
+            return View(result);
         }
 
         [HttpGet]
