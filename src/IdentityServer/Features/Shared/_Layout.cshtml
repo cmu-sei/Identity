@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     @Html.Raw(ViewBag.Meta)
     <link rel="stylesheet" href="~/lib/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css?v=20201120" />
     @await Html.PartialAsync("_Favicons")
 </head>
 <body>
@@ -53,7 +53,7 @@
     <script src="~/lib/jquery.slim.min.js"></script>
     <script src="~/lib/popper.min.js"></script>
     <script src="~/lib/bootstrap.min.js"></script>
-    <script src="~/js/site.js"></script>
+    <script src="~/js/site.js?v=20201120"></script>
     @RenderSection("scripts", required: false)
 
 </body>

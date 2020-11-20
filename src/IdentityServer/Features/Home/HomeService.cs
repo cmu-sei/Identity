@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -60,6 +60,8 @@ namespace IdentityServer.Features.Home
 
         private bool IsMSIE(string agent)
         {
+            if (string.IsNullOrEmpty(agent))
+                return false;
             string msiePattern = "msie\\s|trident";
             return Regex.IsMatch(agent, msiePattern, RegexOptions.IgnoreCase);
         }

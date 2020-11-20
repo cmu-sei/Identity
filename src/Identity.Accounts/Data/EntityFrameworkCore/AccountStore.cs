@@ -55,7 +55,7 @@ namespace Identity.Accounts.Data.EntityFrameworkCore
             int id = await DbContext.Accounts
                 .Where(u => u.GlobalId == guid)
                 .Select(u => u.Id)
-                .SingleOrDefaultAsync();
+                .FirstOrDefaultAsync();
 
             return await Load(id);
         }
