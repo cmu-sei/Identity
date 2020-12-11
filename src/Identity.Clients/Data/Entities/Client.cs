@@ -20,7 +20,7 @@ namespace Identity.Clients.Data
         public string PairWiseSubjectSalt { get; set; }
         [Obsolete] public string ProtocolType { get; set; } = "oidc"; // ProtocolTypes.OpenIdConnect;
         public string ClientClaimsPrefix { get; set; } = "client_";
-        public ClientFlag Flags { get; set; } = ClientFlag.RequireConsent;
+        public ClientFlag Flags { get; set; } = ClientFlag.RequireConsent | ClientFlag.AllowRememberConsent | ClientFlag.AlwaysIncludeUserClaimsInIdToken;
         public int IdentityTokenLifetime { get; set; } = 300;
         public int AccessTokenLifetime { get; set; } = 3600;
         public int AuthorizationCodeLifetime { get; set; } = 300;
