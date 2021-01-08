@@ -303,8 +303,7 @@ namespace IdentityServer
                 new RewriteOptions()
                     .AddRewrite(@"^oauth/(.*)", "connect/$1", true)
                     .AddRewrite(@"^api/v4/user", "api/profile/alt", true)
-                    .AddRewrite(@".well-known/resource-that-should-not-exist-whose-status-code-should-not-be-200", ".404", true)
-                    .AddRedirect(@".well-known/change-password", "account/reset")
+                    .AddRedirect(@"^.well-known/change-password", "account/password")
             );
 
             app.UseStaticFiles();
@@ -327,8 +326,6 @@ namespace IdentityServer
                 endpoints.MapJAvatar(_javatar.RoutePrefix).RequireAuthorization();
 
                 endpoints.MapDefaultControllerRoute();
-
-                endpoints.MapFallbackToController("Index", "Home");
             });
         }
 
