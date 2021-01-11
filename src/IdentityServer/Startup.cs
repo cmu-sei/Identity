@@ -270,8 +270,8 @@ namespace IdentityServer
                 });
 
                 options.DefaultPolicy = new AuthorizationPolicyBuilder(
-                    IdentityServer4.IdentityServerConstants.DefaultCookieAuthenticationScheme,
-                    IdentityServer4.IdentityServerConstants.LocalApi.AuthenticationScheme
+                    IdentityServer4.IdentityServerConstants.LocalApi.AuthenticationScheme,
+                    IdentityServer4.IdentityServerConstants.DefaultCookieAuthenticationScheme
                 ).RequireAuthenticatedUser().Build();
             });
 
