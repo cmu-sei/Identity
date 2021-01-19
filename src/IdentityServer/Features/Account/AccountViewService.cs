@@ -58,6 +58,13 @@ namespace IdentityServer.Features.Account
                 ReturnUrl = returnUrl
             });
         }
+        public async Task<PasswordViewModel> GetPasswordView(string returnUrl)
+        {
+            return await GetPasswordView(new PasswordModel
+            {
+                ReturnUrl = returnUrl
+            });
+        }
 
         public async Task<LoginViewModel> GetLoginView(LoginModel model, int lockedSeconds = 0)
         {
@@ -77,6 +84,16 @@ namespace IdentityServer.Features.Account
                 MSIE = IsMSIE(headers[HeaderNames.UserAgent]),
                 CertificateSubject = headers[_options.Authentication.ClientCertSubjectHeader],
                 CertificateIssuer = headers[_options.Authentication.ClientCertIssuerHeader]
+            };
+        }
+        public async Task<PasswordViewModel> GetPasswordView(PasswordModel model, int lockedSeconds = 0)
+        {
+            await Task.Delay(0);
+            return new PasswordViewModel() {
+                CurrentPassword = model.CurrentPassword,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword,
+                Complexity = _options.Password.ComplexityText
             };
         }
 

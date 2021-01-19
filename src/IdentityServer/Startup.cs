@@ -270,8 +270,8 @@ namespace IdentityServer
                 });
 
                 options.DefaultPolicy = new AuthorizationPolicyBuilder(
-                    IdentityServer4.IdentityServerConstants.DefaultCookieAuthenticationScheme,
-                    IdentityServer4.IdentityServerConstants.LocalApi.AuthenticationScheme
+                    IdentityServer4.IdentityServerConstants.LocalApi.AuthenticationScheme,
+                    IdentityServer4.IdentityServerConstants.DefaultCookieAuthenticationScheme
                 ).RequireAuthenticatedUser().Build();
             });
 
@@ -303,6 +303,7 @@ namespace IdentityServer
                 new RewriteOptions()
                     .AddRewrite(@"^oauth/(.*)", "connect/$1", true)
                     .AddRewrite(@"^api/v4/user", "api/profile/alt", true)
+                    .AddRedirect(@"^.well-known/change-password", "account/password")
             );
 
             app.UseStaticFiles();
@@ -325,8 +326,6 @@ namespace IdentityServer
                 endpoints.MapJAvatar(_javatar.RoutePrefix).RequireAuthorization();
 
                 endpoints.MapDefaultControllerRoute();
-
-                endpoints.MapFallbackToController("Index", "Home");
             });
         }
 

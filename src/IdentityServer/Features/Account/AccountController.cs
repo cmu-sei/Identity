@@ -21,6 +21,7 @@ using IdentityServer4;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -186,6 +187,56 @@ namespace IdentityServer.Features.Account
             }
 
             return View(await _viewSvc.GetLoginView(model, locked));
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Password(string returnUrl)
+        {
+            return View(await _viewSvc.GetPasswordView(returnUrl));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Password(PasswordModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    ChangedPassword changed = new ChangedPassword
+                    {
+                        CurrentPassword = model.CurrentPassword,
+                        Value = model.Password
+                    };
+                    await _accountSvc.ChangePasswordAsync(User.GetSubjectId(), changed);
+                    Audit(AuditId.ResetPassword);
+                    return Redirect(model.ReturnUrl ?? "~/");
+                }
+            }
+            catch (AuthenticationFailureException)
+            {
+                ModelState.AddModelError("", "Incorrect password");
+            }
+            catch (AccountDisabledException)
+            {
+                ModelState.AddModelError("", "Account is disabled");
+            }
+            catch (PasswordComplexityException)
+            {
+                ModelState.AddModelError("", "Password does not meet complexity requirements");
+            }
+            catch (PasswordHistoryException)
+            {
+                ModelState.AddModelError("", "Old passwords cannot be reused");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error during change password");
+                ModelState.AddModelError("", "Invalid request");
+            }
+            return View(await _viewSvc.GetPasswordView(model));
         }
 
         [HttpGet]
