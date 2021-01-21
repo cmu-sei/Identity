@@ -64,11 +64,6 @@ namespace IdentityServer.Extensions
                             .Select(r => r.Resource.Name)
                             .ToArray());
                     }
-                foreach (var resource in clientDb.Resources)
-                {
-                    // simply set Scopes to the resource name (just 1 scope)
-                    resource.Scopes = resource.Name;
-                }
                 clientDb.SaveChanges();
 
                 var seedGrants = new IdentityResource[] {
