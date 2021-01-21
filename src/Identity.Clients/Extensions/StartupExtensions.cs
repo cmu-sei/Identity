@@ -78,7 +78,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddScoped<IEventStore, EventStore>()
                 .AddScoped<IManagerStore, ManagerStore>()
                 .AddScoped<IResourceStore, ResourceStore>()
-                .AddScoped<IResourceClaimStore, ResourceClaimStore>()
                 .AddScoped<ISecretStore, SecretStore>()
                 .AddScoped<IUriStore, UriStore>()
                 // .AddScoped<IWebhookStore, WebhookStore>()

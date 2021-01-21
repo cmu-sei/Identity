@@ -18,7 +18,7 @@ namespace Identity.Clients.Models
         public bool Required { get; set; }
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
-        public ICollection<ResourceClaim> Claims { get; set; }
+        public string Scopes { get; set; }
         public ICollection<ResourceManager> Managers { get; set; }
     }
 
@@ -33,6 +33,7 @@ namespace Identity.Clients.Models
         public bool Required { get; set; }
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
+        public string Scopes { get; set; }
     }
 
     public class ChangedResource
@@ -47,6 +48,7 @@ namespace Identity.Clients.Models
         public bool Required { get; set; }
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
+        public string Scopes { get; set; }
     }
 
 }

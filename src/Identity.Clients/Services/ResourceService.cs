@@ -92,10 +92,9 @@ namespace Identity.Clients.Services
             entity.Name = model.Name ?? $"new-api-{_profile.Name.ToKebabCase()}-{new Random().Next().ToString("x")}";
             entity.DisplayName = model.DisplayName ?? entity.Name;
 
-            entity.Claims.Add(new Data.ResourceClaim
-            {
-                Type = entity.Name,
-            });
+            if (String.IsNullOrWhiteSpace(entity.Scopes)) {
+                entity.Scopes = entity.Name;
+            }
 
             entity.Enabled = _profile.IsPrivileged;
 
@@ -135,7 +134,9 @@ namespace Identity.Clients.Services
                 ? model.Enabled
                 : state;
 
-            entity.Claims.First().Type = entity.Name;
+            if (String.IsNullOrWhiteSpace(entity.Scopes)) {
+                entity.Scopes = entity.Name;
+            }
 
             UpdateManagers(entity, model.Managers);
 

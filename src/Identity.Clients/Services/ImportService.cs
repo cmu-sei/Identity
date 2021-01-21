@@ -51,11 +51,7 @@ namespace Identity.Clients.Services
                     Type = ResourceType.Api,
                     Name = scope,
                     Enabled = true,
-                    Claims = new Data.ResourceClaim[] {
-                        new Data.ResourceClaim {
-                            Type = scope
-                        }
-                    }.ToList()
+                    Scopes = scope
                 });
             }
 

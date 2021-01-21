@@ -42,14 +42,14 @@ namespace IdentityServer.Features.Consent
                 return;
             }
 
-            var consent = IdentityServer4.Models.ConsentResponse.Denied;
+            var consent = new IdentityServer4.Models.ConsentResponse { Error = IdentityServer4.Models.AuthorizationError.AccessDenied };
             if (model.Action == "consent")
             {
                 consent = new IdentityServer4.Models.ConsentResponse();
                 consent.RememberConsent = model.RememberConsent;
-                consent.ScopesConsented = ((!model.AllowOfflineAccess)
-                    ? request.ScopesRequested.Where(x => x != StandardScopes.OfflineAccess)
-                    : request.ScopesRequested).ToArray();
+                consent.ScopesValuesConsented = ((!model.AllowOfflineAccess)
+                    ? request.ValidatedResources.RawScopeValues.Where(x => x != StandardScopes.OfflineAccess)
+                    : request.ValidatedResources.RawScopeValues).ToArray();
             }
 
             await _interaction.GrantConsentAsync(request, consent);
@@ -64,10 +64,10 @@ namespace IdentityServer.Features.Consent
                 return null;
             }
 
-            var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);
+            var client = await _clientStore.FindEnabledClientByIdAsync(request.Client.ClientId);
             if (client == null)
             {
-                _logger.LogError("Invalid client id: {0}", request.ClientId);
+                _logger.LogError("Invalid client id: {0}", request.Client.ClientId);
                 return null;
             }
 
@@ -75,7 +75,7 @@ namespace IdentityServer.Features.Consent
             var vm = new ConsentViewModel();
             vm.ReturnUrl = returnUrl;
 
-            vm.RequestOfflineAccess = request.ScopesRequested.Contains(StandardScopes.OfflineAccess);
+            vm.RequestOfflineAccess = request.ValidatedResources.RawScopeValues.Contains(StandardScopes.OfflineAccess);
 
             vm.AllowRememberConsent = client.AllowRememberConsent && !vm.RequestOfflineAccess;
 
@@ -86,11 +86,11 @@ namespace IdentityServer.Features.Consent
 
             vm.IdentityScopes = resources.Where(r =>
                 r.Type == ResourceType.Identity &&
-                request.ScopesRequested.Contains(r.Name)).ToArray();
+                request.ValidatedResources.RawScopeValues.Contains(r.Name)).ToArray();
 
             vm.ResourceScopes = resources.Where(r =>
                 r.Type == ResourceType.Api &&
-                request.ScopesRequested.Contains(r.Name)).ToArray();
+                request.ValidatedResources.RawScopeValues.Contains(r.Name)).ToArray();
 
             if (vm.IdentityScopes.Length == 0 && vm.ResourceScopes.Length == 0)
                 return null;

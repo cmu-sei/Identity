@@ -21,17 +21,10 @@ namespace Identity.Clients.Data
         public bool Required { get; set; }
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
-        public ICollection<ResourceClaim> Claims { get; set; } = new List<ResourceClaim>();
+        public string Scopes { get; set; }
         public ICollection<ResourceManager> Managers { get; set; } = new List<ResourceManager>();
 
         [Obsolete]
         public ICollection<ClientResource> Clients { get; set; }
-    }
-
-    public class ResourceClaim : IEntity
-    {
-        public int Id { get; set; }
-        public int ResourceId { get; set; }
-        public string Type { get; set; }
     }
 }

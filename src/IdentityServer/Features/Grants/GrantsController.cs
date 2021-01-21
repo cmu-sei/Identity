@@ -51,7 +51,7 @@ namespace IdentityServer.Features.Grants
 
         private async Task<List<GrantViewModel>> GetGrantsView()
         {
-            var grants = await _interaction.GetAllUserConsentsAsync();
+            var grants = await _interaction.GetAllUserGrantsAsync();
 
             var list = new List<GrantViewModel>();
             foreach(var grant in grants)

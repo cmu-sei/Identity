@@ -28,7 +28,6 @@ namespace Identity.Clients.Data.EntityFrameworkCore
             if (result == null)
             {
                 result = await base.List()
-                    .Include(r => r.Claims)
                     .Include(r => r.Managers)
                     .ToArrayAsync();
 

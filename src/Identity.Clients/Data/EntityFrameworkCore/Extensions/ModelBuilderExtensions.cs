@@ -82,11 +82,7 @@ namespace Identity.Clients.Data.EntityFrameworkCore.Extensions
                 resource.HasIndex(x => x.Name).IsUnique();
                 resource.Property(x => x.DisplayName).HasMaxLength(100);
                 resource.Property(x => x.Description).HasMaxLength(1000);
-            });
-
-            builder.Entity<ResourceClaim>(claim =>
-            {
-                claim.Property(x => x.Type).HasMaxLength(50);
+                resource.Property(x => x.Scopes).HasMaxLength(200);
             });
 
 

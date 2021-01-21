@@ -15,17 +15,15 @@ namespace Identity.Clients.Mappers
 
             CreateMap<Data.Resource, Resource>()
                 .ForMember(d => d.DisplayName, opt => opt.MapFrom(s => string.IsNullOrEmpty(s.DisplayName) ? s.Name : s.DisplayName))
-                .ForMember(d => d.Description, opt => opt.MapFrom(s => System.String.Join(", ", s.Claims.Select(c => c.Type))));
+                .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Scopes));
             CreateMap<Resource, Data.Resource>()
-                .ForMember(d => d.Managers, opt => opt.Ignore())
-                .ForMember(d => d.Claims, opt => opt.Ignore());
+                .ForMember(d => d.Managers, opt => opt.Ignore());
             CreateMap<NewResource, Data.Resource>();
 
                 // .ForMember(d => d.Name, opt => opt.MapFrom(s => s.DisplayName.ToKebabCase()));
             // CreateMap<ChangedResource, Data.Resource>()
             //     .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Name.ToKebabCase()));
 
-            CreateMap<Data.ResourceClaim, ResourceClaim>();
             // CreateMap<NewResourceClaim, Data.ResourceClaim>();
             // CreateMap<ChangedResourceClaim, Data.ResourceClaim>();
 

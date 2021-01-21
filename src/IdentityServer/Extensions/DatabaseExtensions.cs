@@ -64,6 +64,11 @@ namespace IdentityServer.Extensions
                             .Select(r => r.Resource.Name)
                             .ToArray());
                     }
+                foreach (var resource in clientDb.Resources)
+                {
+                    // simply set Scopes to the resource name (just 1 scope)
+                    resource.Scopes = resource.Name;
+                }
                 clientDb.SaveChanges();
 
                 var seedGrants = new IdentityResource[] {
@@ -194,11 +199,10 @@ namespace IdentityServer.Extensions
                             Type = ResourceType.Grant,
                             Name = resource.Name,
                             DisplayName = resource.DisplayName,
-                            Description = resource.Description
+                            Description = resource.Description,
+                            Scopes = $"{resource.Name} client_credentials"
                         };
                         clientDb.Resources.Add(entity);
-                        entity.Claims.Add(new ResourceClaim { Type = resource.Name });
-                        entity.Claims.Add(new ResourceClaim { Type = "client_credentials" });
                     }
                 }
 
@@ -221,10 +225,9 @@ namespace IdentityServer.Extensions
                         clientDb.Resources.Add(entity);
 
                         if (resource.Scopes.Count == 0)
-                            resource.Scopes.Add(new Scope(resource.Name, resource.DisplayName));
+                            resource.Scopes.Add(resource.Name);
 
-                        foreach (var s in resource.Scopes)
-                            entity.Claims.Add(new ResourceClaim { Type = s.Name });
+                        entity.Scopes = String.Join(' ', resource.Scopes);
 
                         clientDb.SaveChanges();
                     }
@@ -249,8 +252,7 @@ namespace IdentityServer.Extensions
                             Default = "openid profile organization".Contains(resource.Name)
                         };
                         clientDb.Resources.Add(entity);
-                        foreach (var s in resource.UserClaims)
-                            entity.Claims.Add(new ResourceClaim { Type = s });
+                        entity.Scopes = String.Join(' ', resource.UserClaims);
                     }
                 }
 

@@ -31,30 +31,31 @@ namespace IdentityServer.Services
             return _all;
         }
 
-        public async Task<ApiResource> FindApiResourceAsync(string name)
+         public async Task<IEnumerable<ApiResource>> FindApiResourcesByNameAsync(IEnumerable<string> apiResourceNames)
         {
             await Task.Delay(0);
             return GetAll()
-                .Where(r => r.Type == ResourceType.Api && r.Name == name)
-                .Select(r => ConvertApiResource(r))
-                .FirstOrDefault();
+                .Where(r => r.Type == ResourceType.Api && apiResourceNames.Contains(r.Name))
+                .Select(r => ConvertApiResource(r));
         }
 
-        public async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeAsync(IEnumerable<string> scopeNames)
+        public async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
             await Task.Delay(0);
-            List<ApiResource> result = new List<ApiResource>();
-            var all = GetAll();
-            var map = all.Where(r => r.Type == ResourceType.Api).SelectMany(r => r.Claims).ToDictionary(c => c.Type);
-            foreach(string scope in scopeNames)
-            {
-                if (map.ContainsKey(scope))
-                    result.Add(ConvertApiResource(all.Where(r => r.Id == map[scope].ResourceId).First()));
-            }
-            return result;
+            return GetAll()
+                .Where(r => r.Type == ResourceType.Api && r.Scopes.Split(' ').Any(s => scopeNames.Contains(s)))
+                .Select(r => ConvertApiResource(r));
         }
 
-        public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeAsync(IEnumerable<string> scopeNames)
+        async Task<IEnumerable<ApiScope>> IResourceStore.FindApiScopesByNameAsync(IEnumerable<string> scopeNames)
+        {
+            await Task.Delay(0);
+            return GetAll()
+                .Where(r => r.Type == ResourceType.ApiScope && scopeNames.Contains(r.Name))
+                .Select(r => ConvertApiScope(r));
+        }
+
+        public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
         {
             await Task.Delay(0);
             List<IdentityResource> result = new List<IdentityResource>();
@@ -74,7 +75,10 @@ namespace IdentityServer.Services
                     .Select(r => ConvertIdentityResource(r)).ToArray(),
                 GetAll()
                     .Where(r => r.Type == ResourceType.Api)
-                    .Select(r => ConvertApiResource(r)).ToArray()
+                    .Select(r => ConvertApiResource(r)).ToArray(),
+                GetAll()
+                    .Where(r => r.Type == ResourceType.ApiScope)
+                    .Select(r => ConvertApiScope(r)).ToArray()
             );
         }
 
@@ -89,13 +93,7 @@ namespace IdentityServer.Services
                     Name = resource.Name,
                     DisplayName = resource.DisplayName,
                     Description = resource.Description,
-                    Scopes = resource.Claims.Select(c => new Scope{
-                        Name = c.Type,
-                        DisplayName = resource.DisplayName,
-                        Required = resource.Required,
-                        Emphasize = resource.Emphasize,
-                        ShowInDiscoveryDocument = resource.ShowInDiscoveryDocument
-                    }).ToArray()
+                    Scopes = resource.Scopes.Split(' ')
                 };
         }
 
@@ -113,9 +111,26 @@ namespace IdentityServer.Services
                     Emphasize = resource.Emphasize,
                     Required = resource.Required,
                     ShowInDiscoveryDocument = resource.ShowInDiscoveryDocument,
-                    UserClaims = resource.Claims.Select(c => c.Type).ToArray()
+                    UserClaims = resource.Scopes.Split(' ')
                 };
         }
 
+        private ApiScope ConvertApiScope(Identity.Clients.Models.Resource resource)
+        {
+            if (resource == null)
+                return null;
+
+            return new ApiScope
+                {
+                    Enabled = resource.Enabled,
+                    Name = resource.Name,
+                    DisplayName = resource.DisplayName,
+                    Description = resource.Description,
+                    Emphasize = resource.Emphasize,
+                    Required = resource.Required,
+                    ShowInDiscoveryDocument = resource.ShowInDiscoveryDocument,
+                    UserClaims = resource.Scopes.Split(' ')
+                };
+        }
     }
 }

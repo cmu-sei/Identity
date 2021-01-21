@@ -32,7 +32,8 @@ namespace Identity.Clients.Abstractions
         None,
         Identity,
         Api,
-        Grant
+        Grant,
+        ApiScope
     }
 
     public enum ClientUriType

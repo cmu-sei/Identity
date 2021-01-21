@@ -679,7 +679,13 @@ namespace IdentityServer.Features.Account
                 }
                 : null;
 
-            await HttpContext.SignInAsync(user.GlobalId, username, props, new Claim(JwtClaimTypes.Role, user.Role.ToLower()));
+            var userToSignIn = new IdentityServerUser(user.GlobalId)	
+            {	
+                DisplayName = username,	
+                AdditionalClaims = { new Claim(JwtClaimTypes.Role, user.Role.ToLower()) },
+                AuthenticationTime = DateTimeOffset.UtcNow.UtcDateTime	
+            };
+            await HttpContext.SignInAsync(userToSignIn, props);
             //TODO: broadcast to logging hub
             // Logger.LogInformation(
             //     new EventId(LogEventId.AuthSucceededWithCertRequired),

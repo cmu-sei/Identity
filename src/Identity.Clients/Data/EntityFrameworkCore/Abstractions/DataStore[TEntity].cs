@@ -114,9 +114,7 @@ namespace Identity.Clients.Data.EntityFrameworkCore.Abstractions
         {
             string key = (entity is IEntityClientProperty)
                 ? $"{typeof(Data.Client).FullName}:{((IEntityClientProperty)entity).ClientId}"
-                : (entity is ResourceClaim)
-                    ? "Identity.Clients.Data.Resource[]:all"
-                    : $"{entity.GetType().FullName}:{entity.Id}";
+                : $"{entity.GetType().FullName}:{entity.Id}";
 
             await UnCache(key);
 

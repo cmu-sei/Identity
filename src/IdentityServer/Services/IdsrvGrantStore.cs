@@ -21,9 +21,9 @@ namespace IdentityServer.Services
 
         private readonly GrantService _svc;
 
-        public async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
+        public async Task<IEnumerable<PersistedGrant>> GetAllAsync(PersistedGrantFilter filter)
         {
-            var grants = await _svc.GetAllAsync(subjectId);
+            var grants = await _svc.GetAllAsync(filter.SubjectId);
             return grants.Select(g => Map(g)).ToArray();
         }
 
@@ -33,14 +33,14 @@ namespace IdentityServer.Services
             return Map(grant);
         }
 
-        public async Task RemoveAllAsync(string subjectId, string clientId)
+        public async Task RemoveAllAsync(PersistedGrantFilter filter)
         {
-            await _svc.RemoveAllAsync(subjectId, clientId);
+            await _svc.RemoveAllAsync(filter.SubjectId, filter.ClientId);
         }
 
-        public async Task RemoveAllAsync(string subjectId, string clientId, string type)
+        public async Task RemoveAllAsync(PersistedGrantFilter filter, string type)
         {
-            await _svc.RemoveAllAsync(subjectId, clientId, type);
+            await _svc.RemoveAllAsync(filter.SubjectId, filter.ClientId, type);
         }
 
         public async Task RemoveAsync(string key)

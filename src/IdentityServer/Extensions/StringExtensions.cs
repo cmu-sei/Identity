@@ -4,6 +4,7 @@
 using System;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using IdentityServer4.Models;
 
 namespace IdentityServer.Extensions
 {
@@ -50,13 +51,13 @@ namespace IdentityServer.Extensions
             return url + prefix + item;
         }
 
-        public static Claim ToClaim(this string value)
+        public static ClientClaim ToClaim(this string value)
         {
             int x = value.IndexOf('=');
             if (x < 2)
                 throw new ArgumentException("format not key=value");
 
-            return new Claim(
+            return new ClientClaim(
                 value.Substring(0,x).Trim(),
                 value.Substring(x+1).Trim()
             );
