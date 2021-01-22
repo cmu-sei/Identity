@@ -105,7 +105,8 @@ namespace Identity.Clients.Tests
                     },
                     new Data.Resource{
                         Type = ResourceType.Grant,
-                        Name = "client client_credentials"
+                        Name = "client",
+                        Scopes = "client_credentials"
                     }
                 };
 
