@@ -51,8 +51,18 @@ namespace Identity.Clients.Services
                     Type = ResourceType.Api,
                     Name = scope,
                     Enabled = true,
-                    Scopes = scope
+                    Scopes = scope,
+                    Secrets = new Data.ApiSecret[]
+                    {
+                        new Data.ApiSecret 
+                        {
+                            Type = "SharedSecret",
+                            Value = scope.Sha256(),
+                            Description = "Added by Dev at " + DateTime.UtcNow.ToString("u")
+                        }
+                    }
                 });
+
             }
 
             foreach (var client in model.Clients)

@@ -97,9 +97,9 @@ namespace IdentityServer.Extensions
                     }
                 }.ToList();
 
-                var seedApi = new ApiResource[] {
-                    new ApiResource { Name = "identity-api" },
-                    new ApiResource { Name = "identity-api-privileged" },
+                var seedApi = new DbSeedApi[] {
+                    new DbSeedApi { Name = "identity-api" },
+                    new DbSeedApi { Name = "identity-api-privileged" },
                 }.ToList();
 
                 var seedClients = new List<DbSeedClient>(); //[] {
@@ -201,7 +201,7 @@ namespace IdentityServer.Extensions
                     }
                 }
 
-                foreach (IdentityServer4.Models.ApiResource resource in seedApi)
+                foreach (var resource in seedApi)
                 {
                     if (!clientDb.Resources.Any(r =>
                         r.Type == ResourceType.Api
@@ -219,10 +219,19 @@ namespace IdentityServer.Extensions
 
                         clientDb.Resources.Add(entity);
 
-                        if (resource.Scopes.Count == 0)
-                            resource.Scopes.Add(resource.Name);
-
+                        if (String.IsNullOrWhiteSpace(resource.Scopes))
+                            resource.Scopes = resource.Name;
+                        
                         entity.Scopes = String.Join(' ', resource.Scopes);
+
+                        entity.Secrets.Add(
+                            new ApiSecret
+                            {
+                                Type = "SharedSecret",
+                                Value = resource.SeedSecret.Sha256(),
+                                Description = "Added by Admin at " + DateTime.UtcNow.ToString("u")
+                            }
+                        );
 
                         clientDb.SaveChanges();
                     }

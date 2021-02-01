@@ -66,9 +66,9 @@ namespace Identity.Clients.Services
             return Mapper.Map<Resource[]>(query.ToArray());
         }
 
-        public async Task<Resource[]> LoadAll()
+        public async Task<ResourceDetail[]> LoadAll()
         {
-            return Mapper.Map<Resource[]>(await _store.GetAll());
+            return Mapper.Map<ResourceDetail[]>(await _store.GetAll());
         }
 
         public async Task<Resource> Load(int id)
@@ -140,6 +140,8 @@ namespace Identity.Clients.Services
 
             UpdateManagers(entity, model.Managers);
 
+            UpdateSecrets(entity, model.Secrets);
+
             try
             {
                 await _store.Update(entity);
@@ -165,6 +167,16 @@ namespace Identity.Clients.Services
             }
         }
 
+        private void UpdateSecrets(Data.Resource entity, IEnumerable<ApiSecret> secrets)
+        {
+            foreach (var secret in secrets.Where(s => s.Deleted))
+            {
+                var target = entity.Secrets.SingleOrDefault(s => s.Id == secret.Id);
+                if (target != null)
+                    entity.Secrets.Remove(target);
+            }
+        }
+
         public async Task Delete(int id)
         {
             if (! await CanManage(id))
@@ -176,6 +188,30 @@ namespace Identity.Clients.Services
         private async Task<bool> CanManage(int id)
         {
             return _profile.IsPrivileged || await _store.CanManage(id, _profile.Id);
+        }
+
+        public async Task<ApiSecret> AddSecret(int resourceId)
+        {
+            var entity = await _store.Load(resourceId);
+            if (!await CanManage(resourceId))
+                throw new InvalidOperationException();
+
+            string val = Guid.NewGuid().ToString("N");
+            entity.Secrets.Add(new Data.ApiSecret
+            {
+                ResourceId = resourceId,
+                Type = SecretTypes.SharedSecret,
+                Value = val.Sha256(),
+                Description = $"Added by {_profile.Name} at {DateTime.UtcNow}"
+            });
+
+            await _store.Update(entity);
+
+            return new ApiSecret
+            {
+                Id = entity.Secrets.Last().Id,
+                Value = val
+            };
         }
 
         public async Task<string> NewEnlistCode(int id)

@@ -16,9 +16,18 @@ namespace Identity.Clients.Mappers
             CreateMap<Data.Resource, Resource>()
                 .ForMember(d => d.DisplayName, opt => opt.MapFrom(s => string.IsNullOrEmpty(s.DisplayName) ? s.Name : s.DisplayName))
                 .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Scopes));
+            CreateMap<Data.Resource, ResourceDetail>()
+                .ForMember(d => d.DisplayName, opt => opt.MapFrom(s => string.IsNullOrEmpty(s.DisplayName) ? s.Name : s.DisplayName))
+                .ForMember(d => d.Description, opt => opt.MapFrom(s => s.Scopes));
             CreateMap<Resource, Data.Resource>()
-                .ForMember(d => d.Managers, opt => opt.Ignore());
+                .ForMember(d => d.Managers, opt => opt.Ignore())
+                .ForMember(d => d.Secrets, opt => opt.Ignore());
             CreateMap<NewResource, Data.Resource>();
+            CreateMap<Data.ApiSecret, ApiSecret>()
+                .ForMember(d => d.Value, opt => opt.MapFrom(s => s.Description));
+            CreateMap<Data.ApiSecret, ApiSecretDetail>();
+            CreateMap<ApiSecretDetail, ApiSecret>()
+                .ForMember(d => d.Value, opt => opt.MapFrom(s => s.Description));
 
                 // .ForMember(d => d.Name, opt => opt.MapFrom(s => s.DisplayName.ToKebabCase()));
             // CreateMap<ChangedResource, Data.Resource>()

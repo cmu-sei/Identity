@@ -20,9 +20,9 @@ namespace IdentityServer.Services
         }
         private readonly ResourceService _svc;
 
-        Identity.Clients.Models.Resource[] _all;
+        Identity.Clients.Models.ResourceDetail[] _all;
 
-        private Identity.Clients.Models.Resource[] GetAll()
+        private Identity.Clients.Models.ResourceDetail[] GetAll()
         {
             if (_all != null)
                 return _all;
@@ -51,8 +51,11 @@ namespace IdentityServer.Services
         {
             await Task.Delay(0);
             return GetAll()
-                .Where(r => r.Type == ResourceType.ApiScope && scopeNames.Contains(r.Name))
-                .Select(r => ConvertApiScope(r));
+                .Where(r => r.Type == ResourceType.Api)
+                .SelectMany(r => r.Scopes.Split(' '))
+                .Distinct()
+                .Where(r => scopeNames.Contains(r))
+                .Select(r => new ApiScope(r));
         }
 
         public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeNameAsync(IEnumerable<string> scopeNames)
@@ -82,7 +85,7 @@ namespace IdentityServer.Services
             );
         }
 
-        private ApiResource ConvertApiResource(Identity.Clients.Models.Resource resource)
+        private ApiResource ConvertApiResource(Identity.Clients.Models.ResourceDetail resource)
         {
             if (resource == null)
                 return null;
@@ -93,11 +96,12 @@ namespace IdentityServer.Services
                     Name = resource.Name,
                     DisplayName = resource.DisplayName,
                     Description = resource.Description,
-                    Scopes = resource.Scopes.Split(' ')
+                    Scopes = resource.Scopes.Split(' '),
+                    ApiSecrets = resource.Secrets.Select(s => new Secret(s.Value)).ToArray()
                 };
         }
 
-        private IdentityResource ConvertIdentityResource(Identity.Clients.Models.Resource resource)
+        private IdentityResource ConvertIdentityResource(Identity.Clients.Models.ResourceDetail resource)
         {
             if (resource == null)
                 return null;
@@ -115,7 +119,7 @@ namespace IdentityServer.Services
                 };
         }
 
-        private ApiScope ConvertApiScope(Identity.Clients.Models.Resource resource)
+        private ApiScope ConvertApiScope(Identity.Clients.Models.ResourceDetail resource)
         {
             if (resource == null)
                 return null;

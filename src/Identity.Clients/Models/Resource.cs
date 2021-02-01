@@ -19,7 +19,13 @@ namespace Identity.Clients.Models
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
         public string Scopes { get; set; }
+        public ICollection<ApiSecret> Secrets { get; set; }
         public ICollection<ResourceManager> Managers { get; set; }
+    }
+
+    public class ResourceDetail : Resource
+    {
+        public new ICollection<ApiSecretDetail> Secrets { get; set; }
     }
 
     public class NewResource

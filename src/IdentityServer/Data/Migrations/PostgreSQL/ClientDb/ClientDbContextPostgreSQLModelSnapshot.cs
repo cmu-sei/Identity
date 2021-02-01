@@ -19,6 +19,39 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.ClientDb
                 .HasAnnotation("ProductVersion", "3.1.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            modelBuilder.Entity("Identity.Clients.Data.ApiSecret", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Description")
+                        .HasColumnType("character varying(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<DateTime?>("Expiration")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ResourceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResourceId");
+
+                    b.ToTable("ApiSecret");
+                });
+
             modelBuilder.Entity("Identity.Clients.Data.Client", b =>
                 {
                     b.Property<int>("Id")
@@ -394,6 +427,15 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.ClientDb
                     b.HasIndex("ResourceId");
 
                     b.ToTable("ResourceManager");
+                });
+
+            modelBuilder.Entity("Identity.Clients.Data.ApiSecret", b =>
+                {
+                    b.HasOne("Identity.Clients.Data.Resource", "Resource")
+                        .WithMany("Secrets")
+                        .HasForeignKey("ResourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Identity.Clients.Data.ClientClaim", b =>

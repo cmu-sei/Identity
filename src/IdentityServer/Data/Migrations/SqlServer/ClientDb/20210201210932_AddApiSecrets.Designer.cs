@@ -4,14 +4,16 @@ using Identity.Clients.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdentityServer.Data.Migrations.SqlServer.ClientDb
 {
     [DbContext(typeof(ClientDbContextSqlServer))]
-    partial class ClientDbContextSqlServerModelSnapshot : ModelSnapshot
+    [Migration("20210201210932_AddApiSecrets")]
+    partial class AddApiSecrets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

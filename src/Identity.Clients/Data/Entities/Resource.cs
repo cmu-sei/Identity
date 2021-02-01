@@ -22,6 +22,7 @@ namespace Identity.Clients.Data
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; } = true;
         public string Scopes { get; set; }
+        public ICollection<ApiSecret> Secrets { get; set; } = new List<ApiSecret>();
         public ICollection<ResourceManager> Managers { get; set; } = new List<ResourceManager>();
 
         [Obsolete]

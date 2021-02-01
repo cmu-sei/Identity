@@ -85,6 +85,13 @@ namespace Identity.Clients.Data.EntityFrameworkCore.Extensions
                 resource.Property(x => x.Scopes).HasMaxLength(200);
             });
 
+            builder.Entity<ApiSecret>(secret =>
+            {
+                secret.Property(x => x.Value).HasMaxLength(50).IsRequired();
+                secret.Property(x => x.Type).HasMaxLength(50);
+                secret.Property(x => x.Description).HasMaxLength(200);
+            });
+
 
         }
     }

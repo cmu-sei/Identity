@@ -1,18 +1,22 @@
 @api = http://localhost:5000/api
 @json = Content-Type: application/json
 @auth = Authorization: Bearer {{login.response.body.access_token}}
+@auth2 = Authorization: Basic ZGV2LWFwaTpkZXYtYXBp
 
 ###
 POST {{api}}/resource/devimport
 {{json}}
 
 {
+    "Apis": [
+        "dev-api"
+    ],
     "Clients": [
         {
             "Id": "dev-client",
             "Secret": "dev-secret",
-            "GrantType": "client_credentials",
-            "Scopes": "openid profile identity-api identity-api-privileged",
+            "GrantType": "client_credentials password",
+            "Scopes": "openid profile dev-api email organization",
             "RedirectUrl": "http://localhost:5000"
         }
     ]
@@ -23,9 +27,26 @@ POST {{api}}/resource/devimport
 POST http://localhost:5000/connect/token
 Content-Type: application/x-www-form-urlencoded
 
-grant_type=client_credentials
+grant_type=password
 &client_id=dev-client
 &client_secret=dev-secret
+&scope=dev-api openid profile email offline_access
+&username=admin@this.ws
+&password=password
+&response_type=id_token
+
+###
+# @name introspect
+POST http://localhost:5000/connect/introspect
+Content-Type: application/x-www-form-urlencoded
+{{auth2}}
+
+token={{login.response.body.access_token}}
+
+###
+GET http://localhost:5000/connect/userinfo
+{{auth}}
+
 
 ###
 GET {{api}}/accounts

@@ -9,7 +9,7 @@ namespace IdentityServer.Models
     {
         public DbSeedUser[] Users { get; set; } = new DbSeedUser[] {};
         public DbSeedClient[] Clients { get; set; } = new DbSeedClient[] {};
-        public ApiResource[] ApiResources { get; set; } = new ApiResource[] {};
+        public DbSeedApi[] ApiResources { get; set; } = new DbSeedApi[] {};
         public IdentityResource[] IdentityResources { get; set; } = new IdentityResource[] {};
         public IdentityResource[] GrantResources { get; set; } = new IdentityResource[] {};
         public string DefaultClientFlags { get; set; }
@@ -35,5 +35,10 @@ namespace IdentityServer.Models
         public string SeedScopes { get; set; }
         public string SeedSecret { get; set; }
         public DbSeedKVP[] SeedHandlers { get; set; } = new DbSeedKVP[] {};
+    }
+
+    public class DbSeedApi : Identity.Clients.Data.Resource
+    {
+        public string SeedSecret { get; set; }
     }
 }
