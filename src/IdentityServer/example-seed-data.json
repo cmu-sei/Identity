@@ -10,7 +10,8 @@
     {
       "Name": "project-api",
       "DisplayName": "Project API",
-      "Enabled": true
+      "Enabled": true,
+      "SeedSecret": "some-secret"
     }
   ],
   "Clients": [

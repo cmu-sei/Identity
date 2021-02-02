@@ -221,17 +221,20 @@ namespace IdentityServer.Extensions
 
                         if (String.IsNullOrWhiteSpace(resource.Scopes))
                             resource.Scopes = resource.Name;
-                        
+
                         entity.Scopes = String.Join(' ', resource.Scopes);
 
-                        entity.Secrets.Add(
-                            new ApiSecret
-                            {
-                                Type = "SharedSecret",
-                                Value = resource.SeedSecret.Sha256(),
-                                Description = "Added by Admin at " + DateTime.UtcNow.ToString("u")
-                            }
-                        );
+                        if (!string.IsNullOrEmpty(resource.SeedSecret))
+                        {
+                            entity.Secrets.Add(
+                                new ApiSecret
+                                {
+                                    Type = "SharedSecret",
+                                    Value = resource.SeedSecret.Sha256(),
+                                    Description = "Added by Admin at " + DateTime.UtcNow.ToString("u")
+                                }
+                            );
+                        }
 
                         clientDb.SaveChanges();
                     }
