@@ -178,7 +178,7 @@ namespace Identity.Clients.Services
                 entity.Flags ^= ClientFlag.AllowOfflineAccess;
             }
 
-            await ValidateScopes(entity, model.Scopes.Trim());
+            await ValidateScopes(entity, model.Scopes?.Trim());
 
             // only admins can enable
             if (_profile.IsPrivileged)
@@ -203,6 +203,11 @@ namespace Identity.Clients.Services
         {
             if (entity.Scopes == scopes)
                 return;
+            if (String.IsNullOrEmpty(scopes))
+            {
+                entity.Scopes = scopes;
+                return;
+            }
 
             var resources = await _resources.GetAll();
             var validscopes = new List<string>();
