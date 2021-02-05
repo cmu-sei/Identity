@@ -142,6 +142,8 @@ namespace Identity.Clients.Services
 
             UpdateSecrets(entity, model.Secrets);
 
+            await ValidateUserClaims(entity, model.UserClaims?.Trim());
+
             try
             {
                 await _store.Update(entity);
@@ -175,6 +177,33 @@ namespace Identity.Clients.Services
                 if (target != null)
                     entity.Secrets.Remove(target);
             }
+        }
+
+        private async Task ValidateUserClaims(Data.Resource entity, string userClaims)
+        {
+            if (entity.UserClaims == userClaims)
+                return;
+            if (String.IsNullOrEmpty(userClaims))
+            {
+                entity.UserClaims = userClaims;
+                return;
+            }
+
+            var resources = await _store.GetAll();
+            var identityScopes = resources
+                .Where(r => r.Type == ResourceType.Identity && 
+                    (r.Default || _profile.IsPrivileged || r.Managers.Any(m => m.SubjectId == _profile.Id)))
+                .SelectMany(r => r.UserClaims.Split())
+                .Distinct();
+
+            var validClaims = new List<string>();
+
+            foreach (string name in userClaims.Split(" ", StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (identityScopes.Contains(name) && !validClaims.Contains(name))
+                    validClaims.Add(name);
+            }
+            entity.UserClaims = string.Join(" ", validClaims);
         }
 
         public async Task Delete(int id)

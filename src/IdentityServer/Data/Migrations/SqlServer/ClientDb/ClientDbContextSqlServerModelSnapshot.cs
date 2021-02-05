@@ -399,6 +399,10 @@ namespace IdentityServer.Data.Migrations.SqlServer.ClientDb
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserClaims")
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")

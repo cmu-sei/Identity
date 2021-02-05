@@ -259,7 +259,7 @@ namespace IdentityServer.Extensions
                             Default = "openid profile organization".Contains(resource.Name)
                         };
                         clientDb.Resources.Add(entity);
-                        entity.Scopes = String.Join(' ', resource.UserClaims);
+                        entity.UserClaims = String.Join(' ', resource.UserClaims);
                     }
                 }
 
