@@ -9,6 +9,7 @@ using System.Linq;
 using System;
 using Identity.Clients.Extensions;
 using IdentityServer.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityServer.Services
 {
@@ -17,15 +18,18 @@ namespace IdentityServer.Services
 
         public IdsrvClientStore(
             ClientService svc,
-            ResourceService resources
+            ResourceService resources,
+            ILogger<IdsrvClientStore> logger
         )
         {
             _svc = svc;
             _resources = resources;
+            _logger = logger;
         }
 
         private readonly ClientService _svc;
         private readonly ResourceService _resources;
+        private readonly ILogger<IdsrvClientStore> _logger;
 
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
@@ -126,9 +130,9 @@ namespace IdentityServer.Services
 
                 return client;
 
-            } catch
+            } catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Error");
             }
 
             return null;
