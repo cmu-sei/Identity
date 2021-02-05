@@ -127,6 +127,7 @@ namespace Identity.Clients.Services
                 throw new InvalidOperationException();
 
             bool state = entity.Enabled;
+            string previousName = entity.Name;
 
             Mapper.Map(model, entity);
 
@@ -141,6 +142,8 @@ namespace Identity.Clients.Services
             UpdateManagers(entity, model.Managers);
 
             UpdateSecrets(entity, model.Secrets);
+
+            ValidateScopes(entity, model.Scopes?.Trim(), previousName);
 
             await ValidateUserClaims(entity, model.UserClaims?.Trim());
 
@@ -177,6 +180,35 @@ namespace Identity.Clients.Services
                 if (target != null)
                     entity.Secrets.Remove(target);
             }
+        }
+
+        private void ValidateScopes(Data.Resource entity, string scopes, string previousName)
+        {
+            if (entity.Scopes == scopes && entity.Name == previousName)
+                return;
+            if (String.IsNullOrEmpty(scopes))
+                entity.Scopes = entity.Name;
+
+            var scopeNames = scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => 
+                {
+                    if (entity.Name != previousName) // find and replace first occurance of previousName
+                    {
+                        var i = s.IndexOf(previousName); 
+                        string name = i < 0 ? s : s.Substring(0, i) + entity.Name + s.Substring(i + previousName.Length);
+                        return name == entity.Name || name.StartsWith($"{entity.Name}-") ? name : $"{entity.Name}-{name}";
+                    }
+                    if (s == entity.Name || (s.StartsWith($"{entity.Name}-")))
+                        return s;
+                    return $"{entity.Name}-{s}";
+                })
+                .Distinct()
+                .ToList();
+
+            if (!scopeNames.Contains(entity.Name))
+                scopeNames.Add(entity.Name);
+
+            entity.Scopes = string.Join(" ", scopeNames);
         }
 
         private async Task ValidateUserClaims(Data.Resource entity, string userClaims)

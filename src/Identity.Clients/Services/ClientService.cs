@@ -214,7 +214,7 @@ namespace Identity.Clients.Services
 
             foreach (string name in scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries))
             {
-                var resource = resources.SingleOrDefault(r => r.Name == name.Replace("*", ""));
+                var resource = resources.SingleOrDefault(r => r.Scopes.Split(' ').Contains(name.Replace("*", ""))); //TODO: scope now more than name 
 
                 if (resource != null &&
                     (resource.Default || _profile.IsPrivileged || resource.Managers.Any(m => m.SubjectId == _profile.Id))

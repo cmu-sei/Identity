@@ -22,6 +22,7 @@ namespace Identity.Clients.Mappers
             CreateMap<Resource, Data.Resource>()
                 .ForMember(d => d.Managers, opt => opt.Ignore())
                 .ForMember(d => d.Secrets, opt => opt.Ignore())
+                .ForMember(d => d.Scopes, opt => opt.Ignore())
                 .ForMember(d => d.UserClaims, opt => opt.Ignore());
             CreateMap<NewResource, Data.Resource>();
             CreateMap<Data.ApiSecret, ApiSecret>()
