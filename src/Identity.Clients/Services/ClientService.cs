@@ -276,6 +276,7 @@ namespace Identity.Clients.Services
         {
             foreach (var claim in claims)
             {
+                claim.Type = claim.Type.Trim();
                 claim.Value = claim.Value.Trim();
 
                 if (claim.Id > 0)
@@ -283,17 +284,21 @@ namespace Identity.Clients.Services
                     var target = entity.Claims.SingleOrDefault(u => u.Id == claim.Id);
                     if (target != null)
                     {
-                        if (string.IsNullOrEmpty(claim.Value) || claim.Deleted)
+                        if (string.IsNullOrEmpty(claim.Type) || string.IsNullOrEmpty(claim.Value) || claim.Deleted)
                             entity.Claims.Remove(target);
                         else
-                            target.Value = claim.Value.Replace(" ", "");
+                        {
+                            target.Value = claim.Value;
+                            target.Type = claim.Type;
+                        }   
                     }
                 }
-                else
+                else if (!string.IsNullOrEmpty(claim.Type) && !string.IsNullOrEmpty(claim.Value))
                 {
                     entity.Claims.Add(new Data.ClientClaim
                     {
-                        Value = claim.Value.Replace(" ", "")
+                        Type = claim.Type,
+                        Value = claim.Value
                     });
                 }
             }

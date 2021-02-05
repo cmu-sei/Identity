@@ -101,7 +101,7 @@ namespace IdentityServer.Services
                     // client claims
                     AlwaysSendClientClaims = model.AlwaysSendClientClaims,
                     ClientClaimsPrefix = model.ClientClaimsPrefix,
-                    Claims = model.Claims.Select(c => c.Value.ToClaim()).ToArray(),
+                    Claims = model.Claims.Select(c => new IdentityServer4.Models.ClientClaim(c.Type, c.Value)).ToArray(),
 
                     // urls
                     ClientUri = model.Url,
