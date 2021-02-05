@@ -5,9 +5,15 @@ namespace Identity.Clients.Models
 {
     public class ResourceImport
     {
-        public string[] Apis { get; set; } = new string[] {};
-
+        public ApiImport[] Apis { get; set; }
         public ClientImport[] Clients { get; set; } = new ClientImport[] {};
+    }
+
+    public class ApiImport
+    {
+        public string Name { get; set; }
+        public string Scopes { get; set; }
+        public string UserClaims { get; set; }
     }
 
     public class ClientImport

@@ -41,23 +41,24 @@ namespace Identity.Clients.Services
                 .Where(r => r.Type == ResourceType.Api)
                 .ToList();
 
-            foreach (string scope in model.Apis)
+            foreach (var api in model.Apis)
             {
-                var current = existing.SingleOrDefault(r => r.Name == scope);
+                var current = existing.SingleOrDefault(r => r.Name == api.Name);
                 if (current != null)
                     await _resources.Delete(current.Id);
 
                 await _resources.Add(new Data.Resource{
                     Type = ResourceType.Api,
-                    Name = scope,
+                    Name = api.Name,
                     Enabled = true,
-                    Scopes = scope,
+                    Scopes = api.Scopes ?? api.Name,
+                    UserClaims = api.UserClaims,
                     Secrets = new Data.ApiSecret[]
                     {
                         new Data.ApiSecret 
                         {
                             Type = "SharedSecret",
-                            Value = scope.Sha256(),
+                            Value = api.Name.Sha256(),
                             Description = "Added by Dev at " + DateTime.UtcNow.ToString("u")
                         }
                     }
