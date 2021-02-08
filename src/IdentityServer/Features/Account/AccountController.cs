@@ -426,13 +426,13 @@ namespace IdentityServer.Features.Account
                         ModelState.AddModelError("", "Invalid domain");
                     }
 
-                    bool exists = ! await _accountSvc.IsTokenUniqueAsync(model.Email);
+                    // bool exists = ! await _accountSvc.IsTokenUniqueAsync(model.Email);
 
-                    if (state.Action == "Register" && exists)
-                        ModelState.AddModelError("", "Unable to register that account");
+                    // if (state.Action == "Register" && exists)
+                    //     ModelState.AddModelError("", "Unable to register that account");
 
-                    if (state.Action == "Reset" && ! exists)
-                        ModelState.AddModelError("", "Unable to reset that account");
+                    // if (state.Action == "Reset" && ! exists)
+                    //     ModelState.AddModelError("", "Unable to reset that account");
 
                     if (!ModelState.IsValid)
                     {
@@ -460,6 +460,13 @@ namespace IdentityServer.Features.Account
                         break;
 
                     default:
+                        string last = await _cache.GetStringAsync($"testcode:{model.Email}");
+                        if (!string.IsNullOrEmpty(last))
+                        {
+                            ModelState.AddModelError("", "Request Rate-Limited");
+                            break;
+                        }
+
                         bool result = await _accountSvc.ValidateAccountCodeAsync(model.Email, model.Code);
                         if (result)
                         {
@@ -471,6 +478,13 @@ namespace IdentityServer.Features.Account
                         else
                         {
                             ModelState.AddModelError("", "Invalid Code");
+                            await _cache.SetStringAsync(
+                                $"testcode:{model.Email}", DateTime.UtcNow.ToString("s"),
+                                new DistributedCacheEntryOptions
+                                {
+                                    AbsoluteExpirationRelativeToNow = new TimeSpan(0, 0, 5)
+                                }
+                            );
                         }
                         break;
                 }
@@ -651,7 +665,7 @@ namespace IdentityServer.Features.Account
                 }
                 catch (AccountNotUniqueException)
                 {
-                    ModelState.AddModelError("", "Unable to register this account");
+                    ModelState.AddModelError("", "Account already exists");
                     _cookies.Remove(CONFIRM_COOKIE);
 
                 }
@@ -679,11 +693,11 @@ namespace IdentityServer.Features.Account
                 }
                 : null;
 
-            var userToSignIn = new IdentityServerUser(user.GlobalId)	
-            {	
-                DisplayName = username,	
+            var userToSignIn = new IdentityServerUser(user.GlobalId)
+            {
+                DisplayName = username,
                 AdditionalClaims = { new Claim(JwtClaimTypes.Role, user.Role.ToLower()) },
-                AuthenticationTime = DateTimeOffset.UtcNow.UtcDateTime	
+                AuthenticationTime = DateTimeOffset.UtcNow.UtcDateTime
             };
             await HttpContext.SignInAsync(userToSignIn, props);
             //TODO: broadcast to logging hub
@@ -691,7 +705,10 @@ namespace IdentityServer.Features.Account
             //     new EventId(LogEventId.AuthSucceededWithCertRequired),
             //     $"Login, {user.GlobalId}, {method}, {GetRemoteIp()}, {Request.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent]}"
             // );
-            return Redirect(String.IsNullOrEmpty(returnUrl) ? "~/" : returnUrl);
+
+            //TODO: validate returnUrl against client urls
+
+            return Redirect(String.IsNullOrEmpty(returnUrl) || !returnUrl.StartsWith("/") ? "~/" : returnUrl);
         }
 
         private string GetRemoteIp()
