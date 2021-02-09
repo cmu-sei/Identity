@@ -98,6 +98,31 @@ namespace Identity.Clients.Services
             return model;
         }
 
+        public async Task<ClientUri[]> LoadUris()
+        {
+            // TODO: consider caching
+            var uris = await _store.List().SelectMany(c => c.Urls).ToArrayAsync();
+            return Mapper.Map<ClientUri[]>(uris);
+        }
+
+        public async Task<bool> IsValidClientUrl(string returnUrl)
+        {
+            if (Uri.TryCreate(returnUrl, UriKind.Absolute, out Uri result))
+            {
+                string target = $"{result.Scheme}://{result.Host}";
+                var uris = await LoadUris();
+                var allowedHosts = uris
+                    .Where(u => Uri.IsWellFormedUriString(u.Value, UriKind.Absolute))
+                    .Select(u => 
+                    {
+                        var uri = new Uri(u.Value);
+                        return $"{uri.Scheme}://{uri.Host}";
+                    });
+                return allowedHosts.Contains(target);
+            }
+            return false;
+        }
+
         public async Task<ClientSummary> Add(NewClient model)
         {
             int rand = new Random().Next();

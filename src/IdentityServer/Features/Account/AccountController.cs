@@ -12,6 +12,7 @@ using Identity.Accounts.Abstractions;
 using Identity.Accounts.Exceptions;
 using Identity.Accounts.Models;
 using Identity.Accounts.Options;
+using Identity.Clients.Services;
 using IdentityModel;
 using IdentityServer.Extensions;
 using IdentityServer.Models;
@@ -35,6 +36,7 @@ namespace IdentityServer.Features.Account
     {
         private readonly AccountViewService _viewSvc;
         private readonly IAccountService _accountSvc;
+        private readonly ClientService _clientSvc;
         private readonly AccountOptions _options;
         protected readonly CookieService _cookies;
         private readonly IDistributedCache _cache;
@@ -49,6 +51,7 @@ namespace IdentityServer.Features.Account
             AccountViewService viewSvc,
             CookieService cookieService,
             IAccountService accountSvc,
+            ClientService clientSvc,
             IAppMailClient mailer,
             BrandingOptions branding,
             AccountOptions options,
@@ -59,6 +62,7 @@ namespace IdentityServer.Features.Account
             _viewSvc = viewSvc;
             _cookies = cookieService;
             _accountSvc = accountSvc;
+            _clientSvc = clientSvc;
             _options = options;
             _cache = memcache;
             _interaction = idInteraction;
@@ -75,7 +79,7 @@ namespace IdentityServer.Features.Account
         public async Task<IActionResult> Login(string returnUrl)
         {
             if (User.IsAuthenticated())
-                return Redirect(returnUrl ?? "~/");
+                return Redirect(await GetSafeReturnUrl(returnUrl));
 
             if (_options.Authentication.RequireNotice && String.IsNullOrEmpty(Request.Cookies[NOTICE_COOKIE]))
                 return Redirect(Url.Action("notice").ReturnUrl(returnUrl));
@@ -191,9 +195,9 @@ namespace IdentityServer.Features.Account
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Password(string returnUrl)
+        public async Task<IActionResult> Password()
         {
-            return View(await _viewSvc.GetPasswordView(returnUrl));
+            return View(await _viewSvc.GetPasswordView());
         }
 
         [HttpPost]
@@ -212,7 +216,7 @@ namespace IdentityServer.Features.Account
                     };
                     await _accountSvc.ChangePasswordAsync(User.GetSubjectId(), changed);
                     Audit(AuditId.ResetPassword);
-                    return Redirect(model.ReturnUrl ?? "~/");
+                    return Redirect("~/");
                 }
             }
             catch (AuthenticationFailureException)
@@ -395,7 +399,7 @@ namespace IdentityServer.Features.Account
                     return View("Error", ex);
                 }
             }
-            return Redirect(returnUrl ?? "~/");
+            return Redirect(await GetSafeReturnUrl(returnUrl));
         }
 
         [HttpGet]
@@ -713,14 +717,19 @@ namespace IdentityServer.Features.Account
             //     $"Login, {user.GlobalId}, {method}, {GetRemoteIp()}, {Request.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent]}"
             // );
 
-            //TODO: validate returnUrl against client urls
-
-            return Redirect(String.IsNullOrEmpty(returnUrl) || !returnUrl.StartsWith("/") ? "~/" : returnUrl);
+            return Redirect(await GetSafeReturnUrl(returnUrl));
         }
 
         private string GetRemoteIp()
         {
             return Request.HttpContext.Connection.RemoteIpAddress.ToString();
+        }
+        
+        private async Task<string> GetSafeReturnUrl(string returnUrl)
+        {
+            if (!string.IsNullOrEmpty(returnUrl) && (Url.IsLocalUrl(returnUrl) || await _clientSvc.IsValidClientUrl(returnUrl)))
+                return returnUrl;
+            return "~/";
         }
 
         // private bool HasValidatedSubject(HttpRequest request, out string subject)
