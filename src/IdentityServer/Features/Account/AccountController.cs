@@ -426,14 +426,6 @@ namespace IdentityServer.Features.Account
                         ModelState.AddModelError("", "Invalid domain");
                     }
 
-                    // bool exists = ! await _accountSvc.IsTokenUniqueAsync(model.Email);
-
-                    // if (state.Action == "Register" && exists)
-                    //     ModelState.AddModelError("", "Unable to register that account");
-
-                    // if (state.Action == "Reset" && ! exists)
-                    //     ModelState.AddModelError("", "Unable to reset that account");
-
                     if (!ModelState.IsValid)
                     {
                         return View(vm);
@@ -470,6 +462,17 @@ namespace IdentityServer.Features.Account
                         bool result = await _accountSvc.ValidateAccountCodeAsync(model.Email, model.Code);
                         if (result)
                         {
+                            bool exists = ! await _accountSvc.IsTokenUniqueAsync(model.Email);
+                            if (state.Action == "Register" && exists)
+                            {
+                                ModelState.AddModelError("", "Account already exists");
+                                break;
+                            }
+                            if (state.Action == "Reset" && ! exists)
+                            {
+                                ModelState.AddModelError("", "Account does not exist");
+                                break;
+                            }
                             vm.CodeConfirmed = true;
                             state.Confirmed = true;
                             _cookies.Append(CONFIRM_COOKIE, state);
@@ -566,6 +569,10 @@ namespace IdentityServer.Features.Account
                 catch (AccountTokenInvalidException)
                 {
                     ModelState.AddModelError("", "Email not confirmed");
+                }
+                catch (AuthenticationFailureException)
+                {
+                    ModelState.AddModelError("", "Account does not exist");
                 }
                 catch (Exception ex)
                 {
