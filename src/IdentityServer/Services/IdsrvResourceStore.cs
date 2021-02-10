@@ -100,7 +100,7 @@ namespace IdentityServer.Services
                     Description = resource.Description,
                     Scopes = resource.Scopes.Split(' '),
                     ApiSecrets = resource.Secrets.Select(s => new Secret(s.Value)).ToArray(),
-                    UserClaims = resource.UserClaims?.Split(' ')
+                    UserClaims = resource.UserClaims?.Split(' ') ?? new string[]{}
                 };
         }
 
@@ -118,7 +118,7 @@ namespace IdentityServer.Services
                     Emphasize = resource.Emphasize,
                     Required = resource.Required,
                     ShowInDiscoveryDocument = resource.ShowInDiscoveryDocument,
-                    UserClaims = resource.UserClaims?.Split(' ')
+                    UserClaims = resource.UserClaims?.Split(' ') ?? new string[]{}
                 };
         }
 
@@ -136,7 +136,7 @@ namespace IdentityServer.Services
                     Emphasize = resource.Emphasize,
                     Required = resource.Required,
                     ShowInDiscoveryDocument = resource.ShowInDiscoveryDocument,
-                    UserClaims = resource.UserClaims?.Split(' ')
+                    UserClaims = resource.UserClaims?.Split(' ') ?? new string[]{}
                 };
         }
     }
