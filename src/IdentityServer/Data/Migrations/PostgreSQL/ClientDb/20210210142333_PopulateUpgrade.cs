@@ -2,10 +2,11 @@
 
 namespace IdentityServer.Data.Migrations.PostgreSQL.ClientDb
 {
-    public partial class PopulateScopesAndClaims : Migration
+    public partial class PopulateUpgrade : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Populate new "Scopes" and "UserClaims" columns
             migrationBuilder.Sql(
                 "UPDATE \"Resources\" SET \"Scopes\" = \"Name\", " +
                     "\"UserClaims\" = CASE \"Name\" " +
@@ -15,6 +16,13 @@ namespace IdentityServer.Data.Migrations.PostgreSQL.ClientDb
                     "WHEN 'email' THEN 'email email_verified' " +
                     "WHEN 'openid' THEN 'sub' " +
                     "ELSE NULL END;"
+            );
+            // Split "Value" on '=' to separate into "Type" and "Value" columns
+			migrationBuilder.Sql(
+                "UPDATE \"ClientClaim\" " +
+                    "SET \"Type\" = SPLIT_PART(\"Value\", '=', 1), " +
+                        "\"Value\" = SPLIT_PART(\"Value\", '=', 2) " +
+                   "WHERE \"Type\" = '' AND SPLIT_PART(\"Value\", '=', 2) != '';"
             );
         }
 

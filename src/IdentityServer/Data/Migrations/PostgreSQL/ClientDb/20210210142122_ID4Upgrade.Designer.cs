@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IdentityServer.Data.Migrations.PostgreSQL.ClientDb
 {
     [DbContext(typeof(ClientDbContextPostgreSQL))]
-    [Migration("20210202183148_AddUserClaimsToResource")]
-    partial class AddUserClaimsToResource
+    [Migration("20210210142122_ID4Upgrade")]
+    partial class ID4Upgrade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
