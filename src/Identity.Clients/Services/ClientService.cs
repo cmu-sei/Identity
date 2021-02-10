@@ -98,29 +98,34 @@ namespace Identity.Clients.Services
             return model;
         }
 
-        public async Task<ClientUri[]> LoadUris()
+        public async Task<string[]> LoadUris()
         {
             // TODO: consider caching
-            var uris = await _store.List().SelectMany(c => c.Urls).ToArrayAsync();
-            return Mapper.Map<ClientUri[]>(uris);
+            var urls = await _store.List()
+                .Where(c => c.Enabled)
+                .SelectMany(c => c.Urls)
+                .Select(u => u.Value)
+                .Distinct()
+                .ToArrayAsync();
+
+            return urls;
         }
 
         public async Task<bool> IsValidClientUrl(string returnUrl)
         {
-            if (Uri.TryCreate(returnUrl, UriKind.Absolute, out Uri result))
-            {
-                string target = $"{result.Scheme}://{result.Host}";
-                var uris = await LoadUris();
-                var allowedHosts = uris
-                    .Where(u => Uri.IsWellFormedUriString(u.Value, UriKind.Absolute))
-                    .Select(u => 
-                    {
-                        var uri = new Uri(u.Value);
-                        return $"{uri.Scheme}://{uri.Host}";
-                    });
-                return allowedHosts.Contains(target);
-            }
-            return false;
+            if (!Uri.TryCreate(returnUrl, UriKind.Absolute, out Uri uri))
+                return false;
+
+            string target = $"{uri.Scheme}://{uri.Host}";
+
+            var validClientUrls = (await LoadUris())
+                .Where(u => Uri.IsWellFormedUriString(u, UriKind.Absolute))
+                .Select(u => new Uri(u))
+                .Select(u => $"{u.Scheme}://{u.Host}")
+                .Distinct()
+                .ToArray();
+
+            return validClientUrls.Contains(target);
         }
 
         public async Task<ClientSummary> Add(NewClient model)
@@ -239,7 +244,7 @@ namespace Identity.Clients.Services
 
             foreach (string name in scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries))
             {
-                var resource = resources.SingleOrDefault(r => r.Scopes.Split(' ').Contains(name.Replace("*", ""))); //TODO: scope now more than name 
+                var resource = resources.SingleOrDefault(r => r.Scopes.Split(' ').Contains(name.Replace("*", ""))); //TODO: scope now more than name
 
                 if (resource != null &&
                     (resource.Default || _profile.IsPrivileged || resource.Managers.Any(m => m.SubjectId == _profile.Id))
@@ -315,7 +320,7 @@ namespace Identity.Clients.Services
                         {
                             target.Value = claim.Value;
                             target.Type = claim.Type;
-                        }   
+                        }
                     }
                 }
                 else if (!string.IsNullOrEmpty(claim.Type) && !string.IsNullOrEmpty(claim.Value))

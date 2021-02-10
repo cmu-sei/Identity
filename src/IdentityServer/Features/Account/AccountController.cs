@@ -456,7 +456,7 @@ namespace IdentityServer.Features.Account
                         break;
 
                     default:
-                        string last = await _cache.GetStringAsync($"testcode:{model.Email}");
+                        string last = await _cache.GetStringAsync($"CONFIRM:{model.Email}");
                         if (!string.IsNullOrEmpty(last))
                         {
                             ModelState.AddModelError("", "Request Rate-Limited");
@@ -485,11 +485,12 @@ namespace IdentityServer.Features.Account
                         else
                         {
                             ModelState.AddModelError("", "Invalid Code");
+
                             await _cache.SetStringAsync(
-                                $"testcode:{model.Email}", DateTime.UtcNow.ToString("s"),
+                                $"CONFIRM:{model.Email}", DateTime.UtcNow.ToString("s"),
                                 new DistributedCacheEntryOptions
                                 {
-                                    AbsoluteExpirationRelativeToNow = new TimeSpan(0, 0, 5)
+                                    AbsoluteExpirationRelativeToNow = new TimeSpan(0, 0, 3)
                                 }
                             );
                         }
@@ -724,11 +725,15 @@ namespace IdentityServer.Features.Account
         {
             return Request.HttpContext.Connection.RemoteIpAddress.ToString();
         }
-        
+
         private async Task<string> GetSafeReturnUrl(string returnUrl)
         {
-            if (!string.IsNullOrEmpty(returnUrl) && (Url.IsLocalUrl(returnUrl) || await _clientSvc.IsValidClientUrl(returnUrl)))
+            if (string.IsNullOrEmpty(returnUrl))
+                return "~/";
+
+            if (Url.IsLocalUrl(returnUrl) || await _clientSvc.IsValidClientUrl(returnUrl))
                 return returnUrl;
+
             return "~/";
         }
 

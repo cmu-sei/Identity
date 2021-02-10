@@ -38,6 +38,8 @@ namespace IdentityServer.Services
                 var claims  = (await _profileSvc.GetClaimsAsync(id, name, host)).ToList();
                 context.AddRequestedClaims(claims);
 
+
+                // TODO: Remove this in later release
                 if (context.Caller == "ClaimsProviderAccessToken")
                 {
                     // Always include Name in claims
