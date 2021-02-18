@@ -82,11 +82,15 @@ namespace Identity.Clients.Data.EntityFrameworkCore.Extensions
                 resource.HasIndex(x => x.Name).IsUnique();
                 resource.Property(x => x.DisplayName).HasMaxLength(100);
                 resource.Property(x => x.Description).HasMaxLength(1000);
+                resource.Property(x => x.Scopes).HasMaxLength(200);
+                resource.Property(x => x.UserClaims).HasMaxLength(200);
             });
 
-            builder.Entity<ResourceClaim>(claim =>
+            builder.Entity<ApiSecret>(secret =>
             {
-                claim.Property(x => x.Type).HasMaxLength(50);
+                secret.Property(x => x.Value).HasMaxLength(50).IsRequired();
+                secret.Property(x => x.Type).HasMaxLength(50);
+                secret.Property(x => x.Description).HasMaxLength(200);
             });
 
 

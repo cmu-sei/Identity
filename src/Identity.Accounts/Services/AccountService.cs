@@ -73,13 +73,14 @@ namespace Identity.Accounts.Services
 
         public async Task<Account> RegisterWithCredentialsAsync(Credentials credentials, string globalId)
         {
+            if (! await IsTokenUniqueAsync(credentials.Username))
+                throw new Accounts.Exceptions.AccountNotUniqueException();
+
             if (!IsDomainValid(credentials.Username))
                 throw new RegistrationDomainException();
 
             if (!IsPasswordComplex(credentials.Password))
                 throw new PasswordComplexityException();
-
-            // NOTE: consumers responsible for verifying username
 
             Data.Account account = await Register(
                 credentials.Username,

@@ -38,25 +38,12 @@ namespace IdentityServer.Services
                 var claims  = (await _profileSvc.GetClaimsAsync(id, name, host)).ToList();
                 context.AddRequestedClaims(claims);
 
-                // TODO: include client requested access token claims
-                //      as opposed to the following hard-coded entries:
-                //always include name and role claim so they are in access token too.
+
+                // TODO: Remove this in later release
                 if (context.Caller == "ClaimsProviderAccessToken")
                 {
-                    if (
-                        context.Client.AllowedScopes.Contains(JwtClaimTypes.Role)
-                    ) {
-                        context.IssuedClaims.Add(
-                            new Claim(
-                                JwtClaimTypes.Role,
-                                claims.FirstOrDefault(
-                                    c => c.Type == JwtClaimTypes.Role
-                                )?.Value ?? "member"
-                            )
-                        );
-                    }
-
-                    var required = new string[] { JwtClaimTypes.Name }; //, JwtClaimTypes.Role };
+                    // Always include Name in claims
+                    var required = new string[] { JwtClaimTypes.Name };
                     foreach (string scope in required)
                     {
                         string val = claims.Where(c => c.Type == scope).Select(c => c.Value).FirstOrDefault() ?? name ?? "anonymous";

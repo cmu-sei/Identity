@@ -87,6 +87,13 @@ namespace IdentityServer.Api
             return Ok();
         }
 
+        [HttpPut("api/resource/{id}/secret")]
+        [ProducesResponseType(typeof(ApiSecret), 200)]
+        public async Task<IActionResult> GenerateSecret([FromRoute]int id)
+        {
+            return Json(await _svc.AddSecret(id));
+        }
+
         [HttpPut("api/resource/{id}/code")]
         [ProducesResponseType(typeof(object), 200)]
         public async Task<IActionResult> NewEnlistCode([FromRoute]int id)

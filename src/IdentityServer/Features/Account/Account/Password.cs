@@ -14,7 +14,6 @@ namespace IdentityServer.Models
         [Required]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
-        public string ReturnUrl { get; set; }
     }
 
     public class PasswordViewModel : PasswordModel

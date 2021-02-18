@@ -3,15 +3,17 @@ using System;
 using Identity.Clients.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace IdentityServer.Data.Migrations.PostgreSQL.ClientDb
 {
     [DbContext(typeof(ClientDbContextPostgreSQL))]
-    partial class ClientDbContextPostgreSQLModelSnapshot : ModelSnapshot
+    [Migration("20210210142333_PopulateUpgrade")]
+    partial class PopulateUpgrade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

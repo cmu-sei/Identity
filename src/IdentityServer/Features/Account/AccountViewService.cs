@@ -58,12 +58,9 @@ namespace IdentityServer.Features.Account
                 ReturnUrl = returnUrl
             });
         }
-        public async Task<PasswordViewModel> GetPasswordView(string returnUrl)
+        public async Task<PasswordViewModel> GetPasswordView()
         {
-            return await GetPasswordView(new PasswordModel
-            {
-                ReturnUrl = returnUrl
-            });
+            return await GetPasswordView(new PasswordModel());
         }
 
         public async Task<LoginViewModel> GetLoginView(LoginModel model, int lockedSeconds = 0)

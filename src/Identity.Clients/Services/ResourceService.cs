@@ -66,9 +66,9 @@ namespace Identity.Clients.Services
             return Mapper.Map<Resource[]>(query.ToArray());
         }
 
-        public async Task<Resource[]> LoadAll()
+        public async Task<ResourceDetail[]> LoadAll()
         {
-            return Mapper.Map<Resource[]>(await _store.GetAll());
+            return Mapper.Map<ResourceDetail[]>(await _store.GetAll());
         }
 
         public async Task<Resource> Load(int id)
@@ -92,10 +92,9 @@ namespace Identity.Clients.Services
             entity.Name = model.Name ?? $"new-api-{_profile.Name.ToKebabCase()}-{new Random().Next().ToString("x")}";
             entity.DisplayName = model.DisplayName ?? entity.Name;
 
-            entity.Claims.Add(new Data.ResourceClaim
-            {
-                Type = entity.Name,
-            });
+            if (String.IsNullOrWhiteSpace(entity.Scopes)) {
+                entity.Scopes = entity.Name;
+            }
 
             entity.Enabled = _profile.IsPrivileged;
 
@@ -128,6 +127,7 @@ namespace Identity.Clients.Services
                 throw new InvalidOperationException();
 
             bool state = entity.Enabled;
+            string previousName = entity.Name;
 
             Mapper.Map(model, entity);
 
@@ -135,9 +135,17 @@ namespace Identity.Clients.Services
                 ? model.Enabled
                 : state;
 
-            entity.Claims.First().Type = entity.Name;
+            if (String.IsNullOrWhiteSpace(entity.Scopes)) {
+                entity.Scopes = entity.Name;
+            }
 
             UpdateManagers(entity, model.Managers);
+
+            UpdateSecrets(entity, model.Secrets);
+
+            ValidateScopes(entity, model.Scopes?.Trim(), previousName);
+
+            await ValidateUserClaims(entity, model.UserClaims?.Trim());
 
             try
             {
@@ -164,6 +172,72 @@ namespace Identity.Clients.Services
             }
         }
 
+        private void UpdateSecrets(Data.Resource entity, IEnumerable<ApiSecret> secrets)
+        {
+            foreach (var secret in secrets.Where(s => s.Deleted))
+            {
+                var target = entity.Secrets.SingleOrDefault(s => s.Id == secret.Id);
+                if (target != null)
+                    entity.Secrets.Remove(target);
+            }
+        }
+
+        private void ValidateScopes(Data.Resource entity, string scopes, string previousName)
+        {
+            if (entity.Scopes == scopes && entity.Name == previousName)
+                return;
+            if (String.IsNullOrEmpty(scopes))
+                entity.Scopes = entity.Name;
+
+            var scopeNames = scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => 
+                {
+                    if (entity.Name != previousName) // find and replace first occurance of previousName
+                    {
+                        var i = s.IndexOf(previousName); 
+                        string name = i < 0 ? s : s.Substring(0, i) + entity.Name + s.Substring(i + previousName.Length);
+                        return name == entity.Name || name.StartsWith($"{entity.Name}-") ? name : $"{entity.Name}-{name}";
+                    }
+                    if (s == entity.Name || (s.StartsWith($"{entity.Name}-")))
+                        return s;
+                    return $"{entity.Name}-{s}";
+                })
+                .Distinct()
+                .ToList();
+
+            if (!scopeNames.Contains(entity.Name))
+                scopeNames.Add(entity.Name);
+
+            entity.Scopes = string.Join(" ", scopeNames);
+        }
+
+        private async Task ValidateUserClaims(Data.Resource entity, string userClaims)
+        {
+            if (entity.UserClaims == userClaims)
+                return;
+            if (String.IsNullOrEmpty(userClaims))
+            {
+                entity.UserClaims = userClaims;
+                return;
+            }
+
+            var resources = await _store.GetAll();
+            var identityScopes = resources
+                .Where(r => r.Type == ResourceType.Identity && 
+                    (r.Default || _profile.IsPrivileged || r.Managers.Any(m => m.SubjectId == _profile.Id)))
+                .SelectMany(r => r.UserClaims.Split())
+                .Distinct();
+
+            var validClaims = new List<string>();
+
+            foreach (string name in userClaims.Split(" ", StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (identityScopes.Contains(name) && !validClaims.Contains(name))
+                    validClaims.Add(name);
+            }
+            entity.UserClaims = string.Join(" ", validClaims);
+        }
+
         public async Task Delete(int id)
         {
             if (! await CanManage(id))
@@ -175,6 +249,30 @@ namespace Identity.Clients.Services
         private async Task<bool> CanManage(int id)
         {
             return _profile.IsPrivileged || await _store.CanManage(id, _profile.Id);
+        }
+
+        public async Task<ApiSecret> AddSecret(int resourceId)
+        {
+            var entity = await _store.Load(resourceId);
+            if (!await CanManage(resourceId))
+                throw new InvalidOperationException();
+
+            string val = Guid.NewGuid().ToString("N");
+            entity.Secrets.Add(new Data.ApiSecret
+            {
+                ResourceId = resourceId,
+                Type = SecretTypes.SharedSecret,
+                Value = val.Sha256(),
+                Description = $"Added by {_profile.Name} at {DateTime.UtcNow}"
+            });
+
+            await _store.Update(entity);
+
+            return new ApiSecret
+            {
+                Id = entity.Secrets.Last().Id,
+                Value = val
+            };
         }
 
         public async Task<string> NewEnlistCode(int id)

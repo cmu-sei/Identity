@@ -12,6 +12,7 @@ using Identity.Accounts.Abstractions;
 using Identity.Accounts.Exceptions;
 using Identity.Accounts.Models;
 using Identity.Accounts.Options;
+using Identity.Clients.Services;
 using IdentityModel;
 using IdentityServer.Extensions;
 using IdentityServer.Models;
@@ -35,6 +36,7 @@ namespace IdentityServer.Features.Account
     {
         private readonly AccountViewService _viewSvc;
         private readonly IAccountService _accountSvc;
+        private readonly ClientService _clientSvc;
         private readonly AccountOptions _options;
         protected readonly CookieService _cookies;
         private readonly IDistributedCache _cache;
@@ -49,6 +51,7 @@ namespace IdentityServer.Features.Account
             AccountViewService viewSvc,
             CookieService cookieService,
             IAccountService accountSvc,
+            ClientService clientSvc,
             IAppMailClient mailer,
             BrandingOptions branding,
             AccountOptions options,
@@ -59,6 +62,7 @@ namespace IdentityServer.Features.Account
             _viewSvc = viewSvc;
             _cookies = cookieService;
             _accountSvc = accountSvc;
+            _clientSvc = clientSvc;
             _options = options;
             _cache = memcache;
             _interaction = idInteraction;
@@ -75,7 +79,7 @@ namespace IdentityServer.Features.Account
         public async Task<IActionResult> Login(string returnUrl)
         {
             if (User.IsAuthenticated())
-                return Redirect(returnUrl ?? "~/");
+                return Redirect(await GetSafeReturnUrl(returnUrl));
 
             if (_options.Authentication.RequireNotice && String.IsNullOrEmpty(Request.Cookies[NOTICE_COOKIE]))
                 return Redirect(Url.Action("notice").ReturnUrl(returnUrl));
@@ -191,9 +195,9 @@ namespace IdentityServer.Features.Account
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Password(string returnUrl)
+        public async Task<IActionResult> Password()
         {
-            return View(await _viewSvc.GetPasswordView(returnUrl));
+            return View(await _viewSvc.GetPasswordView());
         }
 
         [HttpPost]
@@ -212,7 +216,7 @@ namespace IdentityServer.Features.Account
                     };
                     await _accountSvc.ChangePasswordAsync(User.GetSubjectId(), changed);
                     Audit(AuditId.ResetPassword);
-                    return Redirect(model.ReturnUrl ?? "~/");
+                    return Redirect("~/");
                 }
             }
             catch (AuthenticationFailureException)
@@ -395,7 +399,7 @@ namespace IdentityServer.Features.Account
                     return View("Error", ex);
                 }
             }
-            return Redirect(returnUrl ?? "~/");
+            return Redirect(await GetSafeReturnUrl(returnUrl));
         }
 
         [HttpGet]
@@ -426,14 +430,6 @@ namespace IdentityServer.Features.Account
                         ModelState.AddModelError("", "Invalid domain");
                     }
 
-                    bool exists = ! await _accountSvc.IsTokenUniqueAsync(model.Email);
-
-                    if (state.Action == "Register" && exists)
-                        ModelState.AddModelError("", "Unable to register that account");
-
-                    if (state.Action == "Reset" && ! exists)
-                        ModelState.AddModelError("", "Unable to reset that account");
-
                     if (!ModelState.IsValid)
                     {
                         return View(vm);
@@ -460,9 +456,27 @@ namespace IdentityServer.Features.Account
                         break;
 
                     default:
+                        string last = await _cache.GetStringAsync($"CONFIRM:{model.Email}");
+                        if (!string.IsNullOrEmpty(last))
+                        {
+                            ModelState.AddModelError("", "Request Rate-Limited");
+                            break;
+                        }
+
                         bool result = await _accountSvc.ValidateAccountCodeAsync(model.Email, model.Code);
                         if (result)
                         {
+                            bool exists = ! await _accountSvc.IsTokenUniqueAsync(model.Email);
+                            if (state.Action == "Register" && exists)
+                            {
+                                ModelState.AddModelError("", "Account already exists");
+                                break;
+                            }
+                            if (state.Action == "Reset" && ! exists)
+                            {
+                                ModelState.AddModelError("", "Account does not exist");
+                                break;
+                            }
                             vm.CodeConfirmed = true;
                             state.Confirmed = true;
                             _cookies.Append(CONFIRM_COOKIE, state);
@@ -471,6 +485,14 @@ namespace IdentityServer.Features.Account
                         else
                         {
                             ModelState.AddModelError("", "Invalid Code");
+
+                            await _cache.SetStringAsync(
+                                $"CONFIRM:{model.Email}", DateTime.UtcNow.ToString("s"),
+                                new DistributedCacheEntryOptions
+                                {
+                                    AbsoluteExpirationRelativeToNow = new TimeSpan(0, 0, 3)
+                                }
+                            );
                         }
                         break;
                 }
@@ -552,6 +574,10 @@ namespace IdentityServer.Features.Account
                 catch (AccountTokenInvalidException)
                 {
                     ModelState.AddModelError("", "Email not confirmed");
+                }
+                catch (AuthenticationFailureException)
+                {
+                    ModelState.AddModelError("", "Account does not exist");
                 }
                 catch (Exception ex)
                 {
@@ -651,7 +677,7 @@ namespace IdentityServer.Features.Account
                 }
                 catch (AccountNotUniqueException)
                 {
-                    ModelState.AddModelError("", "Unable to register this account");
+                    ModelState.AddModelError("", "Account already exists");
                     _cookies.Remove(CONFIRM_COOKIE);
 
                 }
@@ -679,18 +705,36 @@ namespace IdentityServer.Features.Account
                 }
                 : null;
 
-            await HttpContext.SignInAsync(user.GlobalId, username, props, new Claim(JwtClaimTypes.Role, user.Role.ToLower()));
+            var userToSignIn = new IdentityServerUser(user.GlobalId)
+            {
+                DisplayName = username,
+                AdditionalClaims = { new Claim(JwtClaimTypes.Role, user.Role.ToLower()) },
+                AuthenticationTime = DateTimeOffset.UtcNow.UtcDateTime
+            };
+            await HttpContext.SignInAsync(userToSignIn, props);
             //TODO: broadcast to logging hub
             // Logger.LogInformation(
             //     new EventId(LogEventId.AuthSucceededWithCertRequired),
             //     $"Login, {user.GlobalId}, {method}, {GetRemoteIp()}, {Request.Headers[Microsoft.Net.Http.Headers.HeaderNames.UserAgent]}"
             // );
-            return Redirect(String.IsNullOrEmpty(returnUrl) ? "~/" : returnUrl);
+
+            return Redirect(await GetSafeReturnUrl(returnUrl));
         }
 
         private string GetRemoteIp()
         {
             return Request.HttpContext.Connection.RemoteIpAddress.ToString();
+        }
+
+        private async Task<string> GetSafeReturnUrl(string returnUrl)
+        {
+            if (string.IsNullOrEmpty(returnUrl))
+                return "~/";
+
+            if (Url.IsLocalUrl(returnUrl) || await _clientSvc.IsValidClientUrl(returnUrl))
+                return returnUrl;
+
+            return "~/";
         }
 
         // private bool HasValidatedSubject(HttpRequest request, out string subject)

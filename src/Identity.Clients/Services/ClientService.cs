@@ -98,6 +98,36 @@ namespace Identity.Clients.Services
             return model;
         }
 
+        public async Task<string[]> LoadUris()
+        {
+            // TODO: consider caching
+            var urls = await _store.List()
+                .Where(c => c.Enabled)
+                .SelectMany(c => c.Urls)
+                .Select(u => u.Value)
+                .Distinct()
+                .ToArrayAsync();
+
+            return urls;
+        }
+
+        public async Task<bool> IsValidClientUrl(string returnUrl)
+        {
+            if (!Uri.TryCreate(returnUrl, UriKind.Absolute, out Uri uri))
+                return false;
+
+            string target = $"{uri.Scheme}://{uri.Host}";
+
+            var validClientUrls = (await LoadUris())
+                .Where(u => Uri.IsWellFormedUriString(u, UriKind.Absolute))
+                .Select(u => new Uri(u))
+                .Select(u => $"{u.Scheme}://{u.Host}")
+                .Distinct()
+                .ToArray();
+
+            return validClientUrls.Contains(target);
+        }
+
         public async Task<ClientSummary> Add(NewClient model)
         {
             int rand = new Random().Next();
@@ -178,7 +208,7 @@ namespace Identity.Clients.Services
                 entity.Flags ^= ClientFlag.AllowOfflineAccess;
             }
 
-            await ValidateScopes(entity, model.Scopes.Trim());
+            await ValidateScopes(entity, model.Scopes?.Trim());
 
             // only admins can enable
             if (_profile.IsPrivileged)
@@ -203,13 +233,18 @@ namespace Identity.Clients.Services
         {
             if (entity.Scopes == scopes)
                 return;
+            if (String.IsNullOrEmpty(scopes))
+            {
+                entity.Scopes = scopes;
+                return;
+            }
 
             var resources = await _resources.GetAll();
             var validscopes = new List<string>();
 
             foreach (string name in scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries))
             {
-                var resource = resources.SingleOrDefault(r => r.Name == name.Replace("*", ""));
+                var resource = resources.SingleOrDefault(r => r.Scopes.Split(' ').Contains(name.Replace("*", ""))); //TODO: scope now more than name
 
                 if (resource != null &&
                     (resource.Default || _profile.IsPrivileged || resource.Managers.Any(m => m.SubjectId == _profile.Id))
@@ -271,6 +306,7 @@ namespace Identity.Clients.Services
         {
             foreach (var claim in claims)
             {
+                claim.Type = claim.Type.Trim();
                 claim.Value = claim.Value.Trim();
 
                 if (claim.Id > 0)
@@ -278,17 +314,21 @@ namespace Identity.Clients.Services
                     var target = entity.Claims.SingleOrDefault(u => u.Id == claim.Id);
                     if (target != null)
                     {
-                        if (string.IsNullOrEmpty(claim.Value) || claim.Deleted)
+                        if (string.IsNullOrEmpty(claim.Type) || string.IsNullOrEmpty(claim.Value) || claim.Deleted)
                             entity.Claims.Remove(target);
                         else
-                            target.Value = claim.Value.Replace(" ", "");
+                        {
+                            target.Value = claim.Value;
+                            target.Type = claim.Type;
+                        }
                     }
                 }
-                else
+                else if (!string.IsNullOrEmpty(claim.Type) && !string.IsNullOrEmpty(claim.Value))
                 {
                     entity.Claims.Add(new Data.ClientClaim
                     {
-                        Value = claim.Value.Replace(" ", "")
+                        Type = claim.Type,
+                        Value = claim.Value
                     });
                 }
             }

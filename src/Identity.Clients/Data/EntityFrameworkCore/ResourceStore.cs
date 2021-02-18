@@ -28,7 +28,7 @@ namespace Identity.Clients.Data.EntityFrameworkCore
             if (result == null)
             {
                 result = await base.List()
-                    .Include(r => r.Claims)
+                    .Include(c => c.Secrets)
                     .Include(r => r.Managers)
                     .ToArrayAsync();
 
@@ -40,9 +40,36 @@ namespace Identity.Clients.Data.EntityFrameworkCore
         public async Task<Resource> LoadByEnlistCode(string code)
         {
             return await DbContext.Resources
+                .Include(c => c.Secrets)
                 .Include(c => c.Managers)
                 .Where(c => c.EnlistCode == code)
                 .SingleOrDefaultAsync();
+        }
+
+        public override async Task<Resource> Load(int id)
+        {
+            if (ScopedCache.ContainsKey(id))
+                return ScopedCache[id];
+
+            var resource = await FromCache(id);
+            if (resource == null)
+            {
+                resource = await DbContext.Resources
+                .Include(c => c.Secrets)
+                .Include(c => c.Managers)
+                .Where(c => c.Id == id)
+                .SingleOrDefaultAsync();
+
+                await ToCache(resource);
+            }
+            else
+            {
+                DbContext.Resources.Attach(resource);
+            }
+
+            ScopedCache.Add(id, resource);
+
+            return resource;
         }
 
         public async Task<bool> CanManage(int id, string subjectId)

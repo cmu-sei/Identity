@@ -97,9 +97,9 @@ namespace IdentityServer.Extensions
                     }
                 }.ToList();
 
-                var seedApi = new ApiResource[] {
-                    new ApiResource { Name = "identity-api" },
-                    new ApiResource { Name = "identity-api-privileged" },
+                var seedApi = new DbSeedApi[] {
+                    new DbSeedApi { Name = "identity-api" },
+                    new DbSeedApi { Name = "identity-api-privileged" },
                 }.ToList();
 
                 var seedClients = new List<DbSeedClient>(); //[] {
@@ -194,15 +194,14 @@ namespace IdentityServer.Extensions
                             Type = ResourceType.Grant,
                             Name = resource.Name,
                             DisplayName = resource.DisplayName,
-                            Description = resource.Description
+                            Description = resource.Description,
+                            Scopes = $"{resource.Name} client_credentials"
                         };
                         clientDb.Resources.Add(entity);
-                        entity.Claims.Add(new ResourceClaim { Type = resource.Name });
-                        entity.Claims.Add(new ResourceClaim { Type = "client_credentials" });
                     }
                 }
 
-                foreach (IdentityServer4.Models.ApiResource resource in seedApi)
+                foreach (var resource in seedApi)
                 {
                     if (!clientDb.Resources.Any(r =>
                         r.Type == ResourceType.Api
@@ -220,11 +219,22 @@ namespace IdentityServer.Extensions
 
                         clientDb.Resources.Add(entity);
 
-                        if (resource.Scopes.Count == 0)
-                            resource.Scopes.Add(new Scope(resource.Name, resource.DisplayName));
+                        if (String.IsNullOrWhiteSpace(resource.Scopes))
+                            resource.Scopes = resource.Name;
 
-                        foreach (var s in resource.Scopes)
-                            entity.Claims.Add(new ResourceClaim { Type = s.Name });
+                        entity.Scopes = String.Join(' ', resource.Scopes);
+
+                        if (!string.IsNullOrEmpty(resource.SeedSecret))
+                        {
+                            entity.Secrets.Add(
+                                new ApiSecret
+                                {
+                                    Type = "SharedSecret",
+                                    Value = resource.SeedSecret.Sha256(),
+                                    Description = "Added by Admin at " + DateTime.UtcNow.ToString("u")
+                                }
+                            );
+                        }
 
                         clientDb.SaveChanges();
                     }
@@ -249,8 +259,7 @@ namespace IdentityServer.Extensions
                             Default = "openid profile organization".Contains(resource.Name)
                         };
                         clientDb.Resources.Add(entity);
-                        foreach (var s in resource.UserClaims)
-                            entity.Claims.Add(new ResourceClaim { Type = s });
+                        entity.UserClaims = String.Join(' ', resource.UserClaims);
                     }
                 }
 

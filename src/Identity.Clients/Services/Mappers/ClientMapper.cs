@@ -34,17 +34,19 @@ namespace Identity.Clients.Mappers
 
             CreateMap<Data.ClientEventHandler, ClientEventTarget>()
                 .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Client.Name))
-                .ForMember(d => d.Name, opt => opt.MapFrom(s => s.Client.DisplayName))
+                .ForMember(d => d.Name, opt => opt.MapFrom(s => string.IsNullOrEmpty(s.Client.DisplayName) ? s.Client.Name : s.Client.DisplayName))
                 .ForMember(d => d.Enabled, opt => opt.MapFrom(s => s.Enabled && s.Client.Enabled))
                 .ForMember(d => d.Uri, opt => opt.MapFrom(s => s.Uri))
                 .ForMember(d => d.Type, opt => opt.MapFrom(s => s.ClientEvent.Type));
 
             CreateMap<Data.Client, ClientSummary>()
+                .ForMember(d => d.DisplayName, opt => opt.MapFrom(s => string.IsNullOrEmpty(s.DisplayName) ? s.Name : s.DisplayName))
                 .ForMember(d => d.ClientUri, opt => opt.MapFrom(s => s.Urls.Where(u => u.Type == ClientUriType.ClientUri).Select(u => u.Value).FirstOrDefault()))
                 .ForMember(d => d.LogoUri, opt => opt.MapFrom(s => s.Urls.Where(u => u.Type == ClientUriType.LogoUri).Select(u => u.Value).FirstOrDefault()))
                 .ForMember(d => d.EventReferenceUri, opt => opt.MapFrom(s => s.Urls.Where(u => u.Type == ClientUriType.EventReferenceUri).Select(u => u.Value).FirstOrDefault()));
 
             CreateMap<Data.Client, Client>()
+                .ForMember(d => d.DisplayName, opt => opt.MapFrom(s => string.IsNullOrEmpty(s.DisplayName) ? s.Name : s.DisplayName))
                 .ForMember(d => d.RequirePkce, opt => opt.MapFrom(s => s.Flags.HasFlag(ClientFlag.RequirePkce)))
                 .ForMember(d => d.RequireConsent, opt => opt.MapFrom(s => s.Flags.HasFlag(ClientFlag.RequireConsent)))
                 .ForMember(d => d.AlwaysIncludeUserClaimsInIdToken, opt => opt.MapFrom(s => s.Flags.HasFlag(ClientFlag.AlwaysIncludeUserClaimsInIdToken)))

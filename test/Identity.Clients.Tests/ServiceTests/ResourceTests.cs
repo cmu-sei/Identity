@@ -66,81 +66,47 @@ namespace Identity.Clients.Tests
                     new Data.Resource{
                         Type = ResourceType.Api,
                         Name = "sketch-common",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "sketch-common" }
-                        }
+                        Scopes = "sketch-common"
                     },
                     new Data.Resource{
                         Type = ResourceType.Identity,
                         Name = "openid",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "openid" }
-                        }
+                        Scopes = "openid"
                     },
                     new Data.Resource{
                         Type = ResourceType.Identity,
                         Name = "profile",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "name" },
-                            new Data.ResourceClaim { Type = "picture" },
-                            new Data.ResourceClaim { Type = "timezone" },
-                        }
+                        Scopes = "name picture timezone"
                     },
                     new Data.Resource{
                         Type = ResourceType.Identity,
                         Name = "email",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "email" },
-                            new Data.ResourceClaim { Type = "email_verified" }
-                        }
+                        Scopes = "email email_verified"
                     },
                     new Data.Resource{
                         Type = ResourceType.Identity,
                         Name = "organization",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "name" },
-                            new Data.ResourceClaim { Type = "logo" }
-                        }
+                        Scopes = "name logo"
                     },
                     new Data.Resource{
                         Type = ResourceType.Grant,
                         Name = "implicit",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "implicit" },
-                            new Data.ResourceClaim { Type = "client_credentials" }
-                        }
+                        Scopes = "implicit client_credentials"
                     },
                     new Data.Resource{
                         Type = ResourceType.Grant,
                         Name = "hybrid",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "hybrid" },
-                            new Data.ResourceClaim { Type = "client_credentials" }
-                        }
+                        Scopes = "hybrid client_credentials"
                     },
                     new Data.Resource{
                         Type = ResourceType.Grant,
                         Name = "code",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "code" },
-                            new Data.ResourceClaim { Type = "client_credentials" }
-                        }
+                        Scopes = "code client_credentials"
                     },
                     new Data.Resource{
                         Type = ResourceType.Grant,
                         Name = "client",
-                        Claims = new Data.ResourceClaim[]
-                        {
-                            new Data.ResourceClaim { Type = "client_credentials" }
-                        }
+                        Scopes = "client_credentials"
                     }
                 };
 
