@@ -99,8 +99,7 @@ namespace IdentityServer.Api
         public async Task<IActionResult> NewEnlistCode([FromRoute]int id)
         {
             string code = await _svc.NewEnlistCode(id);
-            string url = $"{_branding.UiHost}/resource/enlist/{code}";
-            return Json(new { Url = url });
+            return Json(new { Code = code });
         }
 
         [HttpPost("api/resource/enlist/{code}")]
