@@ -259,9 +259,16 @@ namespace Identity.Accounts.Services
         private async Task SetAccountNames(Data.Account account, string name, bool id_affiliate)
         {
             UpdateProperty(account, "name", name);
-            UpdateProperty(account, "username", $"{name.ToAccountSlug()}.{account.Id.ToString("x4")}");
+
+            string username = _options.Registration.AutoUniqueUsernames
+                ? $"{name.ToAccountSlug()}.{account.Id.ToString("x4")}"
+                : $"{name.ToAccountSlug()}";
+
+            UpdateProperty(account, "username", username);
+
             if (id_affiliate)
                 UpdateProperty(account, ClaimTypes.IdAffiliate, "true");
+
             await _store.Update(account);
         }
 
