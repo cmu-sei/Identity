@@ -256,10 +256,11 @@ namespace IdentityServer.Extensions
                             Enabled = resource.Enabled,
                             Emphasize = resource.Emphasize,
                             Required = resource.Required,
-                            Default = "openid profile organization".Contains(resource.Name)
+                            Default = "openid profile organization".Contains(resource.Name),
+                            UserClaims = String.Join(' ', resource.UserClaims),
+                            Scopes = resource.Name
                         };
                         clientDb.Resources.Add(entity);
-                        entity.UserClaims = String.Join(' ', resource.UserClaims);
                     }
                 }
 
