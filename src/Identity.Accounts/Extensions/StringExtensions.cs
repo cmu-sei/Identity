@@ -104,7 +104,7 @@ namespace Identity.Accounts.Extensions
             var result = new StringBuilder();
             foreach (char c in s.ToCharArray())
             {
-                if (Char.IsLetter(c)) result.Append(Char.ToLower(c));
+                if (Char.IsLetterOrDigit(c)) result.Append(Char.ToLower(c));
                 if (c == '.' || c == ' ') result.Append('.');
                 if (c == '-') result.Append('-');
             }
