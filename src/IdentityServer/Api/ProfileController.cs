@@ -265,12 +265,15 @@ namespace IdentityServer.Api
         public async Task<IActionResult> AddUsername([FromBody] Credentials model)
         {
             string key = $"{User.GetSubjectId()}:{model.Username}:verifycode";
-            string code = await _cache.GetStringAsync(key);
 
-            if (string.IsNullOrEmpty(code) || model.Code != code)
+            bool verified = model.Code == await _cache.GetStringAsync(key) ||
+                await _svc.ValidateAccountCodeAsync(model.Username, model.Code);
+
+            if (!verified)
                 throw new AccountNotConfirmedException();
 
             await _svc.AddorUpdateAccountAsync(User.GetSubjectId(), model.Username);
+
             await _cache.RemoveAsync(key);
 
             Audit(AuditId.RegisteredCredential);
