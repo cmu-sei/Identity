@@ -68,7 +68,7 @@ namespace IdentityServer.Services
                     // AccessTokenType = AccessTokenType.Jwt,
                     // ProtocolType = "oidc",
                     // AllowPlainTextPkce = false,
-                    RequireClientSecret = false,
+                    RequireClientSecret = model.Secrets.Any(),
 
                     // client
                     Enabled = model.Enabled,
