@@ -153,7 +153,13 @@ namespace IdentityServer
 
             #region IdentityServer
 
-            services.AddIdentityServer()
+            services.AddIdentityServer(options =>
+            {
+                if (_env.IsDevelopment())
+                {
+                    options.IssuerUri = "localhost";
+                }
+            })
                 .AddConfiguredSigningCredential(_certificatePath, _certificatePass)
                 .AddClientStore<IdsrvClientStore>()
                 .AddResourceStore<IdsrvResourceStore>()
