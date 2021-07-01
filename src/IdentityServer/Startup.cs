@@ -159,6 +159,10 @@ namespace IdentityServer
                 {
                     options.IssuerUri = "localhost";
                 }
+
+                if (_authOptions.CookieLifetimeMinutes > 0)
+                    options.Authentication.CookieLifetime = new TimeSpan(0, _authOptions.CookieLifetimeMinutes, 0);
+
             })
                 .AddConfiguredSigningCredential(_certificatePath, _certificatePass)
                 .AddClientStore<IdsrvClientStore>()

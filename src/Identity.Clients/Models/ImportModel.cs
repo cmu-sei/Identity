@@ -1,11 +1,11 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 namespace Identity.Clients.Models
 {
     public class ResourceImport
     {
-        public ApiImport[] Apis { get; set; }
+        public ApiImport[] Apis { get; set; } = new ApiImport[] {};
         public ClientImport[] Clients { get; set; } = new ClientImport[] {};
     }
 
@@ -23,6 +23,6 @@ namespace Identity.Clients.Models
         public string GrantType { get; set; }
         public string Scopes { get; set; }
         public string Secret { get; set; }
-        public string RedirectUrl { get; set; }
+        public string[] RedirectUrl { get; set; } = new string[] {};
     }
 }
