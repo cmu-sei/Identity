@@ -2,6 +2,7 @@
 // Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Identity.Clients.Abstractions;
@@ -55,7 +56,7 @@ namespace Identity.Clients.Services
                     UserClaims = api.UserClaims,
                     Secrets = new Data.ApiSecret[]
                     {
-                        new Data.ApiSecret 
+                        new Data.ApiSecret
                         {
                             Type = "SharedSecret",
                             Value = api.Name.Sha256(),
@@ -95,15 +96,16 @@ namespace Identity.Clients.Services
             if ("implicit hybrid".Contains(client.GrantType))
                 entity.Flags |= ClientFlag.AllowAccessTokensViaBrowser;
 
-            if (client.RedirectUrl.HasValue())
+            var urls = new List<Data.ClientUri>();
+            foreach (string u in client.RedirectUrl)
             {
-                entity.Urls = new Data.ClientUri[] {
-                    new Data.ClientUri {
-                        Type = ClientUriType.RedirectUri,
-                        Value = client.RedirectUrl
-                    }
-                };
+                urls.Add(new Data.ClientUri
+                {
+                    Type = ClientUriType.RedirectUri,
+                    Value = u
+                });
             }
+            entity.Urls = urls.ToArray();
 
             if (client.Secret.HasValue())
             {
