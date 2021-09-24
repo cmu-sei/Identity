@@ -115,55 +115,10 @@ namespace IdentityServer.Api
 
         [HttpPost("api/account/mail")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> SendEmail([FromBody]RelayMailMessage message)
+        public async Task<List<MailMessageStatus>> SendEmail([FromBody]RelayMailMessage message)
         {
-            List<string> addresses = new List<string>();
-            foreach(string id in message.To.Select(x => x.Trim()))
-            {
-                var account = await _svc.FindByGuidAsync(id);
+            string batchId = new Random().Next().ToString("x");
 
-                if (account == null)
-                    account = await _svc.FindByAccountAsync(id);
-
-                if (account != null)
-                {
-                    string name = account.Properties
-                        .FirstOrDefault(p => p.Key == Identity.Accounts.ClaimTypes.Name)?.Value;
-
-                    addresses.AddRange(account.Properties
-                        .Where(p => p.Key == Identity.Accounts.ClaimTypes.Email)
-                        .Select(p => $"{name} <{p.Value}>")
-                        .ToList()
-                    );
-                }
-            }
-
-            if (addresses.Count == 0)
-                throw new Exception("No valid addresses.");
-
-            var msg = new MailMessage
-            {
-                To = String.Join("; ", addresses.ToArray()),
-                Cc = string.Join("; ", message.Cc),
-                Bcc = string.Join("; ", message.Bcc),
-                From = message.From,
-                Subject = message.Subject,
-            };
-
-            if (message.Body.StartsWith("<!doctype html", true, null))
-                msg.Html = message.Body;
-            else
-                msg.Text = message.Body;
-
-            var response = await _mailer.Send(msg);
-
-            return Ok();
-        }
-
-        [HttpPost("api/account/mailbatch")]
-        [ProducesResponseType(200)]
-        public async Task<IActionResult> SendEmailBatch([FromBody]RelayMailMessage message)
-        {
             var list = await _svc.FindAll(
                 new SearchModel
                 {
@@ -171,84 +126,102 @@ namespace IdentityServer.Api
                 }
             );
 
-            // domain subset
-            if (
-                message.To.First().StartsWith("@")
-                && message.To.First() != "@here"
-            )
+            if (!message.Groups.Any() && message.To.Any())
             {
-                list = list
-                    .Where(a => a.Properties.Any(p =>
-                        p.Key == "email" && p.Value.EndsWith(message.To.First()))
+                if (message.To.First() == "@here")
+                {
+                    message.Groups = list.Select(a =>
+                        new RecipientGroup
+                        {
+                            Name = a.Properties.FirstOrDefault(p => p.Key == "name")?.Value,
+                            Members = new string[] {a.GlobalId }
+                        }
                     ).ToArray();
+                }
+                else
+                {
+                    message.Groups = new RecipientGroup[] {
+                        new RecipientGroup
+                        {
+                            Members = message.To
+                        }
+                    };
+                }
             }
 
-            var results = new List<MailMessageStatus>(list.Length);
+            var results = new List<MailMessageStatus>(message.Groups.Length);
 
-            string msgId = Guid.NewGuid().ToString("N");
-
-            foreach (var account in list)
+            foreach (var group in message.Groups)
             {
+                string to = ResolveRecipients(list, group.Members);
+                var result = await SendMessage(message, to, group.Name, batchId);
+                results.Add(result);
+            }
+
+            return results;
+        }
+
+        [HttpPost("api/account/mailverify")]
+        public async Task<MailMessageStatus[]> VerifyMail([FromBody] MailMessageStatus[] list)
+        {
+            foreach (var item in list.Where(r => r.Status == "pending"))
+            {
+                var response = await _mailer.Status(item.ReferenceId);
+                item.Status = response.Status;
+            }
+
+            return list;
+        }
+
+        private async Task<MailMessageStatus> SendMessage(RelayMailMessage message, string to, string name, string batchId)
+        {
+            var msg = new MailMessage
+            {
+                To = to,
+                Cc = string.Join("; ", message.Cc),
+                Bcc = string.Join("; ", message.Bcc),
+                From = message.From,
+                Subject = message.Subject,
+                MessageId = $"{batchId}:{name}:{to}"
+            };
+
+            if (message.Body.StartsWith("<!doctype html", true, null))
+                msg.Html = message.Body.Replace("{name}", name);
+            else
+                msg.Text = message.Body.Replace("{name}", name);
+
+            var response = await _mailer.Send(msg);
+
+            return response;
+        }
+
+        private string ResolveRecipients(Account[] list, string[] to)
+        {
+            var addresses = new List<string>();
+
+            foreach (var item in to.Select(x => x.Trim()))
+            {
+                // item is id or email
+                var account = list.FirstOrDefault(a => a.GlobalId == item);
+
+                if (account is null)
+                    account = list.FirstOrDefault(a => a.Properties.Any(p => p.Key == "email" && p.Value == item));
+
+                if (account is null)
+                    continue;
+
                 string name = account.Properties
                     .FirstOrDefault(p => p.Key == Identity.Accounts.ClaimTypes.Name)?.Value;
 
-                var addresses = account.Properties
+                addresses.AddRange(account.Properties
                     .Where(p => p.Key == Identity.Accounts.ClaimTypes.Email)
                     .Select(p => $"{name} <{p.Value}>")
-                    .ToList();
+                    .ToList()
+                );
 
-                if (addresses.Count == 0)
-                    continue;
-
-                string to = String.Join("; ", addresses.ToArray());
-
-                var msg = new MailMessage
-                {
-                    To = to,
-                    Cc = string.Join("; ", message.Cc),
-                    Bcc = string.Join("; ", message.Bcc),
-                    From = message.From,
-                    Subject = message.Subject,
-                    MessageId = $"{msgId}-{to}"
-                };
-
-                if (message.Body.StartsWith("<!doctype html", true, null))
-                    msg.Html = message.Body.Replace("{name}", name);
-                else
-                    msg.Text = message.Body.Replace("{name}", name);
-
-                var response = await _mailer.Send(msg);
-
-                results.Add(response);
             }
 
-            bool done = false;
-            int pass = 0;
-
-            while  (!done && pass < 5)
-            {
-                await Task.Delay(10000);
-
-                done = true;
-
-                foreach (var item in results.Where(r => r.Status == "pending"))
-                {
-                    var response = await _mailer.Status(item.ReferenceId);
-                    item.Status = response.Status;
-                    done &= item.Status != "pending";
-                }
-
-                pass += 1;
-            }
-
-            Logger.LogInformation("send mail success: {0}", results.Where(r => r.Status == "success").Count());
-
-            foreach (var item in results.Where(r => r.Status != "success"))
-            {
-                Logger.LogInformation("send mail fail: {0} {1}", item.Status, item.MessageId);
-            }
-
-            return Ok();
+            return String.Join("; ", addresses.ToArray());
         }
 
         [HttpGet("api/stats")]
@@ -276,5 +249,12 @@ namespace IdentityServer.Api
         public string From { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
+        public RecipientGroup[] Groups { get; set; } = new RecipientGroup[] {};
+    }
+
+    public class RecipientGroup
+    {
+        public string Name { get; set; }
+        public string[] Members { get; set; }
     }
 }

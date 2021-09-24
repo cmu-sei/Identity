@@ -23,7 +23,7 @@ namespace IdentityServer
                 .InitializeDatabase();
 
             bool dbonly = args.ToList().Contains("--dbonly")
-                || Environment.GetEnvironmentVariable("DBONLY")?.ToLower() == "true";
+                || Environment.GetEnvironmentVariable("APP_DBONLY")?.ToLower() == "true";
 
             if (!dbonly)
                 hostBuilder.Run();
