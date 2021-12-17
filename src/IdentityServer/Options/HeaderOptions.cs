@@ -27,7 +27,7 @@ namespace IdentityServer.Options
 
     public class SecurityHeaderOptions
     {
-        public string ContentSecurity { get; set; } = "default-src 'self' 'unsafe-inline'";
+        public string ContentSecurity { get; set; } = "default-src 'self'; frame-ancestors 'self'";
         public string XContentType { get; set; } = "nosniff";
         public string XFrame { get; set; } = "SAMEORIGIN";
     }
