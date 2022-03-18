@@ -25,6 +25,11 @@ namespace Identity.Accounts
         public const string Email = "email";
         public const string EmailVerified = "email_verified";
         public const string Role = "role";
+    }
 
+    public class ClaimValue
+    {
+        public string Value { get; set; }
+        public string Type { get; set; }
     }
 }
