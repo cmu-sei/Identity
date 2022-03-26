@@ -36,8 +36,13 @@ namespace IdentityServer.Services
             {
                 string host = $"{_http.Request.Scheme}://{_http.Request.Host.Value}{_http.Request.PathBase}";
                 var claims  = (await _profileSvc.GetClaimsAsync(id, name, host)).ToList();
-                context.AddRequestedClaims(claims);
-
+                
+                // convert bool-ish strings to bool-types
+                var boolclaims = claims.Where(c => c.Value == "true" || c.Value == "false").ToArray();
+                foreach (var claim in boolclaims)
+                    claims.Add(new Claim(claim.Type, claim.Value, ClaimValueTypes.Boolean));
+                    
+                context.AddRequestedClaims(claims.Except(boolclaims));
 
                 // TODO: Remove this in later release
                 if (context.Caller == "ClaimsProviderAccessToken")
