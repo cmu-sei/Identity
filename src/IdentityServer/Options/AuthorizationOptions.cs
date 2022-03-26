@@ -7,7 +7,8 @@ namespace IdentityServer.Options
     {
         public string Authority { get; set; }
         public string Audience { get; set; }
-        public int CookieLifetimeMinutes { get; set; }
+        public int CookieLifetimeMinutes { get; set; } = 600;
+        public bool CookieSlidingExpiration { get; set; }
         public OAuth2Client SwaggerClient { get; set; }
         public ExternalOidcScheme[] ExternalOidc { get; set; } = new ExternalOidcScheme[]{};
     }

@@ -163,6 +163,7 @@ namespace IdentityServer
                 if (_authOptions.CookieLifetimeMinutes > 0)
                     options.Authentication.CookieLifetime = new TimeSpan(0, _authOptions.CookieLifetimeMinutes, 0);
 
+                options.Authentication.CookieSlidingExpiration = _authOptions.CookieSlidingExpiration;
             })
                 .AddConfiguredSigningCredential(_certificatePath, _certificatePass)
                 .AddClientStore<IdsrvClientStore>()
