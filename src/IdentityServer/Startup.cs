@@ -310,9 +310,10 @@ namespace IdentityServer
 
             app.UsePathBase(_branding.PathBase);
 
+            app.UseOauthScopeInjection();
+
             app.UseRewriter(
                 new RewriteOptions()
-                    .AddRewrite(@"^oauth/(.*)", "connect/$1", true)
                     .AddRewrite(@"^api/v4/user", "api/profile/alt", true)
                     .AddRedirect(@"^.well-known/change-password", "account/password")
             );
