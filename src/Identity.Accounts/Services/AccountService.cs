@@ -311,7 +311,15 @@ namespace Identity.Accounts.Services
             if (!account.VerifyPassword(creds.Password))
             {
                 account.Lock(_options.Authentication.LockThreshold);
+                
                 await _store.Update(account);
+
+                if (account.IsLocked())
+                {
+                    string duration = account.LockDurationSeconds().ToString();
+                    throw new AccountLockedException(duration);
+                }
+
                 throw new AuthenticationFailureException();
             }
 

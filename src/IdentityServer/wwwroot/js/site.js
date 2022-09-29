@@ -1,40 +1,39 @@
 // Copyright 2020 Carnegie Mellon University.
 // Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
-function ticker($div, ticks, toggleClass) {
-    this.reset = function(v) {
-        console.log(ticks);
-        let inactive = !ticks;
-        ticks = v;
-        if (inactive) $div.trigger('tick');
-    }
-    function tick() {
-        let $this = $(this),
-            ticks = $this.data('ticks');
-
-        if (ticks) {
-            $this.find('.ticker').text(ticks);
-            $this.data('ticks', ticks-1).removeClass(toggleClass);
-            setTimeout(function() {
-                $this.trigger('tick')
-            }, 1000);
-        } else {
-            $this.addClass(toggleClass);
-        }
-    }
-
-    $div.data('ticks', ticks).on('tick', tick).trigger('tick');
+function check_all_required() {
+    const $f = $('#credsform');
+    const $b = $f.find('button');
+    const $r = $f.find('[required]');
+    let enabled = true;
+    $r.each(function() {
+        enabled &= !!$(this).val().length;
+    });
+    $b.prop('disabled', !enabled);
 }
 
-function enableForm($div) {
-    function check() {
-        let enabled = true;
-        $r.each(function() {
-            enabled &= !!$(this).val().length;
-        });
-        $b.prop('disabled', !enabled);
+function tick() {
+    const $this = $(this);
+    const ticks = $this.text();
+    if (ticks > 0) {
+        $this.text(ticks - 1);
+        $this.parent().removeClass('d-none');
+        setTimeout(function() {
+            $this.trigger('tick')
+        }, 1000);
+    } else {
+        $this.parent().addClass('d-none');
     }
-    const $b = $div.find("button");
-    const $r = $div.find("[required]");
-    $r.on('input', check);
 }
+
+$(window).on('load', function() {
+
+    const $t = $('.ticker')
+    if ($t.length)
+        $t.on('tick', tick).trigger('tick');
+
+    const $f = $('#credsform');
+    if ($f.length) {
+        $f.find('[required]').on('input', check_all_required);
+    }
+});
