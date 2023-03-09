@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Identity.Accounts.Options;
+using IdentityServer.Extensions;
 using IdentityServer.Models;
 using IdentityServer.Options;
 using IdentityServer.Services;
@@ -68,7 +69,14 @@ namespace IdentityServer.Features.Account
             await Task.Delay(0);
 
             var headers = _httpContextAccessor.HttpContext.Request.Headers;
-
+            string subject = _httpContextAccessor.HttpContext.Request.GetCertificateSubject(
+                _options.Authentication.ClientCertHeader,
+                _options.Authentication.ClientCertSubjectHeaders
+            );
+            string issuer = _httpContextAccessor.HttpContext.Request.GetCertificateIssuer(
+                _options.Authentication.ClientCertHeader,
+                _options.Authentication.ClientCertIssuerHeaders
+            );
             return new LoginViewModel() {
                 AllowRememberLogin = _options.Authentication.AllowRememberLogin,
                 AllowCredentialLogin = _options.Authentication.AllowCredentialLogin,
@@ -79,8 +87,8 @@ namespace IdentityServer.Features.Account
                 LockedSeconds = lockedSeconds,
                 ExternalSchemes = _authOptions.ExternalOidc.Select(e => e.Scheme).ToArray(),
                 MSIE = IsMSIE(headers[HeaderNames.UserAgent]),
-                CertificateSubject = headers[_options.Authentication.ClientCertSubjectHeader],
-                CertificateIssuer = headers[_options.Authentication.ClientCertIssuerHeader]
+                CertificateSubject = subject,
+                CertificateIssuer = issuer
             };
         }
         public async Task<PasswordViewModel> GetPasswordView(PasswordModel model, int lockedSeconds = 0)
