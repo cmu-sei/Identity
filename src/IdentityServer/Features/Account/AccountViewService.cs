@@ -77,6 +77,10 @@ namespace IdentityServer.Features.Account
                 _options.Authentication.ClientCertHeader,
                 _options.Authentication.ClientCertIssuerHeaders
             );
+            string verification = _httpContextAccessor.HttpContext.Request.GetCertificateVerification(
+                _options.Authentication.ClientCertVerifyHeaders
+            );
+
             return new LoginViewModel() {
                 AllowRememberLogin = _options.Authentication.AllowRememberLogin,
                 AllowCredentialLogin = _options.Authentication.AllowCredentialLogin,
@@ -88,7 +92,8 @@ namespace IdentityServer.Features.Account
                 ExternalSchemes = _authOptions.ExternalOidc.Select(e => e.Scheme).ToArray(),
                 MSIE = IsMSIE(headers[HeaderNames.UserAgent]),
                 CertificateSubject = subject,
-                CertificateIssuer = issuer
+                CertificateIssuer = issuer,
+                CertificateVerification = verification
             };
         }
         public async Task<PasswordViewModel> GetPasswordView(PasswordModel model, int lockedSeconds = 0)

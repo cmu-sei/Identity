@@ -75,6 +75,20 @@ namespace IdentityServer.Extensions
             return "";
         }
 
+        public static string GetCertificateVerification(
+            this HttpRequest request,
+            string[] headers
+        ){
+            foreach(string header in headers)
+            {
+                string value = request.Headers[header];
+                if (string.IsNullOrEmpty(value).Equals(false))
+                    return value;
+            }
+
+            return "";
+        }
+
         public static bool IsPrivileged(this ClaimsPrincipal user)
         {
             return user.IsInRole(AppConstants.AdminRole) || user.IsInRole(AppConstants.ManagerRole);

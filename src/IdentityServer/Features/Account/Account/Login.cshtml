@@ -31,6 +31,14 @@
 
                 @if (String.IsNullOrEmpty(Model.CertificateSubject))
                 {
+                    @if(!String.IsNullOrEmpty(Model.CertificateVerification))
+                    {
+                        <p aria-label="client certificate verification">
+                            <span>Certificate Status:</span>
+                            <em>@Model.CertificateVerification</em>
+                        </p>
+                    }
+
                     <p>
                         If expecting to use a certificate, you should
                         <strong>already</strong> have been prompted by your
@@ -42,7 +50,8 @@
                 else
                 {
                     <p aria-label="client certificate subject">
-                        <em>@Model.CertificateSubject</em><br/>
+                        <small>@Model.CertificateSubject</small><br/>
+                        <small>@Model.CertificateIssuer</small><br/>
                     </p>
                     <p>
                         <form asp-route="Login">
