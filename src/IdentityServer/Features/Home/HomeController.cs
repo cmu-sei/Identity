@@ -5,6 +5,7 @@ using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Identity.Accounts.Options;
+using IdentityServer.Extensions;
 using IdentityServer.Models;
 using IdentityServer.Options;
 using Microsoft.AspNetCore.Authorization;
@@ -56,7 +57,10 @@ namespace IdentityServer.Features.Home
             model.UserAgent = Request.Headers[HeaderNames.UserAgent];
             model.Subject = User?.FindFirstValue("sub") ?? Guid.NewGuid().ToString();
             model.Name = User?.Identity?.Name ?? "Ender Wiggin";
-            model.Certificate = Request.Headers[Options.Authentication.ClientCertSubjectHeader];
+            model.Certificate = Request.GetCertificateSubject(
+                Options.Authentication.ClientCertHeader,
+                Options.Authentication.ClientCertSubjectHeaders
+            );
             return View(model);
         }
 

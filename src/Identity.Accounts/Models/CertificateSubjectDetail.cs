@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System;
 using System.Collections.Generic;
@@ -21,25 +21,44 @@ namespace Identity.Accounts.Models
 
         // expecting ldap v3 distinguished names. https://tools.ietf.org/html/rfc2253
         // That's what nginx 1.11+ passes
+        // now supporting x500 format, with it's inverse ordering and looser char constraints.
         public CertificateSubjectDetail(string subjectDN)
         {
             if (string.IsNullOrEmpty(subjectDN))
                 return;
 
+            char[] delimiters = new char[] {',', '+', ';'};
             var rdns = new List<string>();
             int i = 0, j = 0;
             char[] chars = subjectDN.ToCharArray();
             char last = '_';
+            bool quoted = false;
+            bool escaped = false;
+            bool x500_ordering = subjectDN.IndexOf("O=") < subjectDN.LastIndexOf("OU=");
+
             for (i = 0; i < chars.Length; i++)
             {
-                if ((chars[i] == ',' || chars[i] == '+') && last != '\\')
+                // close-quote
+                if (chars[i] == '"' && quoted)
+                    quoted = false;
+
+                // open-quote
+                if (chars[i] == '"' && last == '=')
+                    quoted = true;
+
+                // escaped
+                escaped = chars[i] != '\\' && last == '\\';
+
+                if (!quoted && !escaped && delimiters.Contains(chars[i]))
                 {
-                    rdns.Add(subjectDN.Substring(j, i-j));
+                    ParseMultiValueRDN(rdns, subjectDN.Substring(j, i-j).Trim());
                     j = i+1;
                 }
+
                 last = chars[i];
             }
-            rdns.Add(subjectDN.Substring(j));
+            // last value
+            ParseMultiValueRDN(rdns, subjectDN.Substring(j).Trim());
 
             this.Subject = subjectDN;
             this.IsAffiliate = Regex.IsMatch(subjectDN, "affiliate|contractor", RegexOptions.IgnoreCase);
@@ -49,7 +68,7 @@ namespace Identity.Accounts.Models
 
             //if no externalid, parse from CN, dod-style
             if (String.IsNullOrEmpty(ExternalId)
-                && Int64.TryParse(nameParts.Last(), out long id))
+                && Int64.TryParse(nameParts.Last(), out _))
             {
                 this.ExternalId = nameParts.Last();
             }
@@ -66,12 +85,16 @@ namespace Identity.Accounts.Models
             var ou = rdns.Where(x => x.StartsWith("OU=")).Select(x => x.Substring(3));
             var o = rdns.Where(x => x.StartsWith("O=")).Select(x => x.Substring(2));
             bool hasContext = false;
-            foreach (string s in ou) hasContext |= ExternalId.Contains(s);
-            foreach (string s in o) hasContext |= ExternalId.Contains(s);
+            foreach (string s in ou.Union(o)) hasContext |= ExternalId.Contains(s);
+            // foreach (string s in o) hasContext |= ExternalId.Contains(s);
             if (!hasContext)
             {
+                string suffix = x500_ordering
+                    ? ou.FirstOrDefault() ?? o.FirstOrDefault()
+                    : ou.LastOrDefault() ?? o.LastOrDefault()
+                ;
                 DeprecatedExternalId = ExternalId;
-                ExternalId += "." + ou.LastOrDefault() ?? o.LastOrDefault();
+                ExternalId += "." + suffix;
             }
 
             DisplayName = (nameParts.Length > 1) // assume dod-style
@@ -86,6 +109,17 @@ namespace Identity.Accounts.Models
 
             this.DisplayName = String.Join(" ", nameParts).ToTitle();
             this.UserName = this.DisplayName.ToAccountSlug();
+        }
+
+        private void ParseMultiValueRDN(List<string> list, string rdn)
+        {
+            int e = rdn.IndexOf('=');
+            string key = rdn.Substring(0, e);
+            string val = rdn.Substring(e+1).Replace("\"", "");
+            string[] multi = val.Split('+');
+            list.Add($"{key}={multi[0].Trim()}");
+            foreach (string p in multi.Skip(1))
+                list.Add(p);
         }
     }
 }

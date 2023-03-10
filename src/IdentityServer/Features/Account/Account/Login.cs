@@ -28,6 +28,7 @@ namespace IdentityServer.Models
         public bool MSIE { get; set; }
         public string CertificateSubject { get; set; }
         public string CertificateIssuer { get; set; }
+        public string CertificateVerification { get; set; }
     }
 
 }

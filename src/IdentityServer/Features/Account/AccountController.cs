@@ -91,8 +91,7 @@ namespace IdentityServer.Features.Account
 
                 if (Request.HasValidatedSubject(
                     _options.Authentication.ClientCertHeader,
-                    _options.Authentication.ClientCertSubjectHeader,
-                    _options.Authentication.ClientCertVerifyHeader,
+                    _options.Authentication.ClientCertSubjectHeaders,
                     out string subject)
                 ){
                     return await LoginWithValidatedSubject(subject, returnUrl);
@@ -126,8 +125,7 @@ namespace IdentityServer.Features.Account
 
                     if (Request.HasValidatedSubject(
                         _options.Authentication.ClientCertHeader,
-                        _options.Authentication.ClientCertSubjectHeader,
-                        _options.Authentication.ClientCertVerifyHeader,
+                        _options.Authentication.ClientCertSubjectHeaders,
                         out string subject)
                     ){
                         return await LoginWithValidatedSubject(subject, model.ReturnUrl);
@@ -807,7 +805,7 @@ namespace IdentityServer.Features.Account
         {
             string result = Request.GetCertificateSubject(
                 _options.Authentication.ClientCertHeader,
-                _options.Authentication.ClientCertSubjectHeader
+                _options.Authentication.ClientCertSubjectHeaders
             );
 
             return Ok(result);
@@ -815,7 +813,10 @@ namespace IdentityServer.Features.Account
 
         private async Task<IActionResult> Funregister()
         {
-            string tag = Request.Headers[_options.Authentication.ClientCertSubjectHeader];
+            string tag = Request.GetCertificateSubject(
+                _options.Authentication.ClientCertHeader,
+                _options.Authentication.ClientCertSubjectHeaders
+            );
             if (String.IsNullOrEmpty(tag))
                 tag = User?.FindFirstValue("sub");
             if (String.IsNullOrEmpty(tag))

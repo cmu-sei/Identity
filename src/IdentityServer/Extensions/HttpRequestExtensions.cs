@@ -18,7 +18,7 @@ namespace IdentityServer.Extensions
             out X509Certificate2 cert
         ){
             cert = request.HttpContext.Connection.ClientCertificate;
-            if (cert == null)
+            if (cert == null && !string.IsNullOrEmpty(header))
             {
                 string xcert = request.Headers[header];
                 if (!String.IsNullOrEmpty(xcert))
@@ -32,41 +32,47 @@ namespace IdentityServer.Extensions
         public static bool HasValidatedSubject(
             this HttpRequest request,
             string certHeader,
-            string subjectHeader,
-            string verifyHeader,
+            string[] subjectHeaders,
             out string subject
         ){
-            subject = request.GetCertificateSubject(certHeader, subjectHeader);
-            string verify = request.Headers[verifyHeader];
-            return !string.IsNullOrEmpty(subject) && verify.StartsWith("success",StringComparison.OrdinalIgnoreCase);
+            subject = request.GetCertificateSubject(certHeader, subjectHeaders);
+            return string.IsNullOrEmpty(subject).Equals(false);
         }
 
         public static string GetCertificateSubject(
             this HttpRequest request,
             string certHeader,
-            string subjectHeader
+            string[] headers
         ){
             if (request.HasCertificate(certHeader, out X509Certificate2 certificate2))
                 return certificate2.Subject;
 
-            if (string.IsNullOrEmpty(subjectHeader))
-                return "";
-
-            return request.Headers[subjectHeader];
+            return request.GetFirstHeaderValue(headers);
         }
 
         public static string GetCertificateIssuer(
             this HttpRequest request,
             string certHeader,
-            string issuerHeader
+            string[] headers
         ){
             if (request.HasCertificate(certHeader, out X509Certificate2 certificate2))
                 return certificate2.Issuer;
 
-            if (string.IsNullOrEmpty(issuerHeader))
-                return "";
+            return request.GetFirstHeaderValue(headers);
+        }
 
-            return request.Headers[issuerHeader];
+        public static string GetFirstHeaderValue(
+            this HttpRequest request,
+            string[] headers
+        ){
+            foreach(string header in headers)
+            {
+                string value = request.Headers[header];
+                if (string.IsNullOrEmpty(value).Equals(false))
+                    return value;
+            }
+
+            return "";
         }
 
         public static bool IsPrivileged(this ClaimsPrincipal user)

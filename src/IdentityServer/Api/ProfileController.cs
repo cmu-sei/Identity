@@ -176,12 +176,12 @@ namespace IdentityServer.Api
 
                 CurrentCertificateIssuer = Request.GetCertificateIssuer(
                     _options.Authentication.ClientCertHeader,
-                    _options.Authentication.ClientCertIssuerHeader
+                    _options.Authentication.ClientCertIssuerHeaders
                 ),
 
                 CurrentCertificateSubject = Request.GetCertificateSubject(
                     _options.Authentication.ClientCertHeader,
-                    _options.Authentication.ClientCertSubjectHeader
+                    _options.Authentication.ClientCertSubjectHeaders
                 )
             });
 
@@ -194,7 +194,7 @@ namespace IdentityServer.Api
         {
             string subject = Request.GetCertificateSubject(
                 _options.Authentication.ClientCertHeader,
-                _options.Authentication.ClientCertSubjectHeader
+                _options.Authentication.ClientCertSubjectHeaders
             );
             return Ok(subject);
         }
@@ -214,8 +214,7 @@ namespace IdentityServer.Api
             {
                 if (Request.HasValidatedSubject(
                     _options.Authentication.ClientCertHeader,
-                    _options.Authentication.ClientCertSubjectHeader,
-                    _options.Authentication.ClientCertVerifyHeader,
+                    _options.Authentication.ClientCertSubjectHeaders,
                     out subject)
                 ){
                     await _svc.AddAccountValidatedSubject(User.GetSubjectId(), subject);
