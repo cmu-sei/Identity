@@ -29,7 +29,7 @@ namespace Identity.Accounts.Options
         public string SigningCertificate { get; set; }
         public string SigningCertificatePassword { get; set; }
 
-        public string ClientCertHeader { get; set; } = "X-ARR-ClientCert";
+        public string ClientCertHeader { get; set; }
         public string[] ClientCertSubjectHeaders { get; set; } = new string[] {};
         public string[] ClientCertIssuerHeaders { get; set; } = new string[] {};
         public string[] ClientCertSerialHeaders { get; set; } = new string[] {};

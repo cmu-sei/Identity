@@ -77,7 +77,7 @@ namespace IdentityServer.Features.Account
                 _options.Authentication.ClientCertHeader,
                 _options.Authentication.ClientCertIssuerHeaders
             );
-            string verification = _httpContextAccessor.HttpContext.Request.GetCertificateVerification(
+            string verification = _httpContextAccessor.HttpContext.Request.GetFirstHeaderValue(
                 _options.Authentication.ClientCertVerifyHeaders
             );
 

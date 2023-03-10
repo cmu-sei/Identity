@@ -18,7 +18,7 @@ namespace IdentityServer.Extensions
             out X509Certificate2 cert
         ){
             cert = request.HttpContext.Connection.ClientCertificate;
-            if (cert == null)
+            if (cert == null && !string.IsNullOrEmpty(header))
             {
                 string xcert = request.Headers[header];
                 if (!String.IsNullOrEmpty(xcert))
@@ -42,40 +42,26 @@ namespace IdentityServer.Extensions
         public static string GetCertificateSubject(
             this HttpRequest request,
             string certHeader,
-            string[] subjectHeaders
+            string[] headers
         ){
             if (request.HasCertificate(certHeader, out X509Certificate2 certificate2))
                 return certificate2.Subject;
 
-            foreach(string header in subjectHeaders)
-            {
-                string value = request.Headers[header];
-                if (string.IsNullOrEmpty(value).Equals(false))
-                    return value;
-            }
-
-            return "";
+            return request.GetFirstHeaderValue(headers);
         }
 
         public static string GetCertificateIssuer(
             this HttpRequest request,
             string certHeader,
-            string[] issuerHeaders
+            string[] headers
         ){
             if (request.HasCertificate(certHeader, out X509Certificate2 certificate2))
                 return certificate2.Issuer;
 
-            foreach(string header in issuerHeaders)
-            {
-                string value = request.Headers[header];
-                if (string.IsNullOrEmpty(value).Equals(false))
-                    return value;
-            }
-
-            return "";
+            return request.GetFirstHeaderValue(headers);
         }
 
-        public static string GetCertificateVerification(
+        public static string GetFirstHeaderValue(
             this HttpRequest request,
             string[] headers
         ){
