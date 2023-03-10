@@ -225,7 +225,6 @@ namespace IdentityServer.Api
         }
 
         [HttpGet("api/stats")]
-        [AllowAnonymous]
         [ProducesResponseType(typeof(AccountStats), 200)]
         public async Task<IActionResult> GetStats([FromQuery] DateTime since)
         {
@@ -233,7 +232,6 @@ namespace IdentityServer.Api
         }
 
         [HttpGet("api/version")]
-        [AllowAnonymous]
         [ProducesResponseType(typeof(string), 200)]
         public IActionResult Version()
         {

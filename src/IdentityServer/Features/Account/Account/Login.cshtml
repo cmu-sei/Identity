@@ -31,28 +31,38 @@
 
                 @if (String.IsNullOrEmpty(Model.CertificateSubject))
                 {
-                    @if(!String.IsNullOrEmpty(Model.CertificateVerification))
+                    @if(String.IsNullOrEmpty(Model.CertificateVerification))
+                    {
+                        <p>
+                            If expecting to use a certificate, you should
+                            <strong>already</strong> have been prompted by your
+                            browser to enter the PIN. If that is not the
+                            case, please refer to
+                            <a asp-action="trouble">troubleshooting</a>.
+                        </p>
+                    }
+                    else
                     {
                         <p aria-label="client certificate verification">
                             <span>Certificate Status:</span>
                             <em>@Model.CertificateVerification</em>
                         </p>
                     }
-
-                    <p>
-                        If expecting to use a certificate, you should
-                        <strong>already</strong> have been prompted by your
-                        browser to enter the PIN. If that is not the
-                        case, please refer to
-                        <a asp-action="trouble">troubleshooting</a>.
-                    </p>
                 }
                 else
                 {
-                    <p aria-label="client certificate subject">
-                        <small>@Model.CertificateSubject</small><br/>
-                        <small>@Model.CertificateIssuer</small><br/>
-                    </p>
+                    <table class="table my-2 text-left" aria-label="client certificate subject">
+                        <tbody>
+                            <tr>
+                                <th>Subject</th>
+                                <td><small>@Model.CertificateSubject</small></td>
+                            </tr>
+                            <tr>
+                                <th>Issuer</th>
+                                <td><small>@Model.CertificateIssuer</small></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <p>
                         <form asp-route="Login">
                             <input id="cert-ReturnUrl" type="hidden" asp-for="ReturnUrl"/>

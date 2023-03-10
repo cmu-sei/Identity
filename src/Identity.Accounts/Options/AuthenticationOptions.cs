@@ -30,9 +30,9 @@ namespace Identity.Accounts.Options
         public string SigningCertificatePassword { get; set; }
 
         public string ClientCertHeader { get; set; } = "X-ARR-ClientCert";
-        public string[] ClientCertSubjectHeaders { get; set; } = new string[] {"ssl-client-subject-dn"};
-        public string[] ClientCertIssuerHeaders { get; set; } = new string[] {"ssl-client-issuer-dn"};
-        public string[] ClientCertSerialHeaders { get; set; } = new string[] {"ssl-client-serial"};
-        public string[] ClientCertVerifyHeaders { get; set; } = new string[] {"ssl-client-verify"};
+        public string[] ClientCertSubjectHeaders { get; set; } = new string[] {};
+        public string[] ClientCertIssuerHeaders { get; set; } = new string[] {};
+        public string[] ClientCertSerialHeaders { get; set; } = new string[] {};
+        public string[] ClientCertVerifyHeaders { get; set; } = new string[] {};
     }
 }
