@@ -124,5 +124,13 @@ namespace Identity.Accounts.Data.Extensions
         {
             return account.Properties.FirstOrDefault(p => p.Key == name)?.Value;
         }
+
+        public static bool IsExpired(this Account account, int idleDays)
+        {
+            return idleDays > 0
+                ? DateTimeOffset.UtcNow > account.WhenLastAuthenticated.AddDays(idleDays)
+                : false
+            ;
+        }
     }
 }

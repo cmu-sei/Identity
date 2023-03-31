@@ -18,6 +18,7 @@ namespace Identity.Accounts.Options
         public bool AllowLocalLogin { get; set; } = true;
         public bool AllowRememberLogin { get; set; } = true;
         public int RememberMeLoginDays { get; set; } = 30;
+        public int ExpireAfterDays { get; set; } = 0;
 
         public bool ShowLogoutPrompt { get; set; } = true;
         public bool AutomaticRedirectAfterSignOut { get; set; } = false;

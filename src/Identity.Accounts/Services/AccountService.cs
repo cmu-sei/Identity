@@ -299,6 +299,12 @@ namespace Identity.Accounts.Services
             if (account.Status == AccountStatus.Disabled)
                 throw new AccountDisabledException();
 
+            if (account.IsExpired(_options.Authentication.ExpireAfterDays))
+            {
+                await SetStatus(account.Id, AccountStatus.Disabled);
+                throw new AccountDisabledException();
+            }
+
             if (account.IsLocked())
             {
                 string duration = account.LockDurationSeconds().ToString();
@@ -311,7 +317,7 @@ namespace Identity.Accounts.Services
             if (!account.VerifyPassword(creds.Password))
             {
                 account.Lock(_options.Authentication.LockThreshold);
-                
+
                 await _store.Update(account);
 
                 if (account.IsLocked())
@@ -376,6 +382,12 @@ namespace Identity.Accounts.Services
             if (account.Status == AccountStatus.Disabled)
                 throw new AccountDisabledException();
 
+            if (account.IsExpired(_options.Authentication.ExpireAfterDays))
+            {
+                await SetStatus(account.Id, AccountStatus.Disabled);
+                throw new AccountDisabledException();
+            }
+
             if (account.IsLocked())
             {
                 string duration = account.LockDurationSeconds().ToString();
@@ -402,6 +414,12 @@ namespace Identity.Accounts.Services
 
             if (account.Status == AccountStatus.Disabled)
                 throw new AccountDisabledException();
+
+            if (account.IsExpired(_options.Authentication.ExpireAfterDays))
+            {
+                await SetStatus(account.Id, AccountStatus.Disabled);
+                throw new AccountDisabledException();
+            }
 
             if (!IsPasswordComplex(creds.Password))
                 throw new PasswordComplexityException();
