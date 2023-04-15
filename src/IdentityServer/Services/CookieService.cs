@@ -6,6 +6,7 @@ using System.Text.Json;
 using Identity.Accounts.Options;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 
 namespace IdentityServer.Services
 {
@@ -14,16 +15,19 @@ namespace IdentityServer.Services
         public CookieService(
             IHttpContextAccessor context,
             IDataProtectionProvider dp,
-            AccountOptions accountOptions
+            AccountOptions accountOptions,
+            IHostEnvironment env
         ) {
             _context = context;
             _dp = dp.CreateProtector(AppConstants.DataProtectionPurpose);
             _expires = accountOptions.Password.ResetTokenExpirationMinutes;
+            _isProduction = env.IsProduction();
         }
 
         private readonly IHttpContextAccessor _context;
         private readonly IDataProtector _dp;
         private int _expires = 5;
+        private bool _isProduction = true;
 
         public object Load(string key, Type type)
         {
@@ -81,6 +85,7 @@ namespace IdentityServer.Services
                     Expires = offset,
                     IsEssential = true,
                     HttpOnly = true,
+                    Secure = _isProduction,
                     SameSite = SameSiteMode.Strict
                 });
         }
