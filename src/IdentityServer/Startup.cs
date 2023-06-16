@@ -99,6 +99,13 @@ namespace IdentityServer
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Azure Application Insights, if connection string is supplied
+            string appInsights = Configuration["ConnectionString"];
+            if (!string.IsNullOrWhiteSpace(appInsights))
+            {
+                services.AddApplicationInsightsTelemetry();
+            }
+
             services.AddMvc()
                 .AddFeatureFolder()
 #if DEBUG
