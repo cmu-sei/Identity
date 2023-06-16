@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System.Threading.Tasks;
 using IdentityServer4.Stores;
@@ -28,6 +28,10 @@ namespace IdentityServer.Services
                 return _all;
 
             _all = _svc.LoadAll().Result;
+
+            foreach(var r in _all)
+                if (!r.Enabled) { r.ShowInDiscoveryDocument= false; }
+
             return _all;
         }
 

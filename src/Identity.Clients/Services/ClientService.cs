@@ -133,7 +133,7 @@ namespace Identity.Clients.Services
             int rand = new Random().Next();
 
             var entity = new Data.Client();
-            entity.Name = model.Name ?? $"new-client-{_profile.Name.ToKebabCase()}-{rand.ToString("x")}";
+            entity.Name = model.Name ?? $"new-client-{rand.ToString("x")}";
             entity.DisplayName = model.DisplayName ?? entity.Name;
             entity.Grants = "client_credentials";
 

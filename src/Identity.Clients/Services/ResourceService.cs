@@ -89,7 +89,7 @@ namespace Identity.Clients.Services
                 throw new InvalidOperationException();
 
             var entity = Mapper.Map<Data.Resource>(model);
-            entity.Name = model.Name ?? $"new-api-{_profile.Name.ToKebabCase()}-{new Random().Next().ToString("x")}";
+            entity.Name = model.Name ?? $"new-api-{new Random().Next().ToString("x")}";
             entity.DisplayName = model.DisplayName ?? entity.Name;
 
             if (String.IsNullOrWhiteSpace(entity.Scopes)) {
@@ -190,11 +190,11 @@ namespace Identity.Clients.Services
                 entity.Scopes = entity.Name;
 
             var scopeNames = scopes.Split(" ", StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => 
+                .Select(s =>
                 {
                     if (entity.Name != previousName) // find and replace first occurance of previousName
                     {
-                        var i = s.IndexOf(previousName); 
+                        var i = s.IndexOf(previousName);
                         string name = i < 0 ? s : s.Substring(0, i) + entity.Name + s.Substring(i + previousName.Length);
                         return name == entity.Name || name.StartsWith($"{entity.Name}-") ? name : $"{entity.Name}-{name}";
                     }
@@ -223,7 +223,7 @@ namespace Identity.Clients.Services
 
             var resources = await _store.GetAll();
             var identityScopes = resources
-                .Where(r => r.Type == ResourceType.Identity && 
+                .Where(r => r.Type == ResourceType.Identity &&
                     (r.Default || _profile.IsPrivileged || r.Managers.Any(m => m.SubjectId == _profile.Id)))
                 .SelectMany(r => r.UserClaims.Split())
                 .Distinct();
