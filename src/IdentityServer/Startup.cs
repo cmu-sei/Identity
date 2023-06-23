@@ -28,6 +28,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Polly;
 using Polly.Extensions.Http;
 
@@ -101,13 +102,9 @@ namespace IdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
             // Add Azure Application Insights, if connection string is supplied
-            if (!string.IsNullOrEmpty(Configuration["Insights:ConnectionString"]))
-            {
-                services.AddApplicationInsightsTelemetry(options =>
-                {
-                    options.ConnectionString = Configuration["Insights:ConnectionString"];
-                });
-    	    }
+            ApplicationInsightsServiceOptions insightOptions = 	Configuration.GetSection("Insights").Get<ApplicationInsightsServiceOptions>() ?? new ApplicationInsightsServiceOptions();
+	if (!string.IsNullOrEmpty(insightOptions.ConnectionString))
+   		services.AddApplicationInsightsTelemetry(insightOptions);
 
             services.AddMvc()
                 .AddFeatureFolder()
