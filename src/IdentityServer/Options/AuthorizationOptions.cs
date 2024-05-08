@@ -29,6 +29,8 @@ namespace IdentityServer.Options
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string Scopes { get; set; }
+        public string AcrValues { get; set; }
+        public string ResponseType { get; set; } = "id_token";
 
     }
 }

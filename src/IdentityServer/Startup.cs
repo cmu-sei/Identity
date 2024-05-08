@@ -262,11 +262,19 @@ namespace IdentityServer
                     config.Authority = oidc.Authority;
                     config.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     config.ClientId = oidc.ClientId;
+                    config.ResponseType = oidc.ResponseType;
                     config.DisableTelemetry = true;
                     foreach (string scope in oidc.Scopes.Split(" "))
                     {
                         config.Scope.Add(scope);
                     }
+                    config.Events.OnRedirectToIdentityProvider = (context) =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(oidc.AcrValues))
+                            context.ProtocolMessage.RedirectUri += $"&acr_values={oidc.AcrValues}";
+                        // context.Response.Redirect(context.RedirectUri);
+                        return Task.CompletedTask;
+                    };
                 });
             }
             #endregion
