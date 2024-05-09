@@ -270,9 +270,7 @@ namespace IdentityServer
                     }
                     config.Events.OnRedirectToIdentityProvider = (context) =>
                     {
-                        if (!string.IsNullOrWhiteSpace(oidc.AcrValues))
-                            context.ProtocolMessage.RedirectUri += $"&acr_values={oidc.AcrValues}";
-                        // context.Response.Redirect(context.RedirectUri);
+                        context.ProtocolMessage.AcrValues = oidc.AcrValues;
                         return Task.CompletedTask;
                     };
                 });
