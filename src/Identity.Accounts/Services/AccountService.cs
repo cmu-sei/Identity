@@ -193,8 +193,18 @@ namespace Identity.Accounts.Services
 
                 await _store.Add(account);
 
-                await SetAccountNames(account, principal.FindFirst(ClaimTypes.Name)?.Value ?? "anonymous", false);
+                string name = principal.FindFirst(ClaimTypes.Name)?.Value ?? "";
+                string email = principal.FindFirst(ClaimTypes.Email)?.Value ?? "";
+                var registration = new UsernameRegistration($"{name}<{email}>");
+
                 UpdateProperty(account, "origin", subClaim.Issuer);
+
+                if (_options.Registration.StoreEmail && registration.Username.IsEmailAddress())
+                {
+                    UpdateProperty(account, ClaimTypes.Email, registration.Username);
+                }
+
+                SetAccountNames(account, registration.DisplayName, registration.IsAffiliate);
                 UpdateExternalUserProfile(account, principal);
             }
             else
@@ -244,19 +254,19 @@ namespace Identity.Accounts.Services
                 WhenCreated = DateTime.UtcNow,
                 Type = type
             });
-            await _store.Update(account);
 
             if (_options.Registration.StoreName)
             {
-                await SetAccountNames(account, name, id_affiliate);
+                SetAccountNames(account, name, id_affiliate);
             }
 
+            await _store.Update(account);
             await _profileService.AddProfileAsync(account.GlobalId, name);
 
             return account;
         }
 
-        private async Task SetAccountNames(Data.Account account, string name, bool id_affiliate)
+        private void SetAccountNames(Data.Account account, string name, bool id_affiliate)
         {
             UpdateProperty(account, "name", name);
 
@@ -269,7 +279,6 @@ namespace Identity.Accounts.Services
             if (id_affiliate)
                 UpdateProperty(account, ClaimTypes.IdAffiliate, "true");
 
-            await _store.Update(account);
         }
 
         #endregion
