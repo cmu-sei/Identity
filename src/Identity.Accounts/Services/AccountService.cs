@@ -199,7 +199,7 @@ namespace Identity.Accounts.Services
 
                 UpdateProperty(account, "origin", subClaim.Issuer);
 
-                if (_options.Registration.StoreEmail && registration.Username.IsEmailAddress())
+                if (_options.Registration.StoreEmail && email.IsEmailAddress())
                 {
                     UpdateProperty(account, ClaimTypes.Email, registration.Username);
                 }
@@ -221,13 +221,13 @@ namespace Identity.Accounts.Services
 
         private void UpdateExternalUserProfile(Data.Account account, ClaimsPrincipal principal)
         {
-            UpdateProperty(account, ClaimTypes.Name, principal.FindFirst(ClaimTypes.Name)?.Value);
-            UpdateProperty(account, ClaimTypes.Avatar, principal.FindFirst(ClaimTypes.Avatar)?.Value);
-            UpdateProperty(account, ClaimTypes.Org, principal.FindFirst(ClaimTypes.Org)?.Value);
-            UpdateProperty(account, ClaimTypes.IdAffiliate, principal.FindFirst(ClaimTypes.IdAffiliate)?.Value);
-            UpdateProperty(account, ClaimTypes.Unit, principal.FindFirst(ClaimTypes.Unit)?.Value);
-            UpdateProperty(account, ClaimTypes.OrgLogo, principal.FindFirst(ClaimTypes.OrgLogo)?.Value);
-            UpdateProperty(account, ClaimTypes.UnitLogo, principal.FindFirst(ClaimTypes.UnitLogo)?.Value);
+            UpdatePropertyIfValue(account, ClaimTypes.Name, principal.FindFirst(ClaimTypes.Name)?.Value);
+            UpdatePropertyIfValue(account, ClaimTypes.Avatar, principal.FindFirst(ClaimTypes.Avatar)?.Value);
+            UpdatePropertyIfValue(account, ClaimTypes.Org, principal.FindFirst(ClaimTypes.Org)?.Value);
+            UpdatePropertyIfValue(account, ClaimTypes.IdAffiliate, principal.FindFirst(ClaimTypes.IdAffiliate)?.Value);
+            UpdatePropertyIfValue(account, ClaimTypes.Unit, principal.FindFirst(ClaimTypes.Unit)?.Value);
+            UpdatePropertyIfValue(account, ClaimTypes.OrgLogo, principal.FindFirst(ClaimTypes.OrgLogo)?.Value);
+            UpdatePropertyIfValue(account, ClaimTypes.UnitLogo, principal.FindFirst(ClaimTypes.UnitLogo)?.Value);
         }
 
         protected async Task<Data.Account> Register(string accountName, string name, AccountTokenType type, bool id_affiliate, string globalId = "")
@@ -897,6 +897,12 @@ namespace Identity.Accounts.Services
                 account.Tokens.Remove(token);
                 await _store.Update(account);
             }
+        }
+
+        private void UpdatePropertyIfValue(Data.Account account, string key, string val)
+        {
+            if (val.HasValue())
+                UpdateProperty(account, key, val);
         }
 
         private void UpdateProperty(Data.Account account, string key, string val)
