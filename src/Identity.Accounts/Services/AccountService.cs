@@ -199,7 +199,7 @@ namespace Identity.Accounts.Services
 
                 UpdateProperty(account, "origin", subClaim.Issuer);
 
-                if (_options.Registration.StoreEmail && email.IsEmailAddress())
+                if (_options.Registration.StoreEmail && registration.Username.IsEmailAddress())
                 {
                     UpdateProperty(account, ClaimTypes.Email, registration.Username);
                 }

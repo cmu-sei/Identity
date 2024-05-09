@@ -1,5 +1,5 @@
-// Copyright 2020 Carnegie Mellon University. 
-// Released under a MIT (SEI) license. See LICENSE.md in the project root. 
+// Copyright 2020 Carnegie Mellon University.
+// Released under a MIT (SEI) license. See LICENSE.md in the project root.
 
 using System.Linq;
 using Identity.Accounts.Extensions;
@@ -58,7 +58,7 @@ namespace Identity.Accounts.Models
         public UsernameRegistration(string value)
         {
             int x = value.IndexOf('<');
-            int y = (x > 0) ? value.IndexOf('>', x) : 0;
+            int y = (x >= 0) ? value.IndexOf('>', x) : 0;
             Username = value.Substring(x+1, y>0 ? y-x-1 : value.Length - x - 1).Trim();
             IsAffiliate = Username.ToLower().Contains(".ctr@");
             DisplayName = (x > 0)
