@@ -1,3 +1,6 @@
+
+# ⚠️ DEPRECATED
+
 # IdentityServer
 
 An application to manage authentication with OpenID Connect and OAuth2.
